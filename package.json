@@ -1,0 +1,49 @@
+{
+  "name": "backend-template-reborn",
+  "version": "1.0.0",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "scripts": {
+    "build": "tsup src --minify",
+    "start:dev": "tsx watch --env-file=.env --no-deprecation src/server.ts",
+    "start:prod": "node --env-file=.env dist/server.js",
+    "format": "prettier --config .prettierrc.json --ignore-path .prettierignore --write 'src/**/*.{js,ts,tsx,jsx}'",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix"
+  },
+  "dependencies": {
+    "@fastify/cors": "11.1.0",
+    "@fastify/jwt": "10.0.0",
+    "@prisma/client": "7.0.1",
+    "@sentry/node": "10.27.0",
+    "@sentry/profiling-node": "10.27.0",
+    "bcryptjs": "3.0.2",
+    "cpf-cnpj-validator": "1.0.3",
+    "fastify": "5.6.0",
+    "nodemailer": "7.0.11",
+    "pino": "10.1.0",
+    "uuid": "11.1.0",
+    "zod": "4.1.12"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.35.0",
+    "@types/node": "24.5.2",
+    "@types/nodemailer": "7.0.4",
+    "eslint": "9.36.0",
+    "eslint-config-prettier": "10.1.8",
+    "eslint-plugin-import": "2.32.0",
+    "eslint-plugin-prettier": "5.5.4",
+    "eslint-plugin-unicorn": "60.0.0",
+    "pino-pretty": "13.1.1",
+    "prettier": "3.6.2",
+    "prisma": "6.19.0",
+    "ts-jest": "29.4.4",
+    "tsup": "8.5.0",
+    "tsx": "4.20.6",
+    "typescript": "5.9.2",
+    "typescript-eslint": "8.47.0"
+  }
+}
