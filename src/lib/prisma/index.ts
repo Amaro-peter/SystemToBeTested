@@ -4,5 +4,5 @@ import { PrismaClient } from '@prisma/client'
 
 export const prisma = new PrismaClient({
   adapter,
-  log: env.LOG_LEVEL === 'debug' ? ['query', 'info', 'warn'] : [],
+  log: env.LOG_LEVEL === 'debug' ? ['query', 'info', 'warn', 'error'] : [],
 })
