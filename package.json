@@ -12,7 +12,20 @@
     "start:prod": "node --env-file=.env dist/server.js",
     "format": "prettier --config .prettierrc.json --ignore-path .prettierignore --write 'src/**/*.{js,ts,tsx,jsx}'",
     "lint": "eslint src/",
-    "lint:fix": "eslint src/ --fix"
+    "lint:fix": "eslint src/ --fix",
+    "db:generate": "prisma generate",
+    "db:migrate:dev": "prisma migrate dev",
+    "db:migrate:dev:default": "prisma migrate dev --name creating_database_models",
+    "db:migrate:reset": "prisma migrate reset --force",
+    "db:seed": "prisma db seed",
+    "db:reset": "run-s db:generate db:migrate:reset db:seed",
+    "db:migrate-deploy": "prisma migrate deploy",
+    "db:deploy": "run-s db:migrate-deploy db:generate db:seed",
+    "ci:generate": "run-p db:generate",
+    "ci:lint": "run-p check:prisma:biome check:src:biome",
+    "ci:format": "run-p check:prisma:biome check:src:biome",
+    "ci:build": "run-s ci:generate build:tsgo build:tsup",
+    "sentry:upload": "sentry-cli sourcemaps inject ./dist && sentry-cli sourcemaps upload ./dist"
   },
   "dependencies": {
     "@fastify/cors": "11.1.0",
