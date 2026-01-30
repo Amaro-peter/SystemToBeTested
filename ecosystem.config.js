@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: 'alecandro-mex-backend',
+      name: 'backend-sistema-mex',
       script: './dist/server.js',
       // cwd: <insira o caminho aqui>,
       max_memory_restart: '256M',
