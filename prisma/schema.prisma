@@ -23,7 +23,9 @@ enum AuthenticationStatus {
 
 enum UserRole {
   ADMIN
-  DEFAULT
+  SUPERVISOR_DOCTOR
+  HEALTH_PROFESSIONAL
+  PATIENT
 }
 
 model AuthenticationAudit {
@@ -46,13 +48,12 @@ model User {
   id            Int       @id @default(autoincrement())
   publicId      String    @unique @default(uuid(7)) @map("public_id")
   name          String
-  username      String    @unique
   email         String    @unique
   cpf           String    @unique
   passwordHash  String    @map("password_hash")
   loginAttempts Int       @default(0) @map("login_attempts")
   lastLogin     DateTime? @map("last_login")
-  role          UserRole  @default(DEFAULT)
+  role          UserRole  @default(PATIENT)
 
   token          String?   @unique
   tokenExpiresAt DateTime? @map("token_expires_at")
