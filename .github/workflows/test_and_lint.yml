@@ -1,13 +1,13 @@
-name: Lint and Build
+name: Lint Test and Build
 
 on:
   pull_request:
-    branches: 
-      - '**'
+    branches: [ main, dev ]
   push:
-    branches:
-      - 'main'
-      - 'dev'
+    branches: [ main, dev ]
+  
+env:
+  NODE_VERSION: 22.x
 
 jobs:
   lint-test-build:
@@ -16,25 +16,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # 1. Setup Node já com cache
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22.18.0
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
-      - name: Cache npm
-        id: npm-cache-dir
-        shell: bash
-        run: echo "dir=$(npm config get cache)" >> ${GITHUB_ENV}
-
+      # 2. Instalação limpa
       - name: Install dependencies
         run: npm ci
 
+      # 3. Qualidade de código
       - name: Run linter
         run: npm run lint
 
+      # 4. Testes (Futuro)
       # - name: Run tests
-      #   run: npm run test
+      #   run: npm run test:ci
 
+      # 5. Build final
       - name: Build
         run: npm run build

@@ -1,6 +1,10 @@
 import { PrismaClient } from '@prisma/client'
+import { adapter } from '../src/lib/prisma/helpers/adapter'
 
-const prisma = new PrismaClient()
+
+const prisma = new PrismaClient({
+    adapter
+})
 
 export async function seed() {
   await prisma.user.upsert({

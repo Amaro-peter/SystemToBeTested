@@ -10,7 +10,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 enum AuthenticationStatus {
@@ -55,8 +54,8 @@ model User {
   lastLogin     DateTime? @map("last_login")
   role          UserRole  @default(DEFAULT)
 
-  token          String?    @unique
-  tokenExpiresAt DateTime?  @map("token_expires_at")
+  token          String?   @unique
+  tokenExpiresAt DateTime? @map("token_expires_at")
 
   createdAt         DateTime  @default(now()) @map("created_at")
   updatedAt         DateTime  @updatedAt @map("updated_at")
@@ -68,4 +67,3 @@ model User {
   @@index([token], name: "idx_user_token")
   @@map("users")
 }
-
