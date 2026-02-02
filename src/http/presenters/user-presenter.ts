@@ -1,11 +1,12 @@
 import { User, UserRole } from '@prisma/client'
 
 type HTTPUser = {
-  id: string
+  publicId: string
   name: string
   email: string
   cpf: string
   role: UserRole
+  phoneNumber: string
   createdAt: Date
   updatedAt: Date
 }
@@ -19,10 +20,11 @@ export class UserPresenter {
     }
 
     return {
-      id: input.publicId,
+      publicId: input.publicId,
       name: input.name,
       email: input.email,
       cpf: input.cpf,
+      phoneNumber: input.phoneNumber,
       role: input.role,
       createdAt: input.createdAt,
       updatedAt: input.updatedAt,

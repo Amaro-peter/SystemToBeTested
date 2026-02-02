@@ -7,13 +7,12 @@ import { deleteUser, deleteUserByPublicId } from './delete-user.controller'
 import { forgotPassword } from './forgot-password.controller'
 import { getUserByPublicId, getUserProfile } from './get-user-profile.controller'
 import { listUsers } from './list-users.controller'
-import { register, registerAdmin } from './register-user.controller'
+import { register } from './register-user.controller'
 import { resetPassword } from './reset-password.controller'
 import { updateUser, updateUserByPublicId } from './update-user.controller'
 
 export async function usersRoutes(app: FastifyInstance) {
   // Register routes:
-  app.post('/register/admin', { onRequest: [verifyJwt, verifyUserRole([UserRole.ADMIN])] }, registerAdmin)
   app.post('/register', register)
 
   // Authentication routes:

@@ -13,6 +13,14 @@ export class PrismaUsersRepository implements UserRepository {
     })
   }
 
+  async findByEmailOrCpf(email: string, cpf: string) {
+    return await prisma.user.findFirst({
+      where: {
+        OR: [{ email }, { cpf }],
+      },
+    })
+  }
+
   async list() {
     return await prisma.user.findMany()
   }
