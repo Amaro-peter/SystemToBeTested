@@ -17,20 +17,15 @@ export class RegisterSupervisorDoctorStrategy implements RegisterProfileStrategy
     try {
       const specificData = supervisorDoctorPayloadSchema.parse(payload)
 
-      logger.info(`Registering supervisor doctor profile for user ID: ${user.id} with CRM: ${specificData.crm}`)
-      
-      const supervisorDoctor = await this.supervisorDoctorRepository.create(user.publicId, 
-        { 
-          crm: specificData.crm 
-        }
-      )
+      const supervisorDoctor = await this.supervisorDoctorRepository.create(user.publicId, {
+        crm: specificData.crm,
+      })
 
-      if(!supervisorDoctor) {
+      if (!supervisorDoctor) {
         throw new SupervisorDoctorCouldNotBeCreatedError()
       }
 
       return { supervisorDoctor }
-
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
         throw new SupervisorDoctorAlreadyExistsError()

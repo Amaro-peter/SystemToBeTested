@@ -10,10 +10,18 @@ import { listUsers } from './list-users.controller'
 import { register } from './register-user.controller'
 import { resetPassword } from './reset-password.controller'
 import { updateUser, updateUserByPublicId } from './update-user.controller'
+import { verifyRegistrationEligibility } from '@middlewares/verify-registration-eligibility.middleware'
 
 export async function usersRoutes(app: FastifyInstance) {
   // Register routes:
-  app.post('/register', register)
+  app.post(
+    '/register',
+    {
+      onRequest: [verifyJwt],
+      preHandler: [verifyRegistrationEligibility],
+    },
+    register,
+  )
 
   // Authentication routes:
   app.post('/sessions', authenticateUser)
