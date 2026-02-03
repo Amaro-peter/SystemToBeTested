@@ -1,5 +1,5 @@
-import { User } from "@prisma/client";
+import { User } from '@prisma/client'
 
 export interface RegisterProfileStrategy {
-    execute(user: User, payLoad: unknown): Promise<unknown>
+  execute(user: User, payLoad: unknown): Promise<unknown>
 }

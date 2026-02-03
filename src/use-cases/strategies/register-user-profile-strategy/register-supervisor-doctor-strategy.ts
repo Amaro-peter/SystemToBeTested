@@ -1,6 +1,5 @@
 import { Prisma, SupervisorDoctor, User } from '@prisma/client'
 import { RegisterProfileStrategy } from './register-profile-strategy.interface'
-import { logger } from '@lib/logger'
 import { SupervisorDoctorRepository } from '@repositories/supervisor-doctor-respository'
 import { SupervisorDoctorCouldNotBeCreatedError } from '@use-cases/errors/supervisor-doctor/supervisor-doctor-could-not-be-created'
 import { SupervisorDoctorAlreadyExistsError } from '@use-cases/errors/supervisor-doctor/supervisor-doctor-already-exists'

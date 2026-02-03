@@ -3,7 +3,7 @@ import { SupervisorDoctorCreateInput, SupervisorDoctorRepository } from '@reposi
 
 export class PrismaSupervisorDoctorRepository implements SupervisorDoctorRepository {
   constructor(private readonly dbContext: DatabaseContext) {}
-  
+
   async create(publicId: string, data: SupervisorDoctorCreateInput) {
     return await this.dbContext.client.supervisorDoctor.create({
       data: {

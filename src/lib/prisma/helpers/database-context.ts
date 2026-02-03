@@ -1,9 +1,8 @@
-import { Prisma, PrismaClient } from "@prisma/client";
-import { prisma as defaultPrisma } from "..";
-import { PrismaTransactionClient } from "@tps/prisma/prisma-transaction-client";
-import { asyncLocalStorage } from "@lib/async-local-storage";
-import { AsyncLocalStorageNotInitializedError } from "@services/errors/async-local-storage-not-initialized-error";
-
+import { Prisma, PrismaClient } from '@prisma/client'
+import { prisma as defaultPrisma } from '..'
+import { PrismaTransactionClient } from '@tps/prisma/prisma-transaction-client'
+import { asyncLocalStorage } from '@lib/async-local-storage'
+import { AsyncLocalStorageNotInitializedError } from '@services/errors/async-local-storage-not-initialized-error'
 
 export class DatabaseContext {
   constructor(private readonly prisma: PrismaClient = defaultPrisma) {}

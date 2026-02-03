@@ -12,7 +12,7 @@ export const registerSchema = z.object({
   phoneNumber: phoneNumberSchema,
   role: userRoleSchema,
   password: passwordSchema,
-  specificData: z.record(z.string(), z.any()).default({})
+  specificData: z.record(z.string(), z.any()).default({}),
 })
 
 export type registerSchemaType = z.infer<typeof registerSchema>
