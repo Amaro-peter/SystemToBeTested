@@ -1,3 +1,5 @@
+import { TOKEN_DURATION_REGEX } from '@constants/regex-constants'
+import ms from 'ms'
 import { z } from 'zod'
 
 const envSchema = z.object({
@@ -5,33 +7,51 @@ const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'staging', 'production', 'test']).default('development'),
   LOG_LEVEL: z.enum(['info', 'debug', 'warn', 'error', 'trace']).default('info'),
 
-  // Database
-  DATABASE_URL: z.url(),
+  // App:
+  APP_NAME: z.string().trim().nonempty().default('SBAstrobio'),
+  APP_PORT: z.coerce.number().default(3333),
+  JWT_SECRET: z.string().trim().min(60, 'JWT secret must be at least 60 characters long'),
+  HASH_SALT_ROUNDS: z.coerce.number().min(6).max(16).default(12),
+  JWT_EXPIRATION: z.string().trim().nonempty().regex(TOKEN_DURATION_REGEX).default('2h'),
+  JWT_REFRESH_EXPIRATION: z.string().trim().nonempty().regex(TOKEN_DURATION_REGEX).default('7d'),
 
-  // App
-  APP_NAME: z.string().default('Backend Template Reborn'),
-  APP_PORT: z.coerce.number().default(3000),
-  JWT_SECRET: z.string().min(60, 'JWT secret must be at least 60 characters long'),
-  FRONTEND_URL: z.url().default('http://localhost:5173'),
-  HASH_SALT_ROUNDS: z.coerce.number().default(12),
+  // Sentry:
+  SENTRY_DSN: z.url().trim().nonempty().optional(),
+  /*SENTRY_RELEASE: z.string().trim().nonempty().default('dev-local'),*/
 
-  SENTRY_DSN: z.string().optional(),
+  // Database:
+  DATABASE_URL: z.url().trim().nonempty(),
+  DB_POOL_MAX: z.coerce.number().int().positive().default(10),
+  DB_POOL_MIN: z.coerce.number().int().positive().default(2),
+  DB_CONNECTION_TIMEOUT: z.coerce.number().int().positive().default(ms('10s')),
+  DB_IDLE_TIMEOUT: z.coerce.number().int().positive().default(ms('30s')),
 
-  // SMTP
+  // Redis:
+  /*REDIS_HOST: z.string().trim().nonempty(),
+  REDIS_PORT: z.coerce.number().int().positive().default(6379),
+  REDIS_PASSWORD: z.string().trim().nonempty(),
+  REDIS_DB: z.coerce.number().int().nonnegative().default(0),*/
+
+  // URLs de Conexão:
+  FRONTEND_URL: z.url().trim().nonempty().default('http://localhost:5173'),
+
+  // SMTP:
   SMTP_EMAIL: z.email(),
-  SMTP_PASSWORD: z.string().min(1),
+  SMTP_PASSWORD: z.string().trim().nonempty(),
   SMTP_PORT: z.coerce.number(),
-  SMTP_HOST: z.string().min(1),
-  SMTP_SECURE: z.enum(['true', 'false']).transform((val) => val === 'true'),
+  SMTP_HOST: z.string().trim().nonempty(),
+  SMTP_SECURE: z.enum(['true', 'false']).transform((data) => data === 'true'),
 })
 
 const _env = envSchema.safeParse(process.env)
 
 if (!_env.success) {
-  // eslint-disable-next-line no-console
-  console.error('Invalid environment variables:', z.treeifyError(_env.error))
-
-  throw new Error('Invalid environment variables. Please check your .env file or environment configuration.')
+  console.error({
+    message: '🚨 Invalid environment variables:',
+    error: _env.error,
+    context: z.treeifyError(_env.error),
+  })
+  throw new Error('Invalid environment variables! Please check your .env file or environment configuration.')
 }
 
 export const env = _env.data

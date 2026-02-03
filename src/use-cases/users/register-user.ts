@@ -1,4 +1,5 @@
 import { env } from '@env/index'
+import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { Prisma, User, UserRole } from '@prisma/client'
 import { UserRepository } from '@repositories/users-repository'
 import { UserAlreadyExistsError } from '@use-cases/errors/users/user-already-exists-error'
@@ -22,7 +23,10 @@ type RegisterUserUseCaseResponse = {
 }
 
 export class RegisterUserUseCase {
-  constructor(private usersRepository: UserRepository) {}
+  constructor(
+    private usersRepository: UserRepository,
+    private dbContext: DatabaseContext,
+  ) {}
 
   async execute({
     name,
@@ -33,43 +37,49 @@ export class RegisterUserUseCase {
     role,
     specificData,
   }: RegisterUserUseCaseRequest): Promise<RegisterUserUseCaseResponse> {
-    try {
-      const existingUser = await this.usersRepository.findByEmailOrCpf(email, cpf)
+    const existingUser = await this.usersRepository.findByEmailOrCpf(email, cpf)
 
-      if (existingUser) {
-        throw new UserAlreadyExistsError()
-      }
-
-      const passwordHash = await hash(password, env.HASH_SALT_ROUNDS)
-
-      const user = await this.usersRepository.create({
-        name,
-        email,
-        cpf,
-        phoneNumber,
-        passwordHash,
-        role,
-      })
-
-      if (!user) {
-        throw new UserCouldNotBeCreatedError()
-      }
-
-      const userProfileStrategy = makeRegisterProfileStrategy(role)
-
-      const userProfile = await userProfileStrategy.execute(user, specificData)
-
-      return {
-        user,
-        userProfile,
-      }
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
-        throw new UserAlreadyExistsError()
-      }
-
-      throw error
+    if (existingUser) {
+      throw new UserAlreadyExistsError()
     }
+
+    const passwordHash = await hash(password, env.HASH_SALT_ROUNDS)
+
+    return this.dbContext.runInTransaction(async () => {
+      try {
+        const user = await this.usersRepository.create({
+          name,
+          email,
+          cpf,
+          phoneNumber,
+          passwordHash,
+          role,
+        })
+
+        if (!user) {
+          throw new UserCouldNotBeCreatedError()
+        }
+
+        const userProfileStrategy = makeRegisterProfileStrategy(role)
+
+        const userProfile = await userProfileStrategy.execute(user, specificData)
+
+        if (!userProfile) {
+          throw new Error('Usuário com role:' + role + ' não pôde ser criado.')
+        }
+
+        return {
+          user,
+          userProfile,
+        }
+      } catch (error) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+          throw new UserAlreadyExistsError()
+        }
+
+        throw error
+      }
+    })
   }
 }
 

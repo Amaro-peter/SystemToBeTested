@@ -1,9 +1,8 @@
 import { PrismaClient } from '@prisma/client'
-import { adapter } from '../src/lib/prisma/helpers/adapter'
-
+import { adapter } from '../src/lib/prisma/helpers/configuration'
 
 const prisma = new PrismaClient({
-    adapter
+  adapter,
 })
 
 export async function seed() {

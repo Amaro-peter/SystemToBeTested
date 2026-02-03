@@ -2,7 +2,9 @@ export const messages = {
   validation: {
     invalidData: 'Dados de registro inválidos!',
     userAlreadyExists: 'Já existe um usuário cadastrado com este CPF ou E-mail',
+    superVisorDoctorAlreadyExists: 'Já existe um usuário Supervisor Médico cadastrado com este CRM',
     invalidCpf: 'CPF inválido!',
+    invalidCRM: 'CRM inválido! Verifique o valor informado.',
     invalidJson: 'O corpo da requisição não está em formato JSON válido. Verifique a estrutura dos dados enviados.',
     invalidPhoneNumber: 'Número de telefone inválido!',
     invalidRole: 'Função de usuário (UserRole) inválida!',
@@ -23,6 +25,7 @@ export const messages = {
     invalidToken: 'Token inválido ou expirado!',
     passwordChangeRequired: 'É necessário alterar a senha antes de acessar o sistema!',
     userCouldNotBeCreated: 'Não foi possível criar o usuário!',
+    supervisorDoctorCouldNotBeCreated: 'Não foi possível criar o usuário Supervisor Médico!',
   },
   info: {
     passwordResetGeneric: 'Se o usuário existir, você receberá um e-mail com instruções para redefinir a senha.',

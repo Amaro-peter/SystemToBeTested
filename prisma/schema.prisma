@@ -45,18 +45,21 @@ model AuthenticationAudit {
 }
 
 model User {
-  id            Int       @id @default(autoincrement())
-  publicId      String    @unique @default(uuid(7)) @map("public_id")
-  name          String
-  email         String    @unique
-  cpf           String    @unique
-  passwordHash  String    @map("password_hash")
-  loginAttempts Int       @default(0) @map("login_attempts")
-  lastLogin     DateTime? @map("last_login")
-  role          UserRole  @default(PATIENT)
+  id       Int    @id @default(autoincrement())
+  publicId String @unique @default(uuid(7)) @map("public_id")
+
+  name         String
+  email        String @unique
+  cpf          String @unique
+  phoneNumber  String @map("phone_number")
+  passwordHash String @map("password_hash")
+
+  role UserRole @default(PATIENT)
 
   token          String?   @unique
   tokenExpiresAt DateTime? @map("token_expires_at")
+  loginAttempts  Int       @default(0) @map("login_attempts")
+  lastLogin      DateTime? @map("last_login")
 
   createdAt         DateTime  @default(now()) @map("created_at")
   updatedAt         DateTime  @updatedAt @map("updated_at")
@@ -64,7 +67,24 @@ model User {
 
   authenticationAudits AuthenticationAudit[]
 
-  @@index([name], name: "idx_user_name")
-  @@index([token], name: "idx_user_token")
+  SupervisorDoctor SupervisorDoctor[]
+
+  @@index([name])
+  @@index([token])
   @@map("users")
+}
+
+model SupervisorDoctor {
+  id Int @id @default(autoincrement())
+
+  crm String @unique
+
+  userId Int  @map("user_id")
+  user   User @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([userId])
+  @@map("supervisor_doctors")
 }

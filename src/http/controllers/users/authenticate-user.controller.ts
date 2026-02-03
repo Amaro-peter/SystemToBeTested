@@ -1,4 +1,4 @@
-import { UserPresenter } from '@http/presenters/user-presenter'
+import { UserPresenter } from '@http/presenters/users/user-presenter'
 import { authenticateSchema } from '@http/schemas/users/authenticate-schema'
 import { logger } from '@lib/logger'
 import { InvalidCredentialsError } from '@use-cases/errors/invalid-credentials-error'

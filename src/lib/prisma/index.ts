@@ -1,5 +1,5 @@
 import { env } from '@env/index'
-import { adapter } from './helpers/adapter'
+import { adapter } from './helpers/configuration'
 import { PrismaClient } from '@prisma/client'
 
 export const prisma = new PrismaClient({

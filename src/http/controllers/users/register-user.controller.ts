@@ -1,6 +1,9 @@
-import { UserPresenter } from '@http/presenters/user-presenter'
+import { UserPresenter } from '@http/presenters/users/user-presenter'
+import { UserProfilePresenterStrategy } from '@http/presenters/users/user-profile-presenter-strategy'
 import { registerSchema } from '@http/schemas/users/register-schema'
 import { logger } from '@lib/logger'
+import { SupervisorDoctorAlreadyExistsError } from '@use-cases/errors/supervisor-doctor/supervisor-doctor-already-exists'
+import { SupervisorDoctorCouldNotBeCreatedError } from '@use-cases/errors/supervisor-doctor/supervisor-doctor-could-not-be-created'
 import { UserAlreadyExistsError } from '@use-cases/errors/users/user-already-exists-error'
 import { makeRegisterUserUseCase } from '@use-cases/factories/make-register-user-use-case'
 import type { FastifyReply, FastifyRequest } from 'fastify'
@@ -21,11 +24,24 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
       specificData,
     })
 
-    logger.info({ userId: user.publicId, role: user.role }, `User with role:${user.role} registered successfully!`)
+    logger.info({ userId: user.publicId, role: user.role }, `User with role ${user.role} registered successfully!`)
 
-    reply.status(201).send({ user: UserPresenter.toHTTP(user), userProfile })
+    const presenterStrategy = UserProfilePresenterStrategy.getStrategy(user.role)
+
+    reply.status(201).send({
+      user: UserPresenter.toHTTP(user),
+      userProfile: presenterStrategy.present(userProfile),
+    })
   } catch (error) {
     if (error instanceof UserAlreadyExistsError) {
+      return reply.status(409).send({ message: error.message })
+    }
+
+    if (error instanceof SupervisorDoctorCouldNotBeCreatedError) {
+      return reply.status(409).send({ message: error.message })
+    }
+
+    if (error instanceof SupervisorDoctorAlreadyExistsError) {
       return reply.status(409).send({ message: error.message })
     }
 

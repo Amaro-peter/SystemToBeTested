@@ -1,4 +1,4 @@
-import { UserPresenter } from '@http/presenters/user-presenter'
+import { UserPresenter } from '@http/presenters/users/user-presenter'
 import { updateSchema } from '@http/schemas/users/update-schema'
 import { publicIdSchema } from '@http/schemas/utils/public-id-schema'
 import { logger } from '@lib/logger'

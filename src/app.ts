@@ -2,7 +2,9 @@ import { messages } from '@constants/messages'
 import { env } from '@env/index'
 import fastifyCors from '@fastify/cors'
 import fastifyJwt from '@fastify/jwt'
+import { asyncContext } from '@http/plugins/async-context.plugin'
 import { appRoutes } from '@http/routes'
+import { asyncLocalStorage } from '@lib/async-local-storage'
 import { logger, runWithRequestId, runWithUserContext } from '@lib/logger'
 import { logError } from '@lib/logger/helpers'
 import * as Sentry from '@sentry/node'
@@ -30,8 +32,12 @@ if (env.SENTRY_DSN) {
   Sentry.setupFastifyErrorHandler(app)
 }
 
+app.register(asyncContext)
+
 app.addHook('onRequest', (request, _reply, done) => {
-  const requestId = uuidv7()
+  const store = asyncLocalStorage.getStore()
+  const requestId = store?.requestId ?? uuidv7()
+
   const xff = request.headers['x-forwarded-for']
   const clientIp = Array.isArray(xff) ? xff[0] : xff?.split(',')[0].trim() || request.ip
 
