@@ -1,5 +1,4 @@
 import { TOKEN_DURATION_REGEX } from '@constants/regex-constants'
-import { logger } from '@lib/logger'
 import ms from 'ms'
 import { z } from 'zod'
 
@@ -47,11 +46,6 @@ const envSchema = z.object({
 const _env = envSchema.safeParse(process.env)
 
 if (!_env.success) {
-  logger.error({
-    message: '🚨 Invalid environment variables:',
-    error: _env.error,
-    context: z.treeifyError(_env.error),
-  })
   throw new Error('Invalid environment variables! Please check your .env file or environment configuration.')
 }
 
