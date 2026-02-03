@@ -1,6 +1,6 @@
 import { asyncLocalStorage } from '@lib/async-local-storage'
-import fp from 'fastify-plugin'
 import { FastifyPluginAsync } from 'fastify'
+import fp from 'fastify-plugin'
 import { v7 as uuidv7 } from 'uuid'
 
 const asyncContextPlugin: FastifyPluginAsync = async (app) => {

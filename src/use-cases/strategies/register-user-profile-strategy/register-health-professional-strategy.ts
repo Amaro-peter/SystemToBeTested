@@ -1,9 +1,9 @@
 // src/use-cases/strategies/register-health-professional-strategy.ts
+import { logger } from '@lib/logger'
+import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { User } from '@prisma/client'
 import { z } from 'zod'
 import { RegisterProfileStrategy } from './register-profile-strategy.interface'
-import { logger } from '@lib/logger'
-import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 
 export interface HealthProfessionalProfileData {
   cref: string

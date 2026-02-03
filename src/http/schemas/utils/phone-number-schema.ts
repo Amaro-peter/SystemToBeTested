@@ -1,6 +1,6 @@
 import { messages } from '@constants/messages'
-import { z } from 'zod'
 import { parsePhoneNumberFromString } from 'libphonenumber-js'
+import { z } from 'zod'
 
 // specified phone format +55 61 98765-4321 or +55 11 8765-4321
 

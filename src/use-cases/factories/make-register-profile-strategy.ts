@@ -7,7 +7,7 @@ import { RegisterProfileStrategy } from '@use-cases/strategies/register-user-pro
 import { RegisterSupervisorDoctorStrategy } from '@use-cases/strategies/register-user-profile-strategy/register-supervisor-doctor-strategy'
 
 const strategies: Record<UserRole, (dbContext: DatabaseContext) => RegisterProfileStrategy> = {
-  [UserRole.PATIENT]: (dbContext) => {
+  [UserRole.PATIENT]: () => {
     throw new Error('RegisterPatientStrategy not implemented')
   },
 
@@ -19,7 +19,7 @@ const strategies: Record<UserRole, (dbContext: DatabaseContext) => RegisterProfi
     return new RegisterSupervisorDoctorStrategy(supervisorDoctorRepository)
   },
 
-  [UserRole.ADMIN]: (dbContext) => {
+  [UserRole.ADMIN]: () => {
     throw new Error('RegisterAdminStrategy not implemented')
   },
 }

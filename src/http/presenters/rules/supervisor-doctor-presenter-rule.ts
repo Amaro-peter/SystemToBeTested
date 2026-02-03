@@ -4,7 +4,7 @@ type SanitizedInput = Record<string, unknown>
 
 export const SupervisorDoctorPresenterRule: PresenterRule<SanitizedInput, SanitizedInput> = (data) => {
   // 1. Extraímos o objeto aninhado e descartamos as datas do nível do perfil
-  const { createdAt, updatedAt, supervisorDoctor, ...rest } = data as {
+  const { supervisorDoctor, ...rest } = data as {
     createdAt?: unknown
     updatedAt?: unknown
     supervisorDoctor?: Record<string, unknown>

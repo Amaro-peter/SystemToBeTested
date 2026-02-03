@@ -1,4 +1,5 @@
 import { verifyJwt } from '@middlewares/verify-jwt.middleware'
+import { verifyRegistrationEligibility } from '@middlewares/verify-registration-eligibility.middleware'
 import { verifyUserRole } from '@middlewares/verify-user-role.middleware'
 import { UserRole } from '@prisma/client'
 import { FastifyInstance } from 'fastify'
@@ -10,7 +11,6 @@ import { listUsers } from './list-users.controller'
 import { register } from './register-user.controller'
 import { resetPassword } from './reset-password.controller'
 import { updateUser, updateUserByPublicId } from './update-user.controller'
-import { verifyRegistrationEligibility } from '@middlewares/verify-registration-eligibility.middleware'
 
 export async function usersRoutes(app: FastifyInstance) {
   // Register routes:

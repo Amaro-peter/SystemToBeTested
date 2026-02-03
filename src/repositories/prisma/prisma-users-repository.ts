@@ -1,4 +1,3 @@
-import { prisma } from '@lib/prisma'
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { Prisma } from '@prisma/client'
 import { UserRepository } from '@repositories/users-repository'
@@ -13,7 +12,7 @@ export class PrismaUsersRepository implements UserRepository {
   }
 
   async findBy(where: Prisma.UserWhereUniqueInput) {
-    return await prisma.user.findUnique({
+    return await this.dbContext.client.user.findUnique({
       where,
     })
   }
@@ -27,18 +26,18 @@ export class PrismaUsersRepository implements UserRepository {
   }
 
   async list() {
-    return await prisma.user.findMany()
+    return await this.dbContext.client.user.findMany()
   }
 
   async update(id: number, data: Prisma.UserUpdateInput) {
-    return await prisma.user.update({
+    return await this.dbContext.client.user.update({
       where: { id },
       data,
     })
   }
 
   async delete(id: number) {
-    return await prisma.user.delete({
+    return await this.dbContext.client.user.delete({
       where: {
         id,
       },
