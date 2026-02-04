@@ -14,7 +14,7 @@ export async function seed() {
       name: 'Admin User',
       email: 'admin@example.com',
       phoneNumber: '11999999999',
-      cpf: '111.111.111-11',
+      cpf: '808.996.310-29',
       // password: 'ybp_whf3wxn2xdr6MTE'
       passwordHash: '$2a$12$y7AWvv8D1P9AVn2G8XkNZOXyrMZ658QFJyR.2kxM.oP/wmgB/.7.2',
       role: 'ADMIN',

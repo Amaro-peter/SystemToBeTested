@@ -1,8 +1,8 @@
 import { messages } from '@constants/messages'
 import { DomainError } from '@core/domain/errors/domain-error'
 
-export class UserAlreadyExistsError extends DomainError {
+export class SupervisorDoctorCouldNotBeUpdatedError extends DomainError {
   constructor() {
-    super(messages.validation.userAlreadyExists)
+    super(messages.errors.supervisorDoctorCouldNotBeUpdated)
   }
 }

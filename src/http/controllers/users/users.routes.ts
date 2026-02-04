@@ -10,7 +10,7 @@ import { getUserByPublicId, getUserProfile } from './get-user-profile.controller
 import { listUsers } from './list-users.controller'
 import { register } from './register-user.controller'
 import { resetPassword } from './reset-password.controller'
-import { updateUser, updateUserByPublicId } from './update-user.controller'
+import { updateUser } from './update-user.controller'
 
 export async function usersRoutes(app: FastifyInstance) {
   // Register routes:
@@ -34,7 +34,6 @@ export async function usersRoutes(app: FastifyInstance) {
   app.delete('/me', { onRequest: [verifyJwt] }, deleteUser)
 
   // Users administration routes:
-  app.patch('/:publicId', { onRequest: [verifyJwt, verifyUserRole([UserRole.ADMIN])] }, updateUserByPublicId)
   app.delete('/:publicId', { onRequest: [verifyJwt, verifyUserRole([UserRole.ADMIN])] }, deleteUserByPublicId)
   app.get('/:publicId', { onRequest: [verifyJwt, verifyUserRole([UserRole.ADMIN])] }, getUserByPublicId)
   app.get('/', { onRequest: [verifyJwt, verifyUserRole([UserRole.ADMIN])] }, listUsers)

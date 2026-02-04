@@ -29,9 +29,9 @@ export class PrismaUsersRepository implements UserRepository {
     return await this.dbContext.client.user.findMany()
   }
 
-  async update(id: number, data: Prisma.UserUpdateInput) {
+  async update(publicId: string, data: Prisma.UserUpdateInput) {
     return await this.dbContext.client.user.update({
-      where: { id },
+      where: { publicId },
       data,
     })
   }

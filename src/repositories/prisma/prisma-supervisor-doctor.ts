@@ -16,4 +16,16 @@ export class PrismaSupervisorDoctorRepository implements SupervisorDoctorReposit
       },
     })
   }
+
+  async update(userId: number, data: SupervisorDoctorCreateInput) {
+    const updated = await this.dbContext.client.supervisorDoctor.update({
+      where: {
+        userId: userId,
+      },
+      data: {
+        crm: data.crm,
+      },
+    })
+    return updated
+  }
 }

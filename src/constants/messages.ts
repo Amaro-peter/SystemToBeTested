@@ -26,6 +26,8 @@ export const messages = {
     passwordChangeRequired: 'É necessário alterar a senha antes de acessar o sistema!',
     userCouldNotBeCreated: 'Não foi possível criar o usuário!',
     supervisorDoctorCouldNotBeCreated: 'Não foi possível criar o usuário Supervisor Médico!',
+    userCouldNotBeUpdated: 'Não foi possível atualizar o usuário!',
+    supervisorDoctorCouldNotBeUpdated: 'Não foi possível atualizar o usuário Supervisor Médico!',
   },
   info: {
     passwordResetGeneric: 'Se o usuário existir, você receberá um e-mail com instruções para redefinir a senha.',
