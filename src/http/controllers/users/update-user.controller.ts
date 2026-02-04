@@ -3,11 +3,8 @@ import { UserProfilePresenterStrategy } from '@http/presenters/users/user-profil
 import { updateSchema } from '@http/schemas/users/update-schema'
 import { logger } from '@lib/logger'
 import { makeUpdateUserUseCase } from '@use-cases/factories/make-update-user-use-case'
-import { DomainError } from '@core/domain/errors/domain-error'
-import { ResourceNotFoundError } from '@use-cases/errors/resource-not-found-error'
-import { UserAlreadyExistsError } from '@use-cases/errors/users/user-already-exists-error'
-import { SupervisorDoctorAlreadyExistsError } from '@use-cases/errors/supervisor-doctor/supervisor-doctor-already-exists'
 import type { FastifyReply, FastifyRequest } from 'fastify'
+import { HttpErrorMapper } from '@http/utils/http-error-mapper'
 
 export async function updateUser(request: FastifyRequest, reply: FastifyReply) {
   const { name, email, cpf, phoneNumber, role, specificData } = updateSchema.parse(request.body)
@@ -24,22 +21,8 @@ export async function updateUser(request: FastifyRequest, reply: FastifyReply) {
     role,
   })
 
-  if (result.isLeft()) {
-    const error = result.value
-
-    if (error instanceof ResourceNotFoundError) {
-      return reply.status(404).send({ message: error.message })
-    }
-
-    if (error instanceof UserAlreadyExistsError || error instanceof SupervisorDoctorAlreadyExistsError) {
-      return reply.status(409).send({ message: error.message })
-    }
-
-    if (error instanceof DomainError) {
-      return reply.status(400).send({ message: error.message })
-    }
-
-    throw error
+  if (!result.success) {
+    return HttpErrorMapper.map(result.error, reply)
   }
 
   const { updatedUser, updatedUserProfile } = result.value

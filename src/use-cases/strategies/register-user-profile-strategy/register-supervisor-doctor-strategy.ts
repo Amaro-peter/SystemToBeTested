@@ -1,7 +1,7 @@
 import { Prisma, SupervisorDoctor, User } from '@prisma/client'
 import { SupervisorDoctorRepository } from '@repositories/supervisor-doctor-respository'
-import { SupervisorDoctorAlreadyExistsError } from '@use-cases/errors/supervisor-doctor/supervisor-doctor-already-exists'
-import { SupervisorDoctorCouldNotBeCreatedError } from '@use-cases/errors/supervisor-doctor/supervisor-doctor-could-not-be-created'
+import { SupervisorDoctorAlreadyExistsError } from '@use-cases/errors/supervisor-doctor/supervisor-doctor-already-exists-error'
+import { SupervisorDoctorCouldNotBeCreatedError } from '@use-cases/errors/supervisor-doctor/supervisor-doctor-could-not-be-created-error'
 import { RegisterProfileStrategy } from './register-profile-strategy.interface'
 import { supervisorDoctorPayloadSchema } from '../schemas/supervisor-doctor/supervisor-doctor-schema'
 

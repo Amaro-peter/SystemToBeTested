@@ -1,13 +1,12 @@
 import { DomainError } from '@core/domain/errors/domain-error'
-import { left, ResultPattern, right } from '@core/logic/result-pattern'
-import { logger } from '@lib/logger'
+import { IErrorMapper } from '@core/domain/errors/error-mappers/error-mapper.interface'
+import { err, ok, Result } from '@core/logic/result-pattern'
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
-import { Prisma, User, UserRole } from '@prisma/client'
+import { User, UserRole } from '@prisma/client'
 import { UserRepository } from '@repositories/users-repository'
 import { ResourceNotFoundError } from '@use-cases/errors/resource-not-found-error'
 import { UserAlreadyExistsError } from '@use-cases/errors/users/user-already-exists-error'
-import { UserCouldNotBeUpdatedError } from '@use-cases/errors/users/user-could-not-be-updated-error'
-import { makeUpdateProfileStrategy } from '@use-cases/factories/make-update-profile-strategy'
+import { makeUpdateProfileStrategy } from '@use-cases/factories/strategies/make-update-profile-strategy'
 
 interface UpdateUserUseCaseRequest {
   publicId: string
@@ -19,87 +18,108 @@ interface UpdateUserUseCaseRequest {
   specificData?: unknown
 }
 
-type UpdateUserUseCaseResponse = ResultPattern<
-  DomainError,
+type UpdateUserUseCaseResponse = Result<
   {
     updatedUser: User
     updatedUserProfile?: unknown
-  }
+  },
+  DomainError
 >
 
 export class UpdateUserUseCase {
   constructor(
     private usersRepository: UserRepository,
     private dbContext: DatabaseContext,
+    private userErrorMapper: IErrorMapper,
   ) {}
 
-  async execute({
-    publicId,
-    name,
-    email,
-    cpf,
-    role,
-    phoneNumber,
-    specificData,
-  }: UpdateUserUseCaseRequest): Promise<UpdateUserUseCaseResponse> {
+  async execute(request: UpdateUserUseCaseRequest): Promise<UpdateUserUseCaseResponse> {
     try {
-      const existingUser = email
-        ? await this.usersRepository.findBy({ email })
-        : cpf
-          ? await this.usersRepository.findBy({ cpf })
-          : null
-
-      if (existingUser && existingUser.publicId !== publicId) {
-        throw new UserAlreadyExistsError()
-      }
+      await this.validateUserUniqueness(request.publicId, request.email, request.cpf)
 
       return await this.dbContext.runInTransaction(async () => {
-        let updatedUser: User | null = null
+        const updatedUser = await this.updateUserEntity(request.publicId, {
+          name: request.name,
+          email: request.email,
+          cpf: request.cpf,
+          phoneNumber: request.phoneNumber,
+        })
 
-        try {
-          updatedUser = await this.usersRepository.update(publicId, {
-            name,
-            email,
-            cpf,
-            phoneNumber,
-          })
-        } catch (error) {
-          if (error instanceof Prisma.PrismaClientKnownRequestError) {
-            if (error.code === 'P2002') throw new UserAlreadyExistsError()
-            if (error.code === 'P2025') throw new UserCouldNotBeUpdatedError()
-          }
-          throw error
+        if (!request.specificData) {
+          return ok({ updatedUser })
         }
 
-        if (!updatedUser) {
-          throw new ResourceNotFoundError()
-        }
-
-        if (!specificData) {
-          return right({
-            updatedUser,
-          })
-        }
-
-        const updateProfileStrategy = makeUpdateProfileStrategy(role)
-
-        const strategyResult = await updateProfileStrategy.execute(updatedUser, specificData)
-
-        if (strategyResult.isLeft()) {
-          throw strategyResult.value
-        }
-
-        return right({
+        const profileResult = await this.updateUserProfile(
           updatedUser,
-          updatedUserProfile: strategyResult.value,
+          request.role,
+          request.specificData,
+          this.dbContext,
+        )
+
+        if (!profileResult.success) {
+          return err(profileResult.error)
+        }
+
+        return ok({
+          updatedUser,
+          updatedUserProfile: profileResult.value,
         })
       })
     } catch (error) {
       if (error instanceof DomainError) {
-        return left(error)
+        return err(error)
+      }
+      throw error
+    }
+  }
+
+  private async validateUserUniqueness(publicId: string, email?: string, cpf?: string): Promise<void> {
+    const existingUser = email
+      ? await this.usersRepository.findBy({ email })
+      : cpf
+        ? await this.usersRepository.findBy({ cpf })
+        : null
+
+    if (existingUser && existingUser.publicId !== publicId) {
+      throw new UserAlreadyExistsError()
+    }
+  }
+
+  private async updateUserEntity(
+    publicId: string,
+    data: {
+      name?: string
+      email?: string
+      cpf?: string
+      phoneNumber?: string
+    },
+  ): Promise<User> {
+    try {
+      const updatedUser = await this.usersRepository.update(publicId, data)
+
+      if (!updatedUser) {
+        throw new ResourceNotFoundError()
+      }
+
+      return updatedUser
+    } catch (error) {
+      const domainError = this.userErrorMapper.mapToDomainError(error)
+
+      if (domainError instanceof DomainError) {
+        throw domainError
       }
 
       throw error
     }
+  }
+
+  private async updateUserProfile(
+    updatedUser: User,
+    role: UserRole,
+    specificData: unknown,
+    dbContext: DatabaseContext,
+  ) {
+    const updateProfileStrategy = makeUpdateProfileStrategy(role, dbContext)
+    return await updateProfileStrategy.execute(updatedUser, specificData)
   }
 }

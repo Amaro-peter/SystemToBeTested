@@ -1,7 +1,7 @@
 import { messages } from '@constants/messages'
-import { DomainError } from '@core/domain/errors/domain-error'
+import { DomainNotFoundError } from '@core/domain/errors/4xx-commom-http-error'
 
-export class UserCouldNotBeUpdatedError extends DomainError {
+export class UserCouldNotBeUpdatedError extends DomainNotFoundError {
   constructor() {
     super(messages.errors.userCouldNotBeUpdated)
   }

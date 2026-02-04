@@ -1,6 +1,7 @@
 import { messages } from '@constants/messages'
+import { DomainError } from '@core/domain/errors/domain-error'
 
-export class UserWithNoRoleError extends Error {
+export class UserWithNoRoleError extends DomainError {
   constructor() {
     super(messages.validation.invalidRole)
   }

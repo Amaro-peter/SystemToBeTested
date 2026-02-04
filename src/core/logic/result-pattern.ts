@@ -1,41 +1,31 @@
-export type ResultPattern<L, A> = Left<L, A> | Right<L, A>
+export type Result<T, E = Error> = { success: true; value: T } | { success: false; error: E }
 
-export class Left<L, A> {
-  readonly value: L
+/**
+ * Creates a success result.
+ */
+export const ok = <T>(value: T): Result<T, never> => ({
+  success: true,
+  value,
+})
 
-  constructor(value: L) {
-    this.value = value
-  }
+/**
+ * Creates a failure result.
+ */
+export const err = <E>(error: E): Result<never, E> => ({
+  success: false,
+  error,
+})
 
-  isLeft(): this is Left<L, A> {
-    return true
-  }
-
-  isRight(): this is Right<L, A> {
-    return false
-  }
+/**
+ * Type guard to check if the result is a success.
+ */
+export function isOk<T, E>(result: Result<T, E>): result is { success: true; value: T } {
+  return result.success
 }
 
-export class Right<L, A> {
-  readonly value: A
-
-  constructor(value: A) {
-    this.value = value
-  }
-
-  isLeft(): this is Left<L, A> {
-    return false
-  }
-
-  isRight(): this is Right<L, A> {
-    return true
-  }
-}
-
-export const left = <L, A>(l: L): ResultPattern<L, A> => {
-  return new Left(l)
-}
-
-export const right = <L, A>(a: A): ResultPattern<L, A> => {
-  return new Right(a)
+/**
+ * Type guard to check if the result is a failure.
+ */
+export function isErr<T, E>(result: Result<T, E>): result is { success: false; error: E } {
+  return !result.success
 }

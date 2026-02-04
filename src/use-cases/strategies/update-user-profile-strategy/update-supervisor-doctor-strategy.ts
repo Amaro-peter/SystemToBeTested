@@ -1,40 +1,48 @@
-import { Prisma, SupervisorDoctor, User } from '@prisma/client'
-import { left, right, type ResultPattern } from '@core/logic/result-pattern'
+import { SupervisorDoctor, User } from '@prisma/client'
+import { err, ok, type Result } from '@core/logic/result-pattern'
 import { SupervisorDoctorRepository } from '@repositories/supervisor-doctor-respository'
-import { supervisorDoctorPayloadSchema } from '../schemas/supervisor-doctor/supervisor-doctor-schema'
-import { UpdateRegisterProfileStrategy } from './update-profile-strategy.interface'
-import { SupervisorDoctorCouldNotBeUpdatedError } from '@use-cases/errors/supervisor-doctor/supervisor-doctor-could-not-be-updated'
-import { SupervisorDoctorAlreadyExistsError } from '@use-cases/errors/supervisor-doctor/supervisor-doctor-already-exists'
 import { DomainError } from '@core/domain/errors/domain-error'
+import { IValidator } from '@core/domain/validation/validator.interface'
+import { IErrorMapper } from '@core/domain/errors/error-mappers/error-mapper.interface'
+import { UpdateProfileStrategy } from './update-profile-strategy.interface'
 
 type SupervisorDoctorStrategyResponse = {
   supervisorDoctor: SupervisorDoctor
 }
 
-export class UpdateSupervisorDoctorStrategy implements UpdateRegisterProfileStrategy<SupervisorDoctorStrategyResponse> {
-  constructor(private supervisorDoctorRepository: SupervisorDoctorRepository) {}
+type SupervisorDoctorPayload = {
+  crm: string
+}
 
-  async execute(updatedUser: User, payload: unknown): Promise<ResultPattern<DomainError, SupervisorDoctorStrategyResponse>> {
+export class UpdateSupervisorDoctorStrategy implements UpdateProfileStrategy<SupervisorDoctorStrategyResponse> {
+  constructor(
+    private supervisorDoctorRepository: SupervisorDoctorRepository,
+    private validator: IValidator<SupervisorDoctorPayload>,
+    private errorMapper: IErrorMapper,
+  ) {}
+
+  async execute(updatedUser: User, payload: unknown): Promise<Result<SupervisorDoctorStrategyResponse, DomainError>> {
+    const validationResult = this.validator.validate(payload)
+
+    if (!validationResult.success) {
+      throw validationResult.error
+    }
+
+    const specificData = validationResult.value
+
     try {
-      const specificData = supervisorDoctorPayloadSchema.parse(payload)
-
       const supervisorDoctor = await this.supervisorDoctorRepository.update(updatedUser.id, {
         crm: specificData.crm,
       })
 
-      if (!supervisorDoctor) {
-        return left(new SupervisorDoctorCouldNotBeUpdatedError())
-      }
-
-      return right({ supervisorDoctor })
-
+      return ok({
+        supervisorDoctor,
+      })
     } catch (error) {
-      if(error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
-        return left(new SupervisorDoctorAlreadyExistsError())
-      }
+      const domainError = this.errorMapper.mapToDomainError(error)
 
-      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
-        return left(new SupervisorDoctorCouldNotBeUpdatedError())
+      if (domainError instanceof DomainError) {
+        return err(domainError)
       }
 
       throw error

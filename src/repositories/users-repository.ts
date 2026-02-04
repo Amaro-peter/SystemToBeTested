@@ -10,6 +10,6 @@ export interface UserRepository {
   findBy(where: Prisma.UserWhereUniqueInput): Promise<User | null>
   findByEmailOrCpf(email: string, cpf: string): Promise<User | null>
   list(): Promise<User[]>
-  update(publicId: string, data: Prisma.UserUpdateInput): Promise<User | null>
+  update(publicId: string, data: Prisma.UserUpdateInput): Promise<User>
   delete(id: number): Promise<User>
 }

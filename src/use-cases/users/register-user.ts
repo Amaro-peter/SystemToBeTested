@@ -4,7 +4,7 @@ import { Prisma, User, UserRole } from '@prisma/client'
 import { UserRepository } from '@repositories/users-repository'
 import { UserAlreadyExistsError } from '@use-cases/errors/users/user-already-exists-error'
 import { UserCouldNotBeCreatedError } from '@use-cases/errors/users/user-could-not-be-created-error'
-import { makeRegisterProfileStrategy } from '@use-cases/factories/make-register-profile-strategy'
+import { makeRegisterProfileStrategy } from '@use-cases/factories/strategies/make-register-profile-strategy'
 import { hash } from 'bcryptjs'
 
 interface RegisterUserUseCaseRequest {

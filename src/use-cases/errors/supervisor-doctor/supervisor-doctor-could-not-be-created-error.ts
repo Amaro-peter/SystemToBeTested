@@ -1,8 +1,8 @@
 import { messages } from '@constants/messages'
 import { DomainError } from '@core/domain/errors/domain-error'
 
-export class SupervisorDoctorCouldNotBeUpdatedError extends DomainError {
+export class SupervisorDoctorCouldNotBeCreatedError extends DomainError {
   constructor() {
-    super(messages.errors.supervisorDoctorCouldNotBeUpdated)
+    super(messages.errors.supervisorDoctorCouldNotBeCreated)
   }
 }

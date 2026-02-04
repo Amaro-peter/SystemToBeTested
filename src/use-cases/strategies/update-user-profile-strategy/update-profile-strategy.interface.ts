@@ -1,7 +1,7 @@
-import { DomainError } from '@core/domain/errors/domain-error'
-import { ResultPattern } from '@core/logic/result-pattern'
 import { User } from '@prisma/client'
+import { Result } from '@core/logic/result-pattern'
+import { DomainError } from '@core/domain/errors/domain-error'
 
-export interface UpdateRegisterProfileStrategy<T = unknown> {
-  execute(user: User, payLoad: unknown): Promise<ResultPattern<DomainError, T>>
+export interface UpdateProfileStrategy<T = unknown> {
+  execute(user: User, payload: unknown): Promise<Result<T, DomainError>>
 }

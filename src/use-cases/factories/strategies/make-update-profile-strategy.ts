@@ -1,11 +1,11 @@
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { UserRole } from '@prisma/client'
-import { PrismaSupervisorDoctorRepository } from '@repositories/prisma/prisma-supervisor-doctor'
 import { UserWithNoRoleError } from '@use-cases/errors/users/user-with-no-role-error'
-import { UpdateRegisterProfileStrategy } from '@use-cases/strategies/update-user-profile-strategy/update-profile-strategy.interface'
+import { UpdateProfileStrategy } from '@use-cases/strategies/update-user-profile-strategy/update-profile-strategy.interface'
 import { UpdateSupervisorDoctorStrategy } from '@use-cases/strategies/update-user-profile-strategy/update-supervisor-doctor-strategy'
+import { makeUpdateSupervisorDoctorStrategy } from './make-update-supervisor-doctor-strategy'
 
-const strategies: Record<UserRole, (dbContext: DatabaseContext) => UpdateRegisterProfileStrategy> = {
+const strategies: Record<UserRole, (dbContext: DatabaseContext) => UpdateProfileStrategy> = {
   [UserRole.PATIENT]: () => {
     throw new Error('UpdatePatientStrategy not implemented')
   },
@@ -16,8 +16,13 @@ const strategies: Record<UserRole, (dbContext: DatabaseContext) => UpdateRegiste
   },
 
   [UserRole.SUPERVISOR_DOCTOR]: (dbContext) => {
-    const supervisorDoctorRepository = new PrismaSupervisorDoctorRepository(dbContext)
-    return new UpdateSupervisorDoctorStrategy(supervisorDoctorRepository)
+    const {
+      supervisorDoctorRepository, 
+      validator, 
+      errorMapper, 
+    } = makeUpdateSupervisorDoctorStrategy(dbContext)
+
+    return new UpdateSupervisorDoctorStrategy(supervisorDoctorRepository, validator, errorMapper)
   },
 
   [UserRole.ADMIN]: () => {
@@ -25,8 +30,7 @@ const strategies: Record<UserRole, (dbContext: DatabaseContext) => UpdateRegiste
   },
 }
 
-export function makeUpdateProfileStrategy(role: UserRole): UpdateRegisterProfileStrategy {
-  const dbContext = new DatabaseContext()
+export function makeUpdateProfileStrategy(role: UserRole, dbContext: DatabaseContext): UpdateProfileStrategy {
 
   const strategyFactory = strategies[role]
 
