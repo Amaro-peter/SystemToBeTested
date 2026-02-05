@@ -1,10 +1,10 @@
-import { SupervisorDoctor, User } from '@prisma/client'
-import { err, type Result } from '@core/logic/result-pattern'
-import { SupervisorDoctorRepository } from '@repositories/supervisor-doctor-respository'
-import { IValidator } from '@core/domain/validation/validator.interface'
 import { IErrorMapper } from '@core/domain/errors/error-mappers/error-mapper.interface'
-import { UpdateProfileStrategy } from './update-profile-strategy.interface'
+import { IValidator } from '@core/domain/validation/validator.interface'
+import { err, type Result } from '@core/logic/result-pattern'
+import { SupervisorDoctor, User } from '@prisma/client'
+import { SupervisorDoctorRepository } from '@repositories/supervisor-doctor-respository'
 import { handleRepositoryCall } from '@use-cases/common/handle-repository-call'
+import { UpdateProfileStrategy } from './update-profile-strategy.interface'
 
 type SupervisorDoctorStrategyResponse = {
   supervisorDoctor: SupervisorDoctor

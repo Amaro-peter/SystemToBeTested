@@ -1,7 +1,6 @@
-import z from "zod";
-import { IValidator } from "./validator.interface";
-import { err, ok, Result } from "@core/logic/result-pattern";
-
+import { err, ok, Result } from '@core/logic/result-pattern'
+import z from 'zod'
+import { IValidator } from './validator.interface'
 
 export class ZodValidator<T> implements IValidator<T> {
   constructor(private schema: z.ZodType<T>) {}

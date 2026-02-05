@@ -1,4 +1,4 @@
-import { DomainError } from "./domain-error"
+import { DomainError } from './domain-error'
 
 // 404 - Not Found
 export abstract class DomainNotFoundError extends DomainError {

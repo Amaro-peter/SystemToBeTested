@@ -1,5 +1,5 @@
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
-import { Prisma, User } from '@prisma/client'
+import { Prisma } from '@prisma/client'
 import { UserRepository } from '@repositories/users-repository'
 
 export class PrismaUsersRepository implements UserRepository {

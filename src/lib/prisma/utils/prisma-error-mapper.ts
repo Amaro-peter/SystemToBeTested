@@ -1,6 +1,6 @@
-import { Prisma } from '@prisma/client'
 import { DomainError } from '@core/domain/errors/domain-error'
 import { IErrorMapper } from '@core/domain/errors/error-mappers/error-mapper.interface'
+import { Prisma } from '@prisma/client'
 
 export interface PrismaErrorMapping {
   P2000?: () => DomainError // Value too long for column

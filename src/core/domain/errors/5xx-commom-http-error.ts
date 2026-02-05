@@ -1,4 +1,4 @@
-import { DomainError } from "./domain-error"
+import { DomainError } from './domain-error'
 
 // 502 - Bad Gateway (Upstream failure)
 export abstract class DomainBadGatewayError extends DomainError {
