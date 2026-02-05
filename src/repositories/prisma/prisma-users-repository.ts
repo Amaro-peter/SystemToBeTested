@@ -1,5 +1,5 @@
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
-import { Prisma } from '@prisma/client'
+import { Prisma, User } from '@prisma/client'
 import { UserRepository } from '@repositories/users-repository'
 
 export class PrismaUsersRepository implements UserRepository {
@@ -36,10 +36,15 @@ export class PrismaUsersRepository implements UserRepository {
     })
   }
 
-  async delete(id: number) {
-    return await this.dbContext.client.user.delete({
+  async deactivateUser(id: number) {
+    return await this.dbContext.client.user.update({
       where: {
         id,
+        isActive: true,
+      },
+      data: {
+        isActive: false,
+        deletedAt: new Date(),
       },
     })
   }

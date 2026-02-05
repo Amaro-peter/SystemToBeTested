@@ -28,4 +28,19 @@ export class PrismaSupervisorDoctorRepository implements SupervisorDoctorReposit
     })
     return updated
   }
+
+  async deactivateSupervisorDoctor(userId: number) {
+    const deactivatedSupervisorDoctor = await this.dbContext.client.supervisorDoctor.update({
+      where: {
+        userId: userId,
+        isActive: true,
+      },
+      data: {
+        isActive: false,
+        deletedAt: new Date(),
+      },
+    })
+
+    return deactivatedSupervisorDoctor
+  }
 }

@@ -11,5 +11,5 @@ export interface UserRepository {
   findByEmailOrCpf(email: string, cpf: string): Promise<User | null>
   list(): Promise<User[]>
   update(publicId: string, data: Prisma.UserUpdateInput): Promise<User>
-  delete(id: number): Promise<User>
+  deactivateUser(id: number): Promise<User>
 }

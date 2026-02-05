@@ -2,6 +2,7 @@ export const messages = {
   validation: {
     invalidData: 'Dados de registro inválidos!',
     userAlreadyExists: 'Já existe um usuário cadastrado com este CPF ou E-mail',
+    userAlreadyDeactivated: 'Este usuário está desativado',
     superVisorDoctorAlreadyExists: 'Já existe um usuário Supervisor Médico cadastrado com este CRM',
     invalidCpf: 'CPF inválido!',
     invalidCRM: 'CRM inválido! Verifique o valor informado.',
@@ -20,6 +21,7 @@ export const messages = {
     internalServer: 'Erro interno do servidor!',
     invalidCredentials: 'Credenciais inválidas!',
     resourceNotFound: 'Recurso não encontrado!',
+    supervisorDoctorNotFound: 'Usuário Supervisor Médico não encontrado!',
     forbidden: 'Acesso negado!',
     unauthorized: 'Não autorizado!',
     invalidToken: 'Token inválido ou expirado!',

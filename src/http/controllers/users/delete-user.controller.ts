@@ -1,47 +1,24 @@
-import { publicIdSchema } from '@http/schemas/utils/public-id-schema'
+import { deleteSchema } from '@http/schemas/users/delete-schema'
+import { HttpErrorMapper } from '@http/utils/http-error-mapper'
 import { logger } from '@lib/logger'
-import { ResourceNotFoundError } from '@use-cases/errors/resource-not-found-error'
 import { makeDeleteUserUseCase } from '@use-cases/factories/make-delete-user-use-case'
 import type { FastifyReply, FastifyRequest } from 'fastify'
 
 export async function deleteUser(request: FastifyRequest, reply: FastifyReply) {
-  try {
-    const deleteUserUseCase = makeDeleteUserUseCase()
+  const { role } = deleteSchema.parse(request.body)
 
-    await deleteUserUseCase.execute({
-      publicId: request.user.sub,
-    })
+  const deleteUserUseCase = makeDeleteUserUseCase()
 
-    logger.info('User deleted successfully!')
+  const result = await deleteUserUseCase.execute({
+    publicId: request.user.sub,
+    role,
+  })
 
-    return reply.status(204).send()
-  } catch (error) {
-    if (error instanceof ResourceNotFoundError) {
-      return reply.status(404).send({ message: error.message })
-    }
-
-    throw error
+  if (!result.success) {
+    return HttpErrorMapper.map(result.error, reply)
   }
-}
 
-export async function deleteUserByPublicId(request: FastifyRequest, reply: FastifyReply) {
-  try {
-    const { publicId } = publicIdSchema.parse(request.params)
+  logger.info('User deactivated successfully!')
 
-    const deleteUserUseCase = makeDeleteUserUseCase()
-
-    await deleteUserUseCase.execute({
-      publicId,
-    })
-
-    logger.info({ targetId: publicId }, 'User deleted successfully!')
-
-    return reply.status(204).send()
-  } catch (error) {
-    if (error instanceof ResourceNotFoundError) {
-      return reply.status(404).send({ message: error.message })
-    }
-
-    throw error
-  }
+  return reply.status(204).send()
 }

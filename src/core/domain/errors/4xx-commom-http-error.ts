@@ -13,3 +13,10 @@ export abstract class DomainConflictError extends DomainError {
     super(message, 409)
   }
 }
+
+// 422 - Unprocessable Entity
+export abstract class DomainUnprocessableEntityError extends DomainError {
+  constructor(message: string) {
+    super(message, 422)
+  }
+}

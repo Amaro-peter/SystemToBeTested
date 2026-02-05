@@ -1,10 +1,10 @@
 import { SupervisorDoctor, User } from '@prisma/client'
-import { err, ok, type Result } from '@core/logic/result-pattern'
+import { err, type Result } from '@core/logic/result-pattern'
 import { SupervisorDoctorRepository } from '@repositories/supervisor-doctor-respository'
-import { DomainError } from '@core/domain/errors/domain-error'
 import { IValidator } from '@core/domain/validation/validator.interface'
 import { IErrorMapper } from '@core/domain/errors/error-mappers/error-mapper.interface'
 import { UpdateProfileStrategy } from './update-profile-strategy.interface'
+import { handleRepositoryCall } from '@use-cases/common/handle-repository-call'
 
 type SupervisorDoctorStrategyResponse = {
   supervisorDoctor: SupervisorDoctor
@@ -21,31 +21,23 @@ export class UpdateSupervisorDoctorStrategy implements UpdateProfileStrategy<Sup
     private errorMapper: IErrorMapper,
   ) {}
 
-  async execute(updatedUser: User, payload: unknown): Promise<Result<SupervisorDoctorStrategyResponse, DomainError>> {
+  async execute(updatedUser: User, payload: unknown): Promise<Result<SupervisorDoctorStrategyResponse, Error>> {
     const validationResult = this.validator.validate(payload)
 
     if (!validationResult.success) {
-      throw validationResult.error
+      return err(validationResult.error)
     }
 
     const specificData = validationResult.value
 
-    try {
+    return await handleRepositoryCall(this.errorMapper, async () => {
       const supervisorDoctor = await this.supervisorDoctorRepository.update(updatedUser.id, {
         crm: specificData.crm,
       })
 
-      return ok({
+      return {
         supervisorDoctor,
-      })
-    } catch (error) {
-      const domainError = this.errorMapper.mapToDomainError(error)
-
-      if (domainError instanceof DomainError) {
-        return err(domainError)
       }
-
-      throw error
-    }
+    })
   }
 }

@@ -3,7 +3,8 @@ import { UserRole } from '@prisma/client'
 import { UserWithNoRoleError } from '@use-cases/errors/users/user-with-no-role-error'
 import { UpdateProfileStrategy } from '@use-cases/strategies/update-user-profile-strategy/update-profile-strategy.interface'
 import { UpdateSupervisorDoctorStrategy } from '@use-cases/strategies/update-user-profile-strategy/update-supervisor-doctor-strategy'
-import { makeUpdateSupervisorDoctorStrategy } from './make-update-supervisor-doctor-strategy'
+import { makeUpdateSupervisorDoctorStrategy } from '../supervisor-doctor/make-update-supervisor-doctor-strategy'
+import { err, ok, Result } from '@core/logic/result-pattern'
 
 const strategies: Record<UserRole, (dbContext: DatabaseContext) => UpdateProfileStrategy> = {
   [UserRole.PATIENT]: () => {
@@ -16,11 +17,7 @@ const strategies: Record<UserRole, (dbContext: DatabaseContext) => UpdateProfile
   },
 
   [UserRole.SUPERVISOR_DOCTOR]: (dbContext) => {
-    const {
-      supervisorDoctorRepository, 
-      validator, 
-      errorMapper, 
-    } = makeUpdateSupervisorDoctorStrategy(dbContext)
+    const { supervisorDoctorRepository, validator, errorMapper } = makeUpdateSupervisorDoctorStrategy(dbContext)
 
     return new UpdateSupervisorDoctorStrategy(supervisorDoctorRepository, validator, errorMapper)
   },
@@ -30,13 +27,20 @@ const strategies: Record<UserRole, (dbContext: DatabaseContext) => UpdateProfile
   },
 }
 
-export function makeUpdateProfileStrategy(role: UserRole, dbContext: DatabaseContext): UpdateProfileStrategy {
-
+export function makeUpdateProfileStrategy(
+  role: UserRole,
+  dbContext: DatabaseContext,
+): Result<UpdateProfileStrategy, Error> {
   const strategyFactory = strategies[role]
 
   if (!strategyFactory) {
-    throw new UserWithNoRoleError()
+    return err(new UserWithNoRoleError())
   }
 
-  return strategyFactory(dbContext)
+  try {
+    const strategy = strategyFactory(dbContext)
+    return ok(strategy)
+  } catch (error) {
+    return err(error)
+  }
 }

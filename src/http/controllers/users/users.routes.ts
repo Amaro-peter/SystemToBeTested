@@ -4,7 +4,7 @@ import { verifyUserRole } from '@middlewares/verify-user-role.middleware'
 import { UserRole } from '@prisma/client'
 import { FastifyInstance } from 'fastify'
 import { authenticateUser } from './authenticate-user.controller'
-import { deleteUser, deleteUserByPublicId } from './delete-user.controller'
+import { deleteUser } from './delete-user.controller'
 import { forgotPassword } from './forgot-password.controller'
 import { getUserByPublicId, getUserProfile } from './get-user-profile.controller'
 import { listUsers } from './list-users.controller'
@@ -34,7 +34,6 @@ export async function usersRoutes(app: FastifyInstance) {
   app.delete('/me', { onRequest: [verifyJwt] }, deleteUser)
 
   // Users administration routes:
-  app.delete('/:publicId', { onRequest: [verifyJwt, verifyUserRole([UserRole.ADMIN])] }, deleteUserByPublicId)
   app.get('/:publicId', { onRequest: [verifyJwt, verifyUserRole([UserRole.ADMIN])] }, getUserByPublicId)
   app.get('/', { onRequest: [verifyJwt, verifyUserRole([UserRole.ADMIN])] }, listUsers)
 }

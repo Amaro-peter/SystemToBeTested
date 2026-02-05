@@ -7,6 +7,7 @@ type HTTPUser = {
   cpf: string
   role: UserRole
   phoneNumber: string
+  isActive: boolean
   createdAt: Date
   updatedAt: Date
 }
@@ -25,6 +26,7 @@ export class UserPresenter {
       email: input.email,
       cpf: input.cpf,
       phoneNumber: input.phoneNumber,
+      isActive: input.isActive,
       role: input.role,
       createdAt: input.createdAt,
       updatedAt: input.updatedAt,
