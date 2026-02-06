@@ -1,4 +1,4 @@
-import { UserPresenter } from '@http/presenters/user-presenter'
+import { UserPresenter } from '@http/presenters/users/user-presenter'
 import { logger } from '@lib/logger'
 import { makeListUsersUseCase } from '@use-cases/factories/make-list-users-use-case'
 import type { FastifyReply, FastifyRequest } from 'fastify'

@@ -1,4 +1,4 @@
-import { UserPresenter } from '@http/presenters/user-presenter'
+import { UserPresenter } from '@http/presenters/users/user-presenter'
 import { publicIdSchema } from '@http/schemas/utils/public-id-schema'
 import { logger } from '@lib/logger'
 import { ResourceNotFoundError } from '@use-cases/errors/resource-not-found-error'

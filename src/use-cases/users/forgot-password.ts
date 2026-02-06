@@ -2,7 +2,7 @@ import { randomBytes } from 'crypto'
 import { emailSchema } from '@http/schemas/utils/email'
 import { User } from '@prisma/client'
 import { UserRepository } from '@repositories/users-repository'
-import { UserNotFoundForPasswordResetError } from '@use-cases/errors/user-not-found-for-password-reset-error'
+import { UserNotFoundForPasswordResetError } from '@use-cases/errors/users/user-not-found-for-password-reset-error'
 
 interface ForgotPasswordUseCaseRequest {
   login: string
@@ -24,8 +24,6 @@ export class ForgotPasswordUseCase {
 
     if (emailSchema.safeParse(login).success) {
       userExists = await this.usersRepository.findBy({ email: login })
-    } else {
-      userExists = await this.usersRepository.findBy({ username: login })
     }
 
     const passwordToken = randomBytes(TOKEN_LENGTH).toString('hex')

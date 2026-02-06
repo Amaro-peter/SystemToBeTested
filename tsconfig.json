@@ -11,6 +11,7 @@
     "outDir": "./dist",
     "baseUrl": "./src",
     "paths": {
+      "@core/*": ["core/*"],
       "@env/*": ["env/*"],
       "@lib/*": ["lib/*"],
       "@controllers/*": ["http/controllers/*"],
@@ -24,6 +25,7 @@
       "@utils/*": ["utils/*"],
       "@templates/*": ["templates/*"],
       "@schemas/*": ["http/schemas/*"],
+
     },
     "typeRoots": ["./node_modules/@types", "./src/types"],
   },
