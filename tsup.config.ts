@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-console */
 import { defineConfig } from 'tsup'
 import type { Options as TsupOptions } from 'tsup'
 

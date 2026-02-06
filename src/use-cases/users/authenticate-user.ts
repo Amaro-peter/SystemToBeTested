@@ -1,5 +1,6 @@
 import { emailSchema } from '@http/schemas/utils/email'
 import { User } from '@prisma/client'
+import { PrismaAuthenticationAuditsRepository } from '@repositories/prisma/prisma-authentication-audits-repository'
 import { UserRepository } from '@repositories/users-repository'
 import { InvalidCredentialsError } from '@use-cases/errors/invalid-credentials-error'
 import { compare } from 'bcryptjs'
@@ -16,7 +17,10 @@ type AuthenticateUserUseCaseResponse = {
 const DUMMY_HASH = '$2a$12$tlPzU0pvKy33GEnCkOCipeNJC1Ho4NHro4XwveiXUM5xChZj3ua9y'
 
 export class AuthenticateUserUseCase {
-  constructor(private usersRepository: UserRepository) {}
+  constructor(
+    private usersRepository: UserRepository,
+    private authenticationAuditsRepository: PrismaAuthenticationAuditsRepository,
+  ) {}
 
   async execute({ login, password }: AuthenticateUserUseCaseRequest): Promise<AuthenticateUserUseCaseResponse> {
     let user: User | null = null
@@ -31,7 +35,25 @@ export class AuthenticateUserUseCase {
 
     const doesPasswordMatch = await compare(password, hashToCompare)
 
-    if (!user || !doesPasswordMatch) throw new InvalidCredentialsError()
+    if (!user) {
+      await this.authenticationAuditsRepository.create({
+        status: 'USER_NOT_EXISTS',
+      })
+      throw new InvalidCredentialsError()
+    } else if (!doesPasswordMatch) {
+      await this.authenticationAuditsRepository.create({
+        //userId: user.id,  - não sei se é necessário
+        status: 'INCORRECT_PASSWORD',
+      })
+      throw new InvalidCredentialsError()
+    }
+
+    await this.authenticationAuditsRepository.create({
+      userId: user.id,
+      status: 'SUCCESS',
+    })
+
+    //if (!user || !doesPasswordMatch) throw new InvalidCredentialsError()
 
     return { user }
   }
