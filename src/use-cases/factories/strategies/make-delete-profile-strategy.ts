@@ -1,8 +1,8 @@
 import { err, ok, Result } from '@core/logic/result-pattern'
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { UserRole } from '@prisma/client'
+import { DeleteProfileStrategy } from '@tps/use-case/users/delete-profile-strategy.interface'
 import { UserWithNoRoleError } from '@use-cases/errors/users/user-with-no-role-error'
-import { DeleteProfileStrategy } from '@use-cases/strategies/delete-user-profile-strategy/delete-profile-strategy.interface'
 import { DeleteSupervisorDoctorStrategy } from '@use-cases/strategies/delete-user-profile-strategy/delete-supervisor-doctor-strategy'
 import { makeDeleteSupervisorDoctorStrategy } from '../supervisor-doctor/make-delete-supervisor-doctor-strategy'
 

@@ -3,7 +3,7 @@ import { logger } from '@lib/logger'
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { User } from '@prisma/client'
 import { z } from 'zod'
-import { RegisterProfileStrategy } from './register-profile-strategy.interface'
+import { RegisterProfileStrategy } from '../../../@types/use-case/users/register-profile-strategy.interface'
 
 export interface HealthProfessionalProfileData {
   cref: string

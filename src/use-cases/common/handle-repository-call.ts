@@ -1,6 +1,6 @@
 // handle-repository-call.ts
-import { IErrorMapper } from '@core/domain/errors/error-mappers/error-mapper.interface'
 import { err, ok, Result } from '@core/logic/result-pattern'
+import { IErrorMapper } from '@tps/error-interfaces/error-mapper.interface'
 
 export async function handleRepositoryCall<T>(
   errorMapper: IErrorMapper,
@@ -10,7 +10,7 @@ export async function handleRepositoryCall<T>(
     const value = await operation()
     return ok(value)
   } catch (error) {
-    const mappedError = errorMapper.mapToDomainError(error)
+    const mappedError = errorMapper.mapToKnownError(error)
     return err(mappedError)
   }
 }

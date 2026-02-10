@@ -1,7 +1,6 @@
 import { messages } from '@constants/messages'
-import { DomainNotFoundError } from '@core/domain/errors/4xx-commom-http-error'
 
-export class ResourceNotFoundError extends DomainNotFoundError {
+export class ResourceNotFoundError extends Error {
   constructor() {
     super(messages.errors.resourceNotFound)
   }

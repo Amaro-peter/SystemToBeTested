@@ -1,7 +1,7 @@
+import { HttpErrorMapper } from '@http/errors/http-error-mapper'
 import { UserPresenter } from '@http/presenters/users/user-presenter'
 import { UserProfilePresenterStrategy } from '@http/presenters/users/user-profile-presenter-strategy'
 import { updateSchema } from '@http/schemas/users/update-schema'
-import { HttpErrorMapper } from '@http/utils/http-error-mapper'
 import { logger } from '@lib/logger'
 import { makeUpdateUserUseCase } from '@use-cases/factories/make-update-user-use-case'
 import type { FastifyReply, FastifyRequest } from 'fastify'

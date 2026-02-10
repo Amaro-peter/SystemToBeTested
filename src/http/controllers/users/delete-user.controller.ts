@@ -1,5 +1,5 @@
+import { HttpErrorMapper } from '@http/errors/http-error-mapper'
 import { deleteSchema } from '@http/schemas/users/delete-schema'
-import { HttpErrorMapper } from '@http/utils/http-error-mapper'
 import { logger } from '@lib/logger'
 import { makeDeleteUserUseCase } from '@use-cases/factories/make-delete-user-use-case'
 import type { FastifyReply, FastifyRequest } from 'fastify'

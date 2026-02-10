@@ -1,7 +1,7 @@
 import { Result } from '@core/logic/result-pattern'
 import { UserRole } from '@prisma/client'
-import { DeleteProfileStrategy } from '@use-cases/strategies/delete-user-profile-strategy/delete-profile-strategy.interface'
+import { DeleteProfileStrategy } from '@tps/use-case/users/delete-profile-strategy.interface'
 
-export interface DeleteProfileStrategyResolver {
+export interface IDeleteProfileStrategyResolver {
   resolve(role: UserRole): Result<DeleteProfileStrategy, Error>
 }

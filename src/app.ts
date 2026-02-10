@@ -5,6 +5,7 @@ import fastifyJwt from '@fastify/jwt'
 import { asyncContext } from '@http/plugins/async-context.plugin'
 import { appRoutes } from '@http/routes'
 import { asyncLocalStorage } from '@lib/async-local-storage'
+import { ValidationError } from '@lib/errors/validation-errors/validation-error'
 import { logger, runWithRequestId, runWithUserContext } from '@lib/logger'
 import { logError } from '@lib/logger/helpers'
 import * as Sentry from '@sentry/node'
@@ -97,10 +98,17 @@ app.register(fastifyJwt, {
 app.register(appRoutes)
 
 app.setErrorHandler((error, _request, reply) => {
-  if (error instanceof ZodError) {
-    logger.debug(z.treeifyError(error), 'Validation error occurred')
+  if (error instanceof ValidationError) {
+    logger.debug(error.body, 'Validation error occurred')
 
-    return reply.status(400).send({ message: messages.validation.invalidData, details: z.treeifyError(error) })
+    return reply.status(error.statusCode).send(error.body)
+  }
+
+  if (error instanceof ZodError) {
+    const validationError = new ValidationError(error)
+    logger.debug(validationError.body, 'Validation error occurred')
+
+    return reply.status(validationError.statusCode).send(validationError.body)
   }
 
   if (error instanceof SyntaxError) {

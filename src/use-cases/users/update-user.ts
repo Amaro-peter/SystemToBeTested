@@ -1,13 +1,13 @@
-import { IErrorMapper } from '@core/domain/errors/error-mappers/error-mapper.interface'
 import { Result } from '@core/logic/result-pattern'
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { User, UserRole } from '@prisma/client'
 import { UserRepository } from '@repositories/users-repository'
+import { IErrorMapper } from '@tps/error-interfaces/error-mapper.interface'
 import { handleRepositoryCall } from '@use-cases/common/handle-repository-call'
-import { ResourceNotFoundError } from '@use-cases/errors/resource-not-found-error'
 import { UserAlreadyDeactivatedError } from '@use-cases/errors/users/user-already-deactivated-error'
 import { UserAlreadyExistsError } from '@use-cases/errors/users/user-already-exists-error'
-import { UpdateProfileStrategyResolver } from '@use-cases/resolvers/update-profile-strategy-resolver.interface'
+import { UserNotFoundError } from '@use-cases/errors/users/user-not-found-error'
+import { IUpdateProfileStrategyResolver } from '@use-cases/resolvers/update-profile-strategy-resolver.interface'
 
 interface UpdateUserUseCaseRequest {
   publicId: string
@@ -32,7 +32,7 @@ export class UpdateUserUseCase {
     private usersRepository: UserRepository,
     private dbContext: DatabaseContext,
     private userErrorMapper: IErrorMapper,
-    private updateProfileStrategyResolver: UpdateProfileStrategyResolver,
+    private updateProfileStrategyResolver: IUpdateProfileStrategyResolver,
   ) {}
 
   async execute(request: UpdateUserUseCaseRequest): Promise<UpdateUserUseCaseResponse> {
@@ -70,7 +70,7 @@ export class UpdateUserUseCase {
     const user = await this.usersRepository.findBy({ publicId })
 
     if (!user) {
-      throw new ResourceNotFoundError()
+      throw new UserNotFoundError()
     }
 
     if (!user.isActive) {
@@ -108,7 +108,7 @@ export class UpdateUserUseCase {
     const updatedUser = await this.usersRepository.update(publicId, data)
 
     if (!updatedUser) {
-      throw new ResourceNotFoundError()
+      throw new UserNotFoundError()
     }
 
     return updatedUser

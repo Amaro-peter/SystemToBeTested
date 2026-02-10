@@ -1,7 +1,7 @@
 import { Result } from '@core/logic/result-pattern'
 import { UserRole } from '@prisma/client'
-import { UpdateProfileStrategy } from '@use-cases/strategies/update-user-profile-strategy/update-profile-strategy.interface'
+import { UpdateProfileStrategy } from '@tps/use-case/users/update-profile-strategy.interface'
 
-export interface UpdateProfileStrategyResolver {
+export interface IUpdateProfileStrategyResolver {
   resolve(role: UserRole): Result<UpdateProfileStrategy, Error>
 }

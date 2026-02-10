@@ -8,17 +8,16 @@ export function ensureError(value: unknown): Error {
   }
 
   if (typeof value === 'object' && value !== null) {
-    // Duck-type error-like objects
-    if ('message' in value && typeof value.message === 'string') {
-      const error = new Error(value.message)
-      // Preserve stack if available
-      if ('stack' in value && typeof value.stack === 'string') {
-        error.stack = value.stack
-      }
-      return error
-    }
+    const raw = value as Record<string, unknown>
+
+    const message = typeof raw.message === 'string' ? raw.message : JSON.stringify(raw)
+
+    const error = new Error(message)
+
+    Object.assign(error, raw)
+
+    return error
   }
 
-  // Fallback for everything else (numbers, null, undefined, symbols, etc.)
   return new Error(String(value))
 }

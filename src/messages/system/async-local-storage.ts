@@ -1,6 +1,6 @@
-import { ISystemResponse } from '@tps/responses/system-response'
+import { IErrorDetail } from '@tps/error-interfaces/error-detail.interface'
 
-export const ASYNC_LOCAL_STORAGE_NOT_INITIALIZED_ERROR: ISystemResponse = {
-  code: 'ASYNC_LOCAL_STORAGE_NOT_INITIALIZED_ERROR',
-  message: 'Erro ao iniciar o local storage da requisição',
+export const ASYNC_LOCAL_STORAGE_NOT_INITIALIZED_ERROR: IErrorDetail = {
+  message: 'Async Local Storage is not initialized.',
+  code: 'ASYNC_LOCAL_STORAGE_NOT_INITIALIZED',
 }

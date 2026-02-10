@@ -1,8 +1,8 @@
-import { messages } from '@constants/messages'
-import { DomainNotFoundError } from '@core/domain/errors/4xx-commom-http-error'
+import { HTTPDomainError } from '@http/errors/http-domain-error'
+import { USER_COULD_NOT_BE_UPDATED_ERROR } from 'messages/responses/user-responses.ts/user-api-responses'
 
-export class UserCouldNotBeUpdatedError extends DomainNotFoundError {
+export class UserCouldNotBeUpdatedError extends HTTPDomainError {
   constructor() {
-    super(messages.errors.userCouldNotBeUpdated)
+    super(USER_COULD_NOT_BE_UPDATED_ERROR, 422)
   }
 }

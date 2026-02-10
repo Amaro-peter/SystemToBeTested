@@ -1,8 +1,8 @@
-import { messages } from '@constants/messages'
-import { DomainUnprocessableEntityError } from '@core/domain/errors/4xx-commom-http-error'
+import { HTTPDomainError } from '@http/errors/http-domain-error'
+import { SUPERVISOR_DOCTOR_COULD_NOT_BE_UPDATED_ERROR } from 'messages/responses/supervisor-doctor-responses.ts/supervisor-doctor-api-responses'
 
-export class SupervisorDoctorCouldNotBeUpdatedError extends DomainUnprocessableEntityError {
+export class SupervisorDoctorCouldNotBeUpdatedError extends HTTPDomainError {
   constructor() {
-    super(messages.errors.supervisorDoctorCouldNotBeUpdated)
+    super(SUPERVISOR_DOCTOR_COULD_NOT_BE_UPDATED_ERROR, 422)
   }
 }

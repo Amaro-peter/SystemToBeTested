@@ -1,8 +1,8 @@
-import { messages } from '@constants/messages'
-import { DomainError } from '@core/domain/errors/domain-error'
+import { HTTPDomainError } from '@http/errors/http-domain-error'
+import { SUPERVISOR_DOCTOR_COULD_NOT_BE_CREATED_ERROR } from 'messages/responses/supervisor-doctor-responses.ts/supervisor-doctor-api-responses'
 
-export class SupervisorDoctorCouldNotBeCreatedError extends DomainError {
+export class SupervisorDoctorCouldNotBeCreatedError extends HTTPDomainError {
   constructor() {
-    super(messages.errors.supervisorDoctorCouldNotBeCreated)
+    super(SUPERVISOR_DOCTOR_COULD_NOT_BE_CREATED_ERROR, 400)
   }
 }

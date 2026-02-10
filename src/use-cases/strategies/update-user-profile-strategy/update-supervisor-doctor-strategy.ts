@@ -1,10 +1,10 @@
-import { IErrorMapper } from '@core/domain/errors/error-mappers/error-mapper.interface'
-import { IValidator } from '@core/domain/validation/validator.interface'
 import { err, type Result } from '@core/logic/result-pattern'
 import { SupervisorDoctor, User } from '@prisma/client'
 import { SupervisorDoctorRepository } from '@repositories/supervisor-doctor-respository'
+import { IErrorMapper } from '@tps/error-interfaces/error-mapper.interface'
+import { IValidator } from '@tps/validation/validator.interface'
 import { handleRepositoryCall } from '@use-cases/common/handle-repository-call'
-import { UpdateProfileStrategy } from './update-profile-strategy.interface'
+import { UpdateProfileStrategy } from '../../../@types/use-case/users/update-profile-strategy.interface'
 
 type SupervisorDoctorStrategyResponse = {
   supervisorDoctor: SupervisorDoctor

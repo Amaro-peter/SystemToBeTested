@@ -1,6 +1,6 @@
 import { asyncLocalStorage } from '@lib/async-local-storage'
+import { AsyncLocalStorageNotInitializedError } from '@lib/errors/async-local-storage/async-local-storage-not-initialized-error'
 import { Prisma, PrismaClient } from '@prisma/client'
-import { AsyncLocalStorageNotInitializedError } from '@services/errors/async-local-storage-not-initialized-error'
 import { PrismaTransactionClient } from '@tps/prisma/prisma-transaction-client'
 import { prisma as defaultPrisma } from '..'
 

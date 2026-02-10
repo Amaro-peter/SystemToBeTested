@@ -1,8 +1,8 @@
-import { messages } from '@constants/messages'
-import { DomainConflictError } from '@core/domain/errors/4xx-commom-http-error'
+import { HTTPDomainError } from '@http/errors/http-domain-error'
+import { SUPERVISOR_DOCTOR_ALREADY_EXISTS_ERROR } from 'messages/responses/supervisor-doctor-responses.ts/supervisor-doctor-api-responses'
 
-export class SupervisorDoctorAlreadyExistsError extends DomainConflictError {
+export class SupervisorDoctorAlreadyExistsError extends HTTPDomainError {
   constructor() {
-    super(messages.validation.superVisorDoctorAlreadyExists)
+    super(SUPERVISOR_DOCTOR_ALREADY_EXISTS_ERROR, 409)
   }
 }

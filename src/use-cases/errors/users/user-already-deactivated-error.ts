@@ -1,8 +1,8 @@
-import { messages } from '@constants/messages'
-import { DomainConflictError } from '@core/domain/errors/4xx-commom-http-error'
+import { HTTPDomainError } from '@http/errors/http-domain-error'
+import { USER_IS_DEACTIVATED } from 'messages/responses/user-responses.ts/user-api-responses'
 
-export class UserAlreadyDeactivatedError extends DomainConflictError {
+export class UserAlreadyDeactivatedError extends HTTPDomainError {
   constructor() {
-    super(messages.validation.userAlreadyDeactivated)
+    super(USER_IS_DEACTIVATED, 409)
   }
 }

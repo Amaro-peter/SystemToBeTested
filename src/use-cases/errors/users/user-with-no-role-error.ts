@@ -1,7 +1,8 @@
-import { messages } from '@constants/messages'
+import { HTTPSystemError } from '@http/errors/http-system-error'
+import { USER_WITH_NO_ROLE_ERROR } from 'messages/responses/user-responses.ts/user-system-responses'
 
-export class UserWithNoRoleError extends Error {
+export class UserWithNoRoleError extends HTTPSystemError {
   constructor() {
-    super(messages.validation.invalidRole)
+    super(USER_WITH_NO_ROLE_ERROR, 500)
   }
 }

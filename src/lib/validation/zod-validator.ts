@@ -1,6 +1,7 @@
 import { err, ok, Result } from '@core/logic/result-pattern'
+import { ValidationError } from '@lib/errors/validation-errors/validation-error'
 import z from 'zod'
-import { IValidator } from './validator.interface'
+import { IValidator } from '../../@types/validation/validator.interface'
 
 export class ZodValidator<T> implements IValidator<T> {
   constructor(private schema: z.ZodType<T>) {}
@@ -9,7 +10,7 @@ export class ZodValidator<T> implements IValidator<T> {
     const result = this.schema.safeParse(data)
 
     if (!result.success) {
-      return err(result.error)
+      return err(new ValidationError(result.error))
     }
 
     return ok(result.data)

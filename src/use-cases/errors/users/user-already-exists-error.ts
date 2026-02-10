@@ -1,8 +1,8 @@
-import { messages } from '@constants/messages'
-import { DomainConflictError } from '@core/domain/errors/4xx-commom-http-error'
+import { HTTPDomainError } from '@http/errors/http-domain-error'
+import { USER_ALREADY_EXISTS_ERROR } from 'messages/responses/user-responses.ts/user-api-responses'
 
-export class UserAlreadyExistsError extends DomainConflictError {
+export class UserAlreadyExistsError extends HTTPDomainError {
   constructor() {
-    super(messages.validation.userAlreadyExists)
+    super(USER_ALREADY_EXISTS_ERROR, 409)
   }
 }

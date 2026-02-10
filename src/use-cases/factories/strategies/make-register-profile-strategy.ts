@@ -1,9 +1,9 @@
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { UserRole } from '@prisma/client'
 import { PrismaSupervisorDoctorRepository } from '@repositories/prisma/prisma-supervisor-doctor'
+import { RegisterProfileStrategy } from '@tps/use-case/users/register-profile-strategy.interface'
 import { UserWithNoRoleError } from '@use-cases/errors/users/user-with-no-role-error'
 import { RegisterHealthProfessionalStrategy } from '@use-cases/strategies/register-user-profile-strategy/register-health-professional-strategy'
-import { RegisterProfileStrategy } from '@use-cases/strategies/register-user-profile-strategy/register-profile-strategy.interface'
 import { RegisterSupervisorDoctorStrategy } from '@use-cases/strategies/register-user-profile-strategy/register-supervisor-doctor-strategy'
 
 const strategies: Record<UserRole, (dbContext: DatabaseContext) => RegisterProfileStrategy> = {

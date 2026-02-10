@@ -1,8 +1,8 @@
 import { err, ok, Result } from '@core/logic/result-pattern'
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { UserRole } from '@prisma/client'
+import { UpdateProfileStrategy } from '@tps/use-case/users/update-profile-strategy.interface'
 import { UserWithNoRoleError } from '@use-cases/errors/users/user-with-no-role-error'
-import { UpdateProfileStrategy } from '@use-cases/strategies/update-user-profile-strategy/update-profile-strategy.interface'
 import { UpdateSupervisorDoctorStrategy } from '@use-cases/strategies/update-user-profile-strategy/update-supervisor-doctor-strategy'
 import { makeUpdateSupervisorDoctorStrategy } from '../supervisor-doctor/make-update-supervisor-doctor-strategy'
 

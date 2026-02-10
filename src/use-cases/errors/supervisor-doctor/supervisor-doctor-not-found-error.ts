@@ -1,8 +1,8 @@
-import { messages } from '@constants/messages'
-import { DomainNotFoundError } from '@core/domain/errors/4xx-commom-http-error'
+import { HTTPDomainError } from '@http/errors/http-domain-error'
+import { SUPERVISOR_DOCTOR_NOT_FOUND_ERROR } from 'messages/responses/supervisor-doctor-responses.ts/supervisor-doctor-api-responses'
 
-export class SupervisorDoctorNotFoundError extends DomainNotFoundError {
+export class SupervisorDoctorNotFoundError extends HTTPDomainError {
   constructor() {
-    super(messages.errors.supervisorDoctorNotFound)
+    super(SUPERVISOR_DOCTOR_NOT_FOUND_ERROR, 404)
   }
 }

@@ -3,7 +3,6 @@ export const messages = {
     invalidData: 'Dados de registro inválidos!',
     userAlreadyExists: 'Já existe um usuário cadastrado com este CPF ou E-mail',
     userAlreadyDeactivated: 'Este usuário está desativado',
-    superVisorDoctorAlreadyExists: 'Já existe um usuário Supervisor Médico cadastrado com este CRM',
     invalidCpf: 'CPF inválido!',
     invalidCRM: 'CRM inválido! Verifique o valor informado.',
     invalidJson: 'O corpo da requisição não está em formato JSON válido. Verifique a estrutura dos dados enviados.',

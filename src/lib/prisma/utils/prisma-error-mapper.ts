@@ -1,25 +1,25 @@
-import { DomainError } from '@core/domain/errors/domain-error'
-import { IErrorMapper } from '@core/domain/errors/error-mappers/error-mapper.interface'
+import { HTTPDomainError } from '@http/errors/http-domain-error'
 import { Prisma } from '@prisma/client'
+import { IErrorMapper } from '@tps/error-interfaces/error-mapper.interface'
 
 export interface PrismaErrorMapping {
-  P2000?: () => DomainError // Value too long for column
-  P2001?: () => DomainError // Record not found in where condition
-  P2002?: () => DomainError // Unique constraint violation
-  P2003?: () => DomainError // Foreign key constraint failed
-  P2025?: () => DomainError // Record not found (update/delete)
-  P2014?: () => DomainError // Relation violation
-  P2015?: () => DomainError // Related record not found
-  P2016?: () => DomainError // Query interpretation error
-  P2021?: () => DomainError // Table does not exist
-  P2022?: () => DomainError // Column does not exist
-  [key: string]: (() => DomainError) | undefined
+  P2000?: () => HTTPDomainError // Value too long for column
+  P2001?: () => HTTPDomainError // Record not found in where condition
+  P2002?: () => HTTPDomainError // Unique constraint violation
+  P2003?: () => HTTPDomainError // Foreign key constraint failed
+  P2025?: () => HTTPDomainError // Record not found (update/delete)
+  P2014?: () => HTTPDomainError // Relation violation
+  P2015?: () => HTTPDomainError // Related record not found
+  P2016?: () => HTTPDomainError // Query interpretation error
+  P2021?: () => HTTPDomainError // Table does not exist
+  P2022?: () => HTTPDomainError // Column does not exist
+  [key: string]: (() => HTTPDomainError) | undefined
 }
 
-export class PrismaErrorMapper implements IErrorMapper {
+export class PrismaErrorMapper implements IErrorMapper<HTTPDomainError> {
   constructor(private readonly errorMapping: PrismaErrorMapping) {}
 
-  mapToDomainError(error: unknown): DomainError | unknown {
+  mapToKnownError(error: unknown): HTTPDomainError | unknown {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       const errorFactory = this.errorMapping[error.code]
       if (errorFactory) {

@@ -1,12 +1,12 @@
-import { IErrorMapper } from '@core/domain/errors/error-mappers/error-mapper.interface'
 import { Result } from '@core/logic/result-pattern'
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { User, UserRole } from '@prisma/client'
 import { UserRepository } from '@repositories/users-repository'
+import { IErrorMapper } from '@tps/error-interfaces/error-mapper.interface'
 import { handleRepositoryCall } from '@use-cases/common/handle-repository-call'
-import { ResourceNotFoundError } from '@use-cases/errors/resource-not-found-error'
 import { UserAlreadyDeactivatedError } from '@use-cases/errors/users/user-already-deactivated-error'
-import { DeleteProfileStrategyResolver } from '@use-cases/resolvers/delete-profile-strategy-resolver.interface'
+import { UserNotFoundError } from '@use-cases/errors/users/user-not-found-error'
+import { IDeleteProfileStrategyResolver } from '@use-cases/resolvers/delete-profile-strategy-resolver.interface'
 
 interface DeleteUserUseCaseRequest {
   publicId: string
@@ -26,7 +26,7 @@ export class DeleteUserUseCase {
     private usersRepository: UserRepository,
     private dbContext: DatabaseContext,
     private userErrorMapper: IErrorMapper,
-    private deleteProfileStrategyResolver: DeleteProfileStrategyResolver,
+    private deleteProfileStrategyResolver: IDeleteProfileStrategyResolver,
   ) {}
 
   async execute({ publicId, role }: DeleteUserUseCaseRequest): Promise<DeleteUserUseCaseResponse> {
@@ -53,7 +53,7 @@ export class DeleteUserUseCase {
     const user = await this.usersRepository.findBy({ publicId })
 
     if (!user) {
-      throw new ResourceNotFoundError()
+      throw new UserNotFoundError()
     }
 
     if (!user.isActive) {
@@ -67,7 +67,7 @@ export class DeleteUserUseCase {
     const deactivatedUser = await this.usersRepository.deactivateUser(user.id)
 
     if (!deactivatedUser) {
-      throw new ResourceNotFoundError()
+      throw new UserNotFoundError()
     }
 
     return deactivatedUser
