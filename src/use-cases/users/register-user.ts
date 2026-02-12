@@ -4,10 +4,11 @@ import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { User, UserRole } from '@prisma/client'
 import { UserRepository } from '@repositories/users-repository'
 import { IErrorMapper } from '@tps/error-interfaces/error-mapper.interface'
+import { IProfileStrategyResolver } from '@tps/use-case/resolvers/profile-strategy-resolve.interface'
+import { RegisterProfileStrategy } from '@tps/use-case/users/register-profile-strategy.interface'
 import { handleRepositoryCall } from '@use-cases/common/handle-repository-call'
 import { UserAlreadyExistsError } from '@use-cases/errors/users/user-already-exists-error'
 import { UserCouldNotBeCreatedError } from '@use-cases/errors/users/user-could-not-be-created-error'
-import { IRegisterProfileStrategyResolver } from '@use-cases/resolvers/register-profile-strategy-resolver.interface'
 import { hash } from 'bcryptjs'
 
 interface RegisterUserUseCaseRequest {
@@ -33,7 +34,7 @@ export class RegisterUserUseCase {
     private usersRepository: UserRepository,
     private dbContext: DatabaseContext,
     private userErrorMapper: IErrorMapper,
-    private registerProfileStrategyResolver: IRegisterProfileStrategyResolver,
+    private registerProfileStrategyResolver: IProfileStrategyResolver<RegisterProfileStrategy>,
   ) {}
 
   async execute({
@@ -82,7 +83,7 @@ export class RegisterUserUseCase {
   }
 
   private async registerUserProfileOrThrow(user: User, role: UserRole, specificData: unknown): Promise<unknown> {
-    const strategyResult = this.registerProfileStrategyResolver.resolve(role)
+    const strategyResult = await this.registerProfileStrategyResolver.resolve(role)
 
     if (!strategyResult.success) {
       throw strategyResult.error

@@ -3,11 +3,12 @@ import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { User, UserRole } from '@prisma/client'
 import { UserRepository } from '@repositories/users-repository'
 import { IErrorMapper } from '@tps/error-interfaces/error-mapper.interface'
+import { IProfileStrategyResolver } from '@tps/use-case/resolvers/profile-strategy-resolve.interface'
+import { UpdateProfileStrategy } from '@tps/use-case/users/update-profile-strategy.interface'
 import { handleRepositoryCall } from '@use-cases/common/handle-repository-call'
 import { UserAlreadyDeactivatedError } from '@use-cases/errors/users/user-already-deactivated-error'
 import { UserAlreadyExistsError } from '@use-cases/errors/users/user-already-exists-error'
 import { UserNotFoundError } from '@use-cases/errors/users/user-not-found-error'
-import { IUpdateProfileStrategyResolver } from '@use-cases/resolvers/update-profile-strategy-resolver.interface'
 
 interface UpdateUserUseCaseRequest {
   publicId: string
@@ -32,7 +33,7 @@ export class UpdateUserUseCase {
     private usersRepository: UserRepository,
     private dbContext: DatabaseContext,
     private userErrorMapper: IErrorMapper,
-    private updateProfileStrategyResolver: IUpdateProfileStrategyResolver,
+    private updateProfileStrategyResolver: IProfileStrategyResolver<UpdateProfileStrategy>,
   ) {}
 
   async execute(request: UpdateUserUseCaseRequest): Promise<UpdateUserUseCaseResponse> {
@@ -115,7 +116,7 @@ export class UpdateUserUseCase {
   }
 
   private async updateUserProfileOrThrow(updatedUser: User, role: UserRole, specificData: unknown): Promise<unknown> {
-    const strategyResult = this.updateProfileStrategyResolver.resolve(role)
+    const strategyResult = await this.updateProfileStrategyResolver.resolve(role)
 
     if (!strategyResult.success) {
       throw strategyResult.error
