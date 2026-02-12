@@ -6,7 +6,7 @@ interface RegisterBody {
   role?: UserRole
 }
 
-export async function verifyRegistrationEligibility(request: FastifyRequest, reply: FastifyReply) {
+export async function verifyEligibility(request: FastifyRequest, reply: FastifyReply) {
   const { role: targetRole } = request.body as RegisterBody
 
   // Default to PATIENT if no role is specified (common for public registration)

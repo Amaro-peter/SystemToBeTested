@@ -1,5 +1,5 @@
 import { HTTPDomainError } from '@http/errors/http-domain-error'
-import { USER_IS_DEACTIVATED } from 'messages/responses/user-responses.ts/user-api-responses'
+import { USER_IS_DEACTIVATED } from 'messages/error/user/user-error-messages'
 
 export class UserAlreadyDeactivatedError extends HTTPDomainError {
   constructor() {

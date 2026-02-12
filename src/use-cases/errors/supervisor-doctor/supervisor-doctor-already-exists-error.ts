@@ -1,5 +1,5 @@
 import { HTTPDomainError } from '@http/errors/http-domain-error'
-import { SUPERVISOR_DOCTOR_ALREADY_EXISTS_ERROR } from 'messages/responses/supervisor-doctor-responses.ts/supervisor-doctor-api-responses'
+import { SUPERVISOR_DOCTOR_ALREADY_EXISTS_ERROR } from 'messages/error/supervisor-doctor/supervisor-doctor-error-messages'
 
 export class SupervisorDoctorAlreadyExistsError extends HTTPDomainError {
   constructor() {

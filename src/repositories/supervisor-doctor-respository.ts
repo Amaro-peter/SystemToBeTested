@@ -5,7 +5,7 @@ export interface SupervisorDoctorCreateInput {
 }
 
 export interface SupervisorDoctorRepository {
-  create(publicId: string, data: SupervisorDoctorCreateInput): Promise<SupervisorDoctor | null>
+  create(publicId: string, data: SupervisorDoctorCreateInput): Promise<SupervisorDoctor>
   update(userId: number, data: SupervisorDoctorCreateInput): Promise<SupervisorDoctor>
   deactivateSupervisorDoctor(userId: number): Promise<SupervisorDoctor>
 }

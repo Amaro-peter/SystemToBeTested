@@ -1,10 +1,13 @@
+import { Result } from '@core/logic/result-pattern'
 import { env } from '@env/index'
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
-import { Prisma, User, UserRole } from '@prisma/client'
+import { User, UserRole } from '@prisma/client'
 import { UserRepository } from '@repositories/users-repository'
+import { IErrorMapper } from '@tps/error-interfaces/error-mapper.interface'
+import { handleRepositoryCall } from '@use-cases/common/handle-repository-call'
 import { UserAlreadyExistsError } from '@use-cases/errors/users/user-already-exists-error'
 import { UserCouldNotBeCreatedError } from '@use-cases/errors/users/user-could-not-be-created-error'
-import { makeRegisterProfileStrategy } from '@use-cases/factories/strategies/make-register-profile-strategy'
+import { IRegisterProfileStrategyResolver } from '@use-cases/resolvers/register-profile-strategy-resolver.interface'
 import { hash } from 'bcryptjs'
 
 interface RegisterUserUseCaseRequest {
@@ -17,15 +20,20 @@ interface RegisterUserUseCaseRequest {
   specificData: unknown
 }
 
-type RegisterUserUseCaseResponse = {
-  user: User
-  userProfile: unknown
-}
+type RegisterUserUseCaseResponse = Result<
+  {
+    user: User
+    userProfile: unknown
+  },
+  Error
+>
 
 export class RegisterUserUseCase {
   constructor(
     private usersRepository: UserRepository,
     private dbContext: DatabaseContext,
+    private userErrorMapper: IErrorMapper,
+    private registerProfileStrategyResolver: IRegisterProfileStrategyResolver,
   ) {}
 
   async execute({
@@ -37,16 +45,12 @@ export class RegisterUserUseCase {
     role,
     specificData,
   }: RegisterUserUseCaseRequest): Promise<RegisterUserUseCaseResponse> {
-    const existingUser = await this.usersRepository.findByEmailOrCpf(email, cpf)
+    return handleRepositoryCall(this.userErrorMapper, async () => {
+      await this.validateUniquenessOrThrow(email, cpf)
 
-    if (existingUser) {
-      throw new UserAlreadyExistsError()
-    }
+      const passwordHash = await hash(password, env.HASH_SALT_ROUNDS)
 
-    const passwordHash = await hash(password, env.HASH_SALT_ROUNDS)
-
-    return this.dbContext.runInTransaction(async () => {
-      try {
+      return await this.dbContext.runInTransaction(async () => {
         const user = await this.usersRepository.create({
           name,
           email,
@@ -60,25 +64,37 @@ export class RegisterUserUseCase {
           throw new UserCouldNotBeCreatedError()
         }
 
-        const userProfileStrategy = makeRegisterProfileStrategy(role)
-
-        const userProfile = await userProfileStrategy.execute(user, specificData)
-
-        if (!userProfile) {
-          throw new Error('Usuário com role:' + role + ' não pôde ser criado.')
-        }
+        const userProfile = await this.registerUserProfileOrThrow(user, role, specificData)
 
         return {
           user,
           userProfile,
         }
-      } catch (error) {
-        if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
-          throw new UserAlreadyExistsError()
-        }
-
-        throw error
-      }
+      })
     })
+  }
+
+  private async validateUniquenessOrThrow(email: string, cpf: string): Promise<void> {
+    const existingUser = await this.usersRepository.findByEmailOrCpf(email, cpf)
+    if (existingUser) {
+      throw new UserAlreadyExistsError()
+    }
+  }
+
+  private async registerUserProfileOrThrow(user: User, role: UserRole, specificData: unknown): Promise<unknown> {
+    const strategyResult = this.registerProfileStrategyResolver.resolve(role)
+
+    if (!strategyResult.success) {
+      throw strategyResult.error
+    }
+
+    const registerProfileStrategy = strategyResult.value
+    const profileResult = await registerProfileStrategy.execute(user, specificData)
+
+    if (!profileResult.success) {
+      throw profileResult.error
+    }
+
+    return profileResult.value
   }
 }

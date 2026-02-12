@@ -1,5 +1,5 @@
+import { verifyEligibility } from '@middlewares/verify-eligibility.middleware'
 import { verifyJwt } from '@middlewares/verify-jwt.middleware'
-import { verifyRegistrationEligibility } from '@middlewares/verify-registration-eligibility.middleware'
 import { verifyUserRole } from '@middlewares/verify-user-role.middleware'
 import { UserRole } from '@prisma/client'
 import { FastifyInstance } from 'fastify'
@@ -18,7 +18,7 @@ export async function usersRoutes(app: FastifyInstance) {
     '/register',
     {
       onRequest: [verifyJwt],
-      preHandler: [verifyRegistrationEligibility],
+      preHandler: [verifyEligibility],
     },
     register,
   )

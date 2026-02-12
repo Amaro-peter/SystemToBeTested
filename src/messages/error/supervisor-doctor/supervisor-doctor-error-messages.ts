@@ -15,7 +15,8 @@ export const SUPERVISOR_DOCTOR_COULD_NOT_BE_CREATED_ERROR: IErrorDetail = {
   message: 'Não foi possível criar o usuário Supervisor Médico!',
 }
 
-export const SUPERVISOR_DOCTOR_COULD_NOT_BE_UPDATED_ERROR: IErrorDetail = {
-  code: 'SUPERVISOR_DOCTOR_COULD_NOT_BE_UPDATED',
-  message: 'Não foi possível atualizar o usuário Supervisor Médico!',
+export const SUPERVISOR_DOCTOR_OPERATION_FAILED_ERROR: IErrorDetail = {
+  code: 'SUPERVISOR_DOCTOR_OPERATION_FAILED',
+  message:
+    'Não foi possível concluir a operação. Verifique se todos os dados relacionados estão corretos e tente novamente.',
 }

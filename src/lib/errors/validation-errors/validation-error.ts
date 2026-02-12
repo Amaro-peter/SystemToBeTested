@@ -1,6 +1,6 @@
 import { IErrorDetail } from '@tps/error-interfaces/error-detail.interface'
 import { BaseError } from 'errors/base-error'
-import { VALIDATION_ERROR } from 'messages/responses/validation-responses.ts/validation-responses'
+import { VALIDATION_ERROR } from 'messages/error/validation-messages/validation-error-messages'
 import { ZodError } from 'zod'
 
 export class ValidationError extends BaseError {

@@ -15,12 +15,17 @@ export const USER_COULD_NOT_BE_CREATED_ERROR: IErrorDetail = {
   message: 'Não foi possível criar o usuário!',
 }
 
-export const USER_COULD_NOT_BE_UPDATED_ERROR: IErrorDetail = {
-  code: 'USER_COULD_NOT_BE_UPDATED',
-  message: 'Não foi possível atualizar o usuário!',
+export const USER_OPERATION_FAILED_ERROR: IErrorDetail = {
+  code: 'USER_OPERATION_FAILED',
+  message: 'Não foi possível realizar a operação com o usuário!',
 }
 
 export const USER_IS_DEACTIVATED: IErrorDetail = {
   code: 'USER_ALREADY_DEACTIVATED',
   message: 'Usuário está desativado!',
+}
+
+export const USER_WITH_NO_ROLE_ERROR: IErrorDetail = {
+  code: 'USER_WITH_NO_ROLE',
+  message: 'Usuário não possui uma função atribuída',
 }

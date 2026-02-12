@@ -1,5 +1,5 @@
 import { HTTPDomainError } from '@http/errors/http-domain-error'
-import { USER_ALREADY_EXISTS_ERROR } from 'messages/responses/user-responses.ts/user-api-responses'
+import { USER_ALREADY_EXISTS_ERROR } from 'messages/error/user/user-error-messages'
 
 export class UserAlreadyExistsError extends HTTPDomainError {
   constructor() {

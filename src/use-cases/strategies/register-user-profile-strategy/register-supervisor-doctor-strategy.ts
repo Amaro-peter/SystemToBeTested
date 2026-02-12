@@ -1,36 +1,43 @@
-import { Prisma, SupervisorDoctor, User } from '@prisma/client'
+import { err, Result } from '@core/logic/result-pattern'
+import { SupervisorDoctor, User } from '@prisma/client'
 import { SupervisorDoctorRepository } from '@repositories/supervisor-doctor-respository'
-import { SupervisorDoctorAlreadyExistsError } from '@use-cases/errors/supervisor-doctor/supervisor-doctor-already-exists-error'
-import { SupervisorDoctorCouldNotBeCreatedError } from '@use-cases/errors/supervisor-doctor/supervisor-doctor-could-not-be-created-error'
+import { IErrorMapper } from '@tps/error-interfaces/error-mapper.interface'
+import { IValidator } from '@tps/validation/validator.interface'
+import { handleRepositoryCall } from '@use-cases/common/handle-repository-call'
 import { RegisterProfileStrategy } from '../../../@types/use-case/users/register-profile-strategy.interface'
-import { supervisorDoctorPayloadSchema } from '../schemas/supervisor-doctor/supervisor-doctor-schema'
 
-export interface SupervisorDoctorStrategyResponse {
+type SupervisorDoctorStrategyResponse = {
   supervisorDoctor: SupervisorDoctor
 }
 
-export class RegisterSupervisorDoctorStrategy implements RegisterProfileStrategy {
-  constructor(private supervisorDoctorRepository: SupervisorDoctorRepository) {}
+type SupervisorDoctorPayload = {
+  crm: string
+}
 
-  async execute(user: User, payload: unknown): Promise<SupervisorDoctorStrategyResponse> {
-    try {
-      const specificData = supervisorDoctorPayloadSchema.parse(payload)
+export class RegisterSupervisorDoctorStrategy implements RegisterProfileStrategy<SupervisorDoctorStrategyResponse> {
+  constructor(
+    private supervisorDoctorRepository: SupervisorDoctorRepository,
+    private validator: IValidator<SupervisorDoctorPayload>,
+    private errorMapper: IErrorMapper,
+  ) {}
 
+  async execute(user: User, payload: unknown): Promise<Result<SupervisorDoctorStrategyResponse, Error>> {
+    const validationResult = this.validator.validate(payload)
+
+    if (!validationResult.success) {
+      return err(validationResult.error)
+    }
+
+    const specificData = validationResult.value
+
+    return await handleRepositoryCall(this.errorMapper, async () => {
       const supervisorDoctor = await this.supervisorDoctorRepository.create(user.publicId, {
         crm: specificData.crm,
       })
 
-      if (!supervisorDoctor) {
-        throw new SupervisorDoctorCouldNotBeCreatedError()
+      return {
+        supervisorDoctor,
       }
-
-      return { supervisorDoctor }
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
-        throw new SupervisorDoctorAlreadyExistsError()
-      }
-
-      throw error
-    }
+    })
   }
 }
