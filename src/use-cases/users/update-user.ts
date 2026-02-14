@@ -14,7 +14,6 @@ interface UpdateUserUseCaseRequest {
   name?: string
   email?: string
   cpf?: string
-  isActive?: boolean
   role: UserRole
   phoneNumber?: string
   specificData?: unknown
@@ -49,7 +48,6 @@ export class UpdateUserUseCase {
           name: request.name,
           email: request.email,
           cpf: request.cpf,
-          isActive: request.isActive,
           phoneNumber: request.phoneNumber,
         })
 
@@ -104,7 +102,6 @@ export class UpdateUserUseCase {
       email?: string
       cpf?: string
       phoneNumber?: string
-      isActive?: boolean
     },
   ): Promise<User> {
     const updatedUser = await this.usersRepository.update(publicId, data)

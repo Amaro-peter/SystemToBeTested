@@ -64,8 +64,16 @@ export const updateSupervisorDoctorPayloadSchema = z
     if (data.crm && !data.crmUf) {
       ctx.addIssue({
         code: 'custom',
-        message: 'A UF do CRM é obrigatória quando o CRM é fornecido',
+        message: 'A Unidade Federativa é obrigatória quando o CRM é fornecido para atualização.',
         path: ['crmUf'],
+      })
+    }
+
+    if (data.crmUf && !data.crm) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'O CRM é obrigatório quando a Unidade Federativa do CRM é fornecida para atualização.',
+        path: ['crm'],
       })
     }
   })
