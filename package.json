@@ -53,7 +53,7 @@
   "devDependencies": {
     "@biomejs/biome": "2.3.13",
     "@commitlint/config-conventional": "20.3.1",
-    "@commitlint/types": "20.3.1",
+    "@commitlint/types": "20.4.0",
     "@eslint/js": "9.35.0",
     "@sentry/cli": "3.1.0",
     "@swc/core": "1.15.11",
