@@ -2,16 +2,16 @@ import { err, type Result } from '@core/logic/result'
 import { SupervisorDoctor, User } from '@prisma/client'
 import { SupervisorDoctorPayload, SupervisorDoctorRepository } from '@repositories/supervisor-doctor-respository'
 import { IErrorMapper } from '@tps/error-interfaces/error-mapper.interface'
+import { IProfileStrategy } from '@tps/use-case/strategies/profile-strategy.interface'
 import { IValidator } from '@tps/validation/validator.interface'
 import { handleRepositoryCall } from '@use-cases/common/handle-repository-call'
 import { filterUndefinedValues } from '@utils/filter-undefined-values'
-import { UpdateProfileStrategy } from '../../../@types/use-case/users/update-profile-strategy.interface'
 
 type SupervisorDoctorStrategyResponse = {
   supervisorDoctor: SupervisorDoctor
 }
 
-export class UpdateSupervisorDoctorStrategy implements UpdateProfileStrategy<SupervisorDoctorStrategyResponse> {
+export class UpdateSupervisorDoctorStrategy implements IProfileStrategy<SupervisorDoctorStrategyResponse> {
   constructor(
     private supervisorDoctorRepository: SupervisorDoctorRepository,
     private validator: IValidator<Partial<SupervisorDoctorPayload>>,

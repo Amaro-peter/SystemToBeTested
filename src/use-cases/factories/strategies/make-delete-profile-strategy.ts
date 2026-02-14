@@ -1,12 +1,12 @@
 import { err, ok, Result } from '@core/logic/result'
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { UserRole } from '@prisma/client'
-import { DeleteProfileStrategy } from '@tps/use-case/users/delete-profile-strategy.interface'
+import { IProfileStrategy } from '@tps/use-case/strategies/profile-strategy.interface'
 import { UserWithNoRoleError } from '@use-cases/errors/users/user-with-no-role-error'
 import { DeleteSupervisorDoctorStrategy } from '@use-cases/strategies/delete-user-profile-strategy/delete-supervisor-doctor-strategy'
 import { makeDeleteSupervisorDoctorStrategy } from '../supervisor-doctor/make-delete-supervisor-doctor-strategy'
 
-const strategies: Record<UserRole, (dbContext: DatabaseContext) => DeleteProfileStrategy> = {
+const strategies: Record<UserRole, (dbContext: DatabaseContext) => IProfileStrategy> = {
   [UserRole.PATIENT]: () => {
     throw new Error('DeletePatientStrategy not implemented')
   },
@@ -27,10 +27,7 @@ const strategies: Record<UserRole, (dbContext: DatabaseContext) => DeleteProfile
   },
 }
 
-export function makeDeleteProfileStrategy(
-  role: UserRole,
-  dbContext: DatabaseContext,
-): Result<DeleteProfileStrategy, Error> {
+export function makeDeleteProfileStrategy(role: UserRole, dbContext: DatabaseContext): Result<IProfileStrategy, Error> {
   const strategyFactory = strategies[role]
 
   if (!strategyFactory) {

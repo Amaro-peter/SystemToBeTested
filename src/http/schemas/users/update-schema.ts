@@ -10,6 +10,7 @@ export const updateSchema = z.object({
   cpf: cpfSchema.optional(),
   phoneNumber: phoneNumberSchema.optional(),
   specificData: z.record(z.string(), z.any()).optional(),
+  isActive: z.literal(true).optional(),
   role: userRoleSchema,
 })
 

@@ -1,12 +1,12 @@
 import { err, ok, Result } from '@core/logic/result'
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { UserRole } from '@prisma/client'
-import { RegisterProfileStrategy } from '@tps/use-case/users/register-profile-strategy.interface'
+import { IProfileStrategy } from '@tps/use-case/strategies/profile-strategy.interface'
 import { UserWithNoRoleError } from '@use-cases/errors/users/user-with-no-role-error'
 import { RegisterSupervisorDoctorStrategy } from '@use-cases/strategies/register-user-profile-strategy/register-supervisor-doctor-strategy'
 import { makeRegisterSupervisorDoctorStrategy } from '../supervisor-doctor/make-register-supervisor-doctor-strategy'
 
-const strategies: Record<UserRole, (dbContext: DatabaseContext) => RegisterProfileStrategy> = {
+const strategies: Record<UserRole, (dbContext: DatabaseContext) => IProfileStrategy> = {
   [UserRole.PATIENT]: () => {
     throw new Error('RegisterPatientStrategy not implemented')
   },
@@ -29,7 +29,7 @@ const strategies: Record<UserRole, (dbContext: DatabaseContext) => RegisterProfi
 export function makeRegisterProfileStrategy(
   role: UserRole,
   dbContext: DatabaseContext,
-): Result<RegisterProfileStrategy, Error> {
+): Result<IProfileStrategy, Error> {
   const strategyFactory = strategies[role]
 
   if (!strategyFactory) {

@@ -3,11 +3,10 @@ import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { User, UserRole } from '@prisma/client'
 import { UserRepository } from '@repositories/users-repository'
 import { IErrorMapper } from '@tps/error-interfaces/error-mapper.interface'
-import { IProfileStrategyResolver } from '@tps/use-case/resolvers/profile-strategy-resolver.interface'
-import { DeleteProfileStrategy } from '@tps/use-case/users/delete-profile-strategy.interface'
 import { handleRepositoryCall } from '@use-cases/common/handle-repository-call'
 import { UserAlreadyDeactivatedError } from '@use-cases/errors/users/user-already-deactivated-error'
 import { UserNotFoundError } from '@use-cases/errors/users/user-not-found-error'
+import { makeDeleteProfileStrategy } from '@use-cases/factories/strategies/make-delete-profile-strategy'
 
 interface DeleteUserUseCaseRequest {
   publicId: string
@@ -27,7 +26,6 @@ export class DeleteUserUseCase {
     private usersRepository: UserRepository,
     private dbContext: DatabaseContext,
     private userErrorMapper: IErrorMapper,
-    private deleteProfileStrategyResolver: IProfileStrategyResolver<DeleteProfileStrategy>,
   ) {}
 
   async execute({ publicId, role }: DeleteUserUseCaseRequest): Promise<DeleteUserUseCaseResponse> {
@@ -75,7 +73,7 @@ export class DeleteUserUseCase {
   }
 
   private async deactivateUserProfileOrThrow(user: User, role: UserRole): Promise<unknown> {
-    const strategyResult = await this.deleteProfileStrategyResolver.resolve(role)
+    const strategyResult = makeDeleteProfileStrategy(role, this.dbContext)
 
     if (!strategyResult.success) {
       throw strategyResult.error

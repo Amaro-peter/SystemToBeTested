@@ -7,7 +7,7 @@ import { makeUpdateUserUseCase } from '@use-cases/factories/users/make-update-us
 import type { FastifyReply, FastifyRequest } from 'fastify'
 
 export async function updateUser(request: FastifyRequest, reply: FastifyReply) {
-  const { name, email, cpf, phoneNumber, role, specificData } = updateSchema.parse(request.body)
+  const { name, email, cpf, phoneNumber, role, isActive, specificData } = updateSchema.parse(request.body)
 
   const updateUserUseCase = makeUpdateUserUseCase()
 
@@ -16,6 +16,7 @@ export async function updateUser(request: FastifyRequest, reply: FastifyReply) {
     name,
     email,
     cpf,
+    isActive,
     phoneNumber,
     specificData,
     role,

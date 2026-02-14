@@ -3,18 +3,18 @@ import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { User, UserRole } from '@prisma/client'
 import { UserRepository } from '@repositories/users-repository'
 import { IErrorMapper } from '@tps/error-interfaces/error-mapper.interface'
-import { IProfileStrategyResolver } from '@tps/use-case/resolvers/profile-strategy-resolver.interface'
-import { UpdateProfileStrategy } from '@tps/use-case/users/update-profile-strategy.interface'
 import { handleRepositoryCall } from '@use-cases/common/handle-repository-call'
 import { UserAlreadyDeactivatedError } from '@use-cases/errors/users/user-already-deactivated-error'
 import { UserAlreadyExistsError } from '@use-cases/errors/users/user-already-exists-error'
 import { UserNotFoundError } from '@use-cases/errors/users/user-not-found-error'
+import { makeUpdateProfileStrategy } from '@use-cases/factories/strategies/make-update-profile-strategy'
 
 interface UpdateUserUseCaseRequest {
   publicId: string
   name?: string
   email?: string
   cpf?: string
+  isActive?: boolean
   role: UserRole
   phoneNumber?: string
   specificData?: unknown
@@ -33,7 +33,6 @@ export class UpdateUserUseCase {
     private usersRepository: UserRepository,
     private dbContext: DatabaseContext,
     private userErrorMapper: IErrorMapper,
-    private updateProfileStrategyResolver: IProfileStrategyResolver<UpdateProfileStrategy>,
   ) {}
 
   async execute(request: UpdateUserUseCaseRequest): Promise<UpdateUserUseCaseResponse> {
@@ -50,6 +49,7 @@ export class UpdateUserUseCase {
           name: request.name,
           email: request.email,
           cpf: request.cpf,
+          isActive: request.isActive,
           phoneNumber: request.phoneNumber,
         })
 
@@ -104,6 +104,7 @@ export class UpdateUserUseCase {
       email?: string
       cpf?: string
       phoneNumber?: string
+      isActive?: boolean
     },
   ): Promise<User> {
     const updatedUser = await this.usersRepository.update(publicId, data)
@@ -116,7 +117,7 @@ export class UpdateUserUseCase {
   }
 
   private async updateUserProfileOrThrow(updatedUser: User, role: UserRole, specificData: unknown): Promise<unknown> {
-    const strategyResult = await this.updateProfileStrategyResolver.resolve(role)
+    const strategyResult = makeUpdateProfileStrategy(role, this.dbContext)
 
     if (!strategyResult.success) {
       throw strategyResult.error
