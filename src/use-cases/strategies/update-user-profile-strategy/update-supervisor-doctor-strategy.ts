@@ -1,23 +1,20 @@
-import { err, type Result } from '@core/logic/result-pattern'
+import { err, type Result } from '@core/logic/result'
 import { SupervisorDoctor, User } from '@prisma/client'
-import { SupervisorDoctorRepository } from '@repositories/supervisor-doctor-respository'
+import { SupervisorDoctorPayload, SupervisorDoctorRepository } from '@repositories/supervisor-doctor-respository'
 import { IErrorMapper } from '@tps/error-interfaces/error-mapper.interface'
 import { IValidator } from '@tps/validation/validator.interface'
 import { handleRepositoryCall } from '@use-cases/common/handle-repository-call'
+import { filterUndefinedValues } from '@utils/filter-undefined-values'
 import { UpdateProfileStrategy } from '../../../@types/use-case/users/update-profile-strategy.interface'
 
 type SupervisorDoctorStrategyResponse = {
   supervisorDoctor: SupervisorDoctor
 }
 
-type SupervisorDoctorPayload = {
-  crm: string
-}
-
 export class UpdateSupervisorDoctorStrategy implements UpdateProfileStrategy<SupervisorDoctorStrategyResponse> {
   constructor(
     private supervisorDoctorRepository: SupervisorDoctorRepository,
-    private validator: IValidator<SupervisorDoctorPayload>,
+    private validator: IValidator<Partial<SupervisorDoctorPayload>>,
     private errorMapper: IErrorMapper,
   ) {}
 
@@ -28,12 +25,10 @@ export class UpdateSupervisorDoctorStrategy implements UpdateProfileStrategy<Sup
       return err(validationResult.error)
     }
 
-    const specificData = validationResult.value
+    const updateData = filterUndefinedValues(validationResult.value)
 
     return await handleRepositoryCall(this.errorMapper, async () => {
-      const supervisorDoctor = await this.supervisorDoctorRepository.update(updatedUser.id, {
-        crm: specificData.crm,
-      })
+      const supervisorDoctor = await this.supervisorDoctorRepository.update(updatedUser.id, updateData)
 
       return {
         supervisorDoctor,

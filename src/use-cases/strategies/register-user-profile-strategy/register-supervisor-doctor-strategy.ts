@@ -1,6 +1,6 @@
-import { err, Result } from '@core/logic/result-pattern'
+import { err, Result } from '@core/logic/result'
 import { SupervisorDoctor, User } from '@prisma/client'
-import { SupervisorDoctorRepository } from '@repositories/supervisor-doctor-respository'
+import { SupervisorDoctorPayload, SupervisorDoctorRepository } from '@repositories/supervisor-doctor-respository'
 import { IErrorMapper } from '@tps/error-interfaces/error-mapper.interface'
 import { IValidator } from '@tps/validation/validator.interface'
 import { handleRepositoryCall } from '@use-cases/common/handle-repository-call'
@@ -8,10 +8,6 @@ import { RegisterProfileStrategy } from '../../../@types/use-case/users/register
 
 type SupervisorDoctorStrategyResponse = {
   supervisorDoctor: SupervisorDoctor
-}
-
-type SupervisorDoctorPayload = {
-  crm: string
 }
 
 export class RegisterSupervisorDoctorStrategy implements RegisterProfileStrategy<SupervisorDoctorStrategyResponse> {
@@ -32,7 +28,7 @@ export class RegisterSupervisorDoctorStrategy implements RegisterProfileStrategy
 
     return await handleRepositoryCall(this.errorMapper, async () => {
       const supervisorDoctor = await this.supervisorDoctorRepository.create(user.publicId, {
-        crm: specificData.crm,
+        ...specificData,
       })
 
       return {

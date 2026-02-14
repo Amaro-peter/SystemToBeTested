@@ -1,7 +1,7 @@
-import { Result } from '@core/logic/result-pattern'
+import { Result } from '@core/logic/result'
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { UserRole } from '@prisma/client'
-import { IProfileStrategyResolver } from '@tps/use-case/resolvers/profile-strategy-resolve.interface'
+import { IProfileStrategyResolver } from '@tps/use-case/resolvers/profile-strategy-resolver.interface'
 import { UpdateProfileStrategy } from '@tps/use-case/users/update-profile-strategy.interface'
 import { makeUpdateProfileStrategy } from '@use-cases/factories/strategies/make-update-profile-strategy'
 

@@ -1,13 +1,13 @@
-import { Result } from '@core/logic/result-pattern'
+import { Result } from '@core/logic/result'
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { User, UserRole } from '@prisma/client'
 import { UserRepository } from '@repositories/users-repository'
 import { IErrorMapper } from '@tps/error-interfaces/error-mapper.interface'
+import { IProfileStrategyResolver } from '@tps/use-case/resolvers/profile-strategy-resolver.interface'
 import { DeleteProfileStrategy } from '@tps/use-case/users/delete-profile-strategy.interface'
 import { handleRepositoryCall } from '@use-cases/common/handle-repository-call'
 import { UserAlreadyDeactivatedError } from '@use-cases/errors/users/user-already-deactivated-error'
 import { UserNotFoundError } from '@use-cases/errors/users/user-not-found-error'
-import { IProfileStrategyResolver } from '@tps/use-case/resolvers/profile-strategy-resolve.interface'
 
 interface DeleteUserUseCaseRequest {
   publicId: string

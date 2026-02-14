@@ -1,4 +1,4 @@
-import { Result } from '@core/logic/result-pattern'
+import { Result } from '@core/logic/result'
 import { User } from '@prisma/client'
 
 export interface DeleteProfileStrategy<T = unknown> {

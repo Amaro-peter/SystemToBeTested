@@ -1,7 +1,7 @@
 import { resetPasswordSchema } from '@http/schemas/users/reset-password-schema'
 import { logger } from '@lib/logger'
 import { InvalidTokenError } from '@use-cases/errors/invalid-token-error'
-import { makeResetPasswordUseCase } from '@use-cases/factories/make-reset-password-use-case'
+import { makeResetPasswordUseCase } from '@use-cases/factories/users/make-reset-password-use-case'
 import type { FastifyReply, FastifyRequest } from 'fastify'
 
 export async function resetPassword(request: FastifyRequest, reply: FastifyReply) {

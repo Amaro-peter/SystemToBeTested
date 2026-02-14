@@ -1,4 +1,4 @@
-import { err, ok, Result } from '@core/logic/result-pattern'
+import { err, ok, Result } from '@core/logic/result'
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { UserRole } from '@prisma/client'
 import { DeleteProfileStrategy } from '@tps/use-case/users/delete-profile-strategy.interface'

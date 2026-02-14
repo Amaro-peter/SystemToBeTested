@@ -1,4 +1,4 @@
-import { type Result } from '@core/logic/result-pattern'
+import { type Result } from '@core/logic/result'
 import { SupervisorDoctor, User } from '@prisma/client'
 import { SupervisorDoctorRepository } from '@repositories/supervisor-doctor-respository'
 import { IErrorMapper } from '@tps/error-interfaces/error-mapper.interface'

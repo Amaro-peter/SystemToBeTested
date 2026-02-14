@@ -1,5 +1,4 @@
-// handle-repository-call.ts
-import { err, ok, Result } from '@core/logic/result-pattern'
+import { err, ok, Result } from '@core/logic/result'
 import { IErrorMapper } from '@tps/error-interfaces/error-mapper.interface'
 
 export async function handleRepositoryCall<T>(

@@ -3,7 +3,7 @@ import { UserPresenter } from '@http/presenters/users/user-presenter'
 import { UserProfilePresenterStrategy } from '@http/presenters/users/user-profile-presenter-strategy'
 import { updateSchema } from '@http/schemas/users/update-schema'
 import { logger } from '@lib/logger'
-import { makeUpdateUserUseCase } from '@use-cases/factories/make-update-user-use-case'
+import { makeUpdateUserUseCase } from '@use-cases/factories/users/make-update-user-use-case'
 import type { FastifyReply, FastifyRequest } from 'fastify'
 
 export async function updateUser(request: FastifyRequest, reply: FastifyReply) {

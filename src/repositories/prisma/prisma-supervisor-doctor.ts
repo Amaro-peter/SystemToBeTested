@@ -1,10 +1,10 @@
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
-import { SupervisorDoctorCreateInput, SupervisorDoctorRepository } from '@repositories/supervisor-doctor-respository'
+import { SupervisorDoctorPayload, SupervisorDoctorRepository } from '@repositories/supervisor-doctor-respository'
 
 export class PrismaSupervisorDoctorRepository implements SupervisorDoctorRepository {
   constructor(private readonly dbContext: DatabaseContext) {}
 
-  async create(publicId: string, data: SupervisorDoctorCreateInput) {
+  async create(publicId: string, data: SupervisorDoctorPayload) {
     return await this.dbContext.client.supervisorDoctor.create({
       data: {
         ...data,
@@ -17,13 +17,13 @@ export class PrismaSupervisorDoctorRepository implements SupervisorDoctorReposit
     })
   }
 
-  async update(userId: number, data: SupervisorDoctorCreateInput) {
+  async update(userId: number, data: Partial<SupervisorDoctorPayload>) {
     const updated = await this.dbContext.client.supervisorDoctor.update({
       where: {
         userId: userId,
       },
       data: {
-        crm: data.crm,
+        ...data,
       },
     })
     return updated
@@ -33,10 +33,8 @@ export class PrismaSupervisorDoctorRepository implements SupervisorDoctorReposit
     const deactivatedSupervisorDoctor = await this.dbContext.client.supervisorDoctor.update({
       where: {
         userId: userId,
-        isActive: true,
       },
       data: {
-        isActive: false,
         deletedAt: new Date(),
       },
     })
