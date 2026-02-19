@@ -1,13 +1,11 @@
-import { Result } from '@core/logic/result-pattern'
-import { DatabaseContext } from '@lib/prisma/helpers/database-context'
+import { ok, err, Result } from '@core/logic/result'
 import { User, UserRole } from '@prisma/client'
 import { UserRepository } from '@repositories/users-repository'
-import { IErrorMapper } from '@tps/error-interfaces/error-mapper.interface'
-import { handleRepositoryCall } from '@use-cases/common/handle-repository-call'
+import { IProfileStrategyFactory } from '@tps/use-case/factories/strategies/profile-strategy-factory'
 import { UserAlreadyDeactivatedError } from '@use-cases/errors/users/user-already-deactivated-error'
 import { UserAlreadyExistsError } from '@use-cases/errors/users/user-already-exists-error'
 import { UserNotFoundError } from '@use-cases/errors/users/user-not-found-error'
-import { IUpdateProfileStrategyResolver } from '@use-cases/resolvers/update-profile-strategy-resolver.interface'
+import { UserOperationFailedError } from '@use-cases/errors/users/user-operation-failed-error'
 
 interface UpdateUserUseCaseRequest {
   publicId: string
@@ -30,104 +28,89 @@ type UpdateUserUseCaseResponse = Result<
 export class UpdateUserUseCase {
   constructor(
     private usersRepository: UserRepository,
-    private dbContext: DatabaseContext,
-    private userErrorMapper: IErrorMapper,
-    private updateProfileStrategyResolver: IUpdateProfileStrategyResolver,
+    private profileFactory: IProfileStrategyFactory,
   ) {}
 
   async execute(request: UpdateUserUseCaseRequest): Promise<UpdateUserUseCaseResponse> {
-    return handleRepositoryCall(this.userErrorMapper, async () => {
-      const currentUser = await this.findActiveUserOrThrow(request.publicId)
+    // 1. Verificar se usuário existe e está ativo
+    const userOrNull = await this.usersRepository.findBy({ publicId: request.publicId })
 
-      await this.validateUniquenessOrThrow(currentUser, request.email, request.cpf)
+    if (!userOrNull) {
+      return err(new UserNotFoundError())
+    }
 
-      // ==========================================
-      // Transaction execution - throw for rollback
-      // ==========================================
-      return await this.dbContext.runInTransaction(async () => {
-        const updatedUser = await this.updateUserDataOrThrow(request.publicId, {
-          name: request.name,
-          email: request.email,
-          cpf: request.cpf,
-          phoneNumber: request.phoneNumber,
-        })
+    if (!userOrNull.isActive) {
+      return err(new UserAlreadyDeactivatedError())
+    }
 
-        if (!request.specificData) {
-          return { updatedUser }
-        }
+    // 2. Validar unicidade (Email/CPF) se foram alterados
+    const uniquenessError = await this.checkUniqueness(userOrNull, request.email, request.cpf)
+    if (uniquenessError) {
+      return err(uniquenessError)
+    }
 
-        const updatedUserProfile = await this.updateUserProfileOrThrow(updatedUser, request.role, request.specificData)
+    // 3. Atualizar dados do Usuário Base
+    const updatedUserResult = await this.usersRepository.update(request.publicId, {
+      name: request.name,
+      email: request.email,
+      cpf: request.cpf,
+      phoneNumber: request.phoneNumber,
+    })
 
-        return {
-          updatedUser,
-          updatedUserProfile,
-        }
-      })
+    if (!updatedUserResult.success) {
+      return err(updatedUserResult.error)
+    }
+
+    const updatedUser = updatedUserResult.value
+
+    if (!updatedUser) {
+      return err(new UserOperationFailedError())
+    }
+
+    // 4. Atualizar Perfil Específico (Se houver dados)
+    let updatedUserProfile: unknown | undefined
+
+    if (request.specificData) {
+      const strategyResult = this.profileFactory.createStrategy(request.role)
+
+      if (!strategyResult.success) {
+        return err(strategyResult.error)
+      }
+
+      const updateProfileStrategy = strategyResult.value
+
+      // O strategy deve retornar Result agora
+      const profileResult = await updateProfileStrategy.execute(updatedUser, request.specificData)
+
+      if (!profileResult.success) {
+        return err(profileResult.error)
+      }
+
+      updatedUserProfile = profileResult.value
+    }
+
+    return ok({
+      updatedUser,
+      updatedUserProfile,
     })
   }
 
-  private async findActiveUserOrThrow(publicId: string): Promise<User> {
-    const user = await this.usersRepository.findBy({ publicId })
-
-    if (!user) {
-      throw new UserNotFoundError()
-    }
-
-    if (!user.isActive) {
-      throw new UserAlreadyDeactivatedError()
-    }
-
-    return user
-  }
-
-  private async validateUniquenessOrThrow(currentUser: User, email?: string, cpf?: string): Promise<void> {
+  // Método auxiliar para checagem de unicidade
+  private async checkUniqueness(currentUser: User, email?: string, cpf?: string): Promise<Error | null> {
     if (email && email !== currentUser.email) {
       const emailExists = await this.usersRepository.findBy({ email })
       if (emailExists) {
-        throw new UserAlreadyExistsError()
+        return new UserAlreadyExistsError()
       }
     }
 
     if (cpf && cpf !== currentUser.cpf) {
       const cpfExists = await this.usersRepository.findBy({ cpf })
       if (cpfExists) {
-        throw new UserAlreadyExistsError()
+        return new UserAlreadyExistsError()
       }
     }
-  }
 
-  private async updateUserDataOrThrow(
-    publicId: string,
-    data: {
-      name?: string
-      email?: string
-      cpf?: string
-      phoneNumber?: string
-    },
-  ): Promise<User> {
-    const updatedUser = await this.usersRepository.update(publicId, data)
-
-    if (!updatedUser) {
-      throw new UserNotFoundError()
-    }
-
-    return updatedUser
-  }
-
-  private async updateUserProfileOrThrow(updatedUser: User, role: UserRole, specificData: unknown): Promise<unknown> {
-    const strategyResult = this.updateProfileStrategyResolver.resolve(role)
-
-    if (!strategyResult.success) {
-      throw strategyResult.error
-    }
-
-    const updateProfileStrategy = strategyResult.value
-    const profileResult = await updateProfileStrategy.execute(updatedUser, specificData)
-
-    if (!profileResult.success) {
-      throw profileResult.error
-    }
-
-    return profileResult.value
+    return null
   }
 }

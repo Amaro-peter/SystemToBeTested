@@ -1,9 +1,9 @@
 import { HttpErrorMapper } from '@http/errors/http-error-mapper'
 import { UserPresenter } from '@http/presenters/users/user-presenter'
-import { UserProfilePresenterStrategy } from '@http/presenters/users/user-profile-presenter-strategy'
+import { UserProfilePresenter } from '@http/presenters/users/user-profile-presenter'
 import { updateSchema } from '@http/schemas/users/update-schema'
 import { logger } from '@lib/logger'
-import { makeUpdateUserUseCase } from '@use-cases/factories/make-update-user-use-case'
+import { makeUpdateUserUseCase } from '@use-cases/users/factories/make-update-user-use-case'
 import type { FastifyReply, FastifyRequest } from 'fastify'
 
 export async function updateUser(request: FastifyRequest, reply: FastifyReply) {
@@ -35,8 +35,7 @@ export async function updateUser(request: FastifyRequest, reply: FastifyReply) {
   }
 
   if (updatedUserProfile) {
-    const presenterStrategy = UserProfilePresenterStrategy.getStrategy(updatedUser.role)
-    response.userProfile = presenterStrategy.present(updatedUserProfile)
+    response.userProfile = UserProfilePresenter.toHTTP(updatedUserProfile)
   }
 
   return reply.status(200).send(response)

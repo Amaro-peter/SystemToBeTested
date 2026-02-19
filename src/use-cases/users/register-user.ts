@@ -1,13 +1,10 @@
-import { Result } from '@core/logic/result-pattern'
+import { err, ok, Result } from '@core/logic/result'
 import { env } from '@env/index'
-import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { User, UserRole } from '@prisma/client'
 import { UserRepository } from '@repositories/users-repository'
-import { IErrorMapper } from '@tps/error-interfaces/error-mapper.interface'
-import { handleRepositoryCall } from '@use-cases/common/handle-repository-call'
+import { IProfileStrategyFactory } from '@tps/use-case/factories/strategies/profile-strategy-factory'
 import { UserAlreadyExistsError } from '@use-cases/errors/users/user-already-exists-error'
 import { UserCouldNotBeCreatedError } from '@use-cases/errors/users/user-could-not-be-created-error'
-import { IRegisterProfileStrategyResolver } from '@use-cases/resolvers/register-profile-strategy-resolver.interface'
 import { hash } from 'bcryptjs'
 
 interface RegisterUserUseCaseRequest {
@@ -31,9 +28,7 @@ type RegisterUserUseCaseResponse = Result<
 export class RegisterUserUseCase {
   constructor(
     private usersRepository: UserRepository,
-    private dbContext: DatabaseContext,
-    private userErrorMapper: IErrorMapper,
-    private registerProfileStrategyResolver: IRegisterProfileStrategyResolver,
+    private profileFactory: IProfileStrategyFactory,
   ) {}
 
   async execute({
@@ -45,56 +40,54 @@ export class RegisterUserUseCase {
     role,
     specificData,
   }: RegisterUserUseCaseRequest): Promise<RegisterUserUseCaseResponse> {
-    return handleRepositoryCall(this.userErrorMapper, async () => {
-      await this.validateUniquenessOrThrow(email, cpf)
-
-      const passwordHash = await hash(password, env.HASH_SALT_ROUNDS)
-
-      return await this.dbContext.runInTransaction(async () => {
-        const user = await this.usersRepository.create({
-          name,
-          email,
-          cpf,
-          phoneNumber,
-          passwordHash,
-          role,
-        })
-
-        if (!user) {
-          throw new UserCouldNotBeCreatedError()
-        }
-
-        const userProfile = await this.registerUserProfileOrThrow(user, role, specificData)
-
-        return {
-          user,
-          userProfile,
-        }
-      })
-    })
-  }
-
-  private async validateUniquenessOrThrow(email: string, cpf: string): Promise<void> {
     const existingUser = await this.usersRepository.findByEmailOrCpf(email, cpf)
-    if (existingUser) {
-      throw new UserAlreadyExistsError()
-    }
-  }
 
-  private async registerUserProfileOrThrow(user: User, role: UserRole, specificData: unknown): Promise<unknown> {
-    const strategyResult = this.registerProfileStrategyResolver.resolve(role)
+    if (existingUser) {
+      return err(new UserAlreadyExistsError())
+    }
+
+    const passwordHash = await hash(password, env.HASH_SALT_ROUNDS)
+
+    const userResult = await this.usersRepository.create({
+      name,
+      email,
+      cpf,
+      phoneNumber,
+      passwordHash,
+      role,
+    })
+
+    if (!userResult.success) {
+      return err(userResult.error)
+    }
+
+    const user = userResult.value
+
+    if (!user) {
+      return err(new UserCouldNotBeCreatedError())
+    }
+
+    // 2. Criação do Perfil Específico
+    // Obtém a estratégia através da Factory injetada
+    const strategyResult = this.profileFactory.createStrategy(role)
 
     if (!strategyResult.success) {
-      throw strategyResult.error
+      // Se estiver usando o Decorator de Transação, retornar erro aqui causará Rollback
+      return err(strategyResult.error)
     }
 
     const registerProfileStrategy = strategyResult.value
+
+    // Executa a estratégia (que também deve retornar Result)
     const profileResult = await registerProfileStrategy.execute(user, specificData)
 
     if (!profileResult.success) {
-      throw profileResult.error
+      return err(profileResult.error)
     }
 
-    return profileResult.value
+    return ok({
+      user,
+      userProfile: profileResult.value,
+    })
   }
 }

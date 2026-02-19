@@ -1,9 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,6 +8,10 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+// =======================================================
+// ENUMS
+// =======================================================
 
 enum AuthenticationStatus {
   SUCCESS
@@ -28,8 +29,99 @@ enum UserRole {
   PATIENT
 }
 
+enum UF {
+  AC
+  AL
+  AP
+  AM
+  BA
+  CE
+  DF
+  ES
+  GO
+  MA
+  MT
+  MS
+  MG
+  PA
+  PB
+  PR
+  PE
+  PI
+  RJ
+  RN
+  RS
+  RO
+  RR
+  SC
+  SP
+  SE
+  TO
+}
+
+enum TipoCRM {
+  DEFINITIVO
+  PROVISORIO
+  ESTRANGEIRO
+}
+
+enum DoctorStatus {
+  ATIVO
+  SUSPENSO
+  CASSADO
+  INATIVO
+}
+
+enum Gender {
+  FEMININO
+  MASCULINO
+  INTERSEXO
+  PREFIRO_NAO_RESPONDER
+}
+
+enum RiskLevel {
+  ALTO
+  MODERADO
+  BAIXO
+}
+
+enum ProfessionalCategory {
+  TECNICO_DE_ENFERMAGEM
+  EDUCADOR_FISICO
+}
+
+enum ClinicalSessionStatus {
+  AGUARDANDO_ATENDIMENTO
+  REALIZANDO_AVALIACAO_PRE_TREINAMENTO
+  ESTEIRA
+  BICICLETA
+  MUSCULACAO
+  REALIZANDO_AVALIACAO_POS_TREINAMENTO
+  FINALIZADO
+}
+
+enum BicycleType {
+  MMS
+  NORMAL
+}
+
+enum TreadmillType {
+  CONTINUO
+  INTERVALADO
+}
+
+enum StrengthExerciseType {
+  STEP
+  MAQUINA
+  BANCO_ALTO
+}
+
+// =======================================================
+// CORE & USERS MODELS
+// =======================================================
+
 model AuthenticationAudit {
-  id         String               @id @default(uuid(7))
+  id         String               @id @default(uuid()) // Removido uuid(7) caso sua versão não suporte nativamente ou substitua por uuid() padrão
   ipAddress  String?              @map("ip_address")
   remotePort String?              @map("remote_port")
   userAgent  String?              @map("user_agent")
@@ -38,7 +130,7 @@ model AuthenticationAudit {
   userId     Int?                 @map("user_id")
   user       User?                @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  createdAt DateTime @default(now()) @map("created_at")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
 
   @@index([userId, createdAt], name: "idx_auth_audit_user_date")
   @@map("authentication_audit")
@@ -46,7 +138,7 @@ model AuthenticationAudit {
 
 model User {
   id       Int    @id @default(autoincrement())
-  publicId String @unique @default(uuid(7)) @map("public_id")
+  publicId String @unique @default(uuid()) @map("public_id")
 
   name         String
   email        String @unique
@@ -64,13 +156,17 @@ model User {
   isActive  Boolean   @default(true) @map("is_active")
   deletedAt DateTime? @map("deleted_at")
 
-  createdAt         DateTime  @default(now()) @map("created_at")
+  createdAt         DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt         DateTime  @updatedAt @map("updated_at")
   passwordChangedAt DateTime? @map("password_changed_at")
 
+  // Relações
   authenticationAudits AuthenticationAudit[]
-
-  SupervisorDoctor SupervisorDoctor[]
+  supervisorDoctor     SupervisorDoctor[]
+  admin                Admin[]
+  healthProfessional   HealthProfessional[]
+  patient              Patient[]
+  sessionVersions      ClinicalSessionVersion[]
 
   @@index([name])
   @@index([token])
@@ -78,21 +174,280 @@ model User {
   @@map("users")
 }
 
-model SupervisorDoctor {
-  id Int @id @default(autoincrement())
+model Admin {
+  publicId String @id @default(uuid())
+  userId   Int    @unique @map("user_id")
+  user     User   @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: NoAction)
 
-  crm String @unique
+  sessionVersions ClinicalSessionVersion[]
+
+  @@map("admins")
+}
+
+model SupervisorDoctor {
+  publicId String  @id @default(uuid())
+  crm      String  @map("crm") @db.VarChar(20)
+  crmUf    UF      @map("crm_uf")
+  tipoCrm  TipoCRM @default(DEFINITIVO) @map("tipo_crm")
 
   userId Int  @unique @map("user_id")
   user   User @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: NoAction)
 
-  isActive  Boolean   @default(true) @map("is_active")
+  status DoctorStatus @default(ATIVO)
+
+  dataRegistro DateTime  @default(now()) @map("data_registro")
+  dataValidade DateTime? @map("data_validade")
+
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime  @updatedAt @map("updated_at")
   deletedAt DateTime? @map("deleted_at")
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
+  @@unique([crm, crmUf])
   @@index([userId])
-  @@index([isActive])
+  @@index([status])
   @@map("supervisor_doctors")
+}
+
+model HealthProfessional {
+  publicId   String               @id @default(uuid())
+  registro   String
+  speciality ProfessionalCategory @map("speciality")
+
+  userId Int  @unique @map("user_id")
+  user   User @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: NoAction)
+
+  executedExercises StrengthExercise[]
+  logs              Log[]
+
+  @@map("health_professionals")
+}
+
+model Patient {
+  publicId              String    @id @default(uuid())
+  birthDate             DateTime  @map("birth_date") @db.Date
+  medicationsInUse      String?   @map("medications_in_use")
+  assistantDoctorName   String?   @map("assistant_doctor_name")
+  assistantDoctorPhone  String?   @map("assistant_doctor_phone")
+  healthInsuranceNumber String?   @map("health_insurance_number")
+  referenceHospital     String?   @map("reference_hospital")
+  emergencyContactName  String?   @map("emergency_contact_name")
+  emergencyContactPhone String?   @map("emergency_contact_phone")
+  healthInsuranceName   String?   @map("health_insurance")
+  gender                Gender
+  riskLevel             RiskLevel @map("risk_level")
+
+  userId Int  @unique @map("user_id")
+  user   User @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: NoAction)
+
+  classId      Int?   @map("class_id")
+  patientClass Class? @relation(fields: [classId], references: [id])
+
+  visits Visit[]
+  logs   Log[]
+
+  @@map("patients")
+}
+
+// =======================================================
+// CLINICAL MODELS
+// =======================================================
+
+model Class {
+  publicId  String @unique @default(uuid()) @map("session_id")
+  id        Int    @id @default(autoincrement())
+  dayOfWeek String @map("day_of_week")
+  time      String
+
+  patients Patient[]
+
+  @@map("classes")
+}
+
+model Visit {
+  publicId String @unique @default(uuid()) @map("visit_id")
+  id       Int    @id @default(autoincrement())
+
+  patientId String  @map("patient_id")
+  patient   Patient @relation(fields: [patientId], references: [publicId])
+
+  checkIn      DateTime? @map("check_in") @db.Date
+  checkOut     DateTime? @map("check_out") @db.Date
+  sessionStart DateTime? @map("session_start") @db.Date
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Date
+
+  clinicalSession ClinicalSession?
+
+  @@map("visits")
+}
+
+model ClinicalSession {
+  publicId String @unique @default(uuid()) @map("clinical_session_id") //pedro_tabela_coracao_id
+  id       Int    @id @default(autoincrement())
+
+  visitId Int?   @unique @map("visit_id")
+  visit   Visit? @relation(fields: [visitId], references: [id])
+
+  status ClinicalSessionStatus
+
+  // Pre-vitals
+  preSystolic     Float? @map("pre_systolic")
+  preDiastolic    Float? @map("pre_diastolic")
+  preHeartRate    Int?   @map("pre_heart_rate")
+  preSaturation   Int?   @map("pre_saturation")
+  preWeight       Float? @map("pre_weight")
+  preBloodGlucose Float? @map("pre_blood_glucose")
+
+  // Post-vitals
+  postSystolic     Float? @map("post_systolic")
+  postDiastolic    Float? @map("post_diastolic")
+  postHeartRate    Int?   @map("post_heart_rate")
+  postSaturation   Int?   @map("post_saturation")
+  postWeight       Float? @map("post_weight")
+  postBloodGlucose Float? @map("post_blood_glucose")
+
+  alerts                 Alert[]
+  aerobicBicycleSheets   AerobicTrainingBicycleSheet[]
+  aerobicTreadmillSheets AerobicTrainingTreadmillSheet[]
+  strengthTrainingSheets StrengthTrainingSheet[]
+  logs                   Log[]
+  versions               ClinicalSessionVersion[]
+
+  @@map("clinical_sessions")
+}
+
+model Alert {
+  publicId String @unique @default(uuid()) @map("alert_id")
+  id       Int    @id @default(autoincrement())
+
+  clinicalSessionId Int             @map("clinical_session_id")
+  session           ClinicalSession @relation(fields: [clinicalSessionId], references: [id])
+  message           String
+  date              DateTime        @default(now()) @db.Timestamptz(3)
+
+  @@map("alerts")
+}
+
+model Log {
+  publicId String @unique @default(uuid()) @map("log_id")
+  id       Int    @id @default(autoincrement())
+
+  clinicalSessionId Int             @map("clinical_session_id")
+  session           ClinicalSession @relation(fields: [clinicalSessionId], references: [id])
+
+  healthProfessionalId String             @map("health_professional_public_id")
+  healthProfessional   HealthProfessional @relation(fields: [healthProfessionalId], references: [publicId])
+
+  patientId String  @map("patient_public_id")
+  patient   Patient @relation(fields: [patientId], references: [publicId])
+
+  @@map("logs")
+}
+
+// =======================================================
+// AUDIT & METADATA
+// =======================================================
+
+model ClinicalSessionVersion {
+  id            String @id @default(uuid())
+  contentBefore Json   @map("content_before")
+  tableName     String @map("table_name") //clinical_sessions
+  elementId     String @map("element_id")
+
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Date
+
+  // Relações opcionais para rastrear quem fez e onde ocorreu
+  userId Int?  @map("user_id")
+  user   User? @relation(fields: [userId], references: [id])
+
+  sessionId     Int?             @map("session_id")
+  session       ClinicalSession? @relation(fields: [sessionId], references: [id])
+  admin         Admin?           @relation(fields: [adminPublicId], references: [publicId])
+  adminPublicId String?
+
+  @@map("clinical_session_versions")
+}
+
+model ClinicalFormMetadata {
+  id       String  @id @default(uuid()) @map("form_id")
+  element1 String?
+  element2 String?
+  element3 String?
+
+  @@map("clinical_form_metadata")
+}
+
+// =======================================================
+// TRAINING SHEETS
+// =======================================================
+
+model AerobicTrainingBicycleSheet {
+  id String @id @default(uuid())
+
+  clinicalSessionId Int             @map("clinical_session_id")
+  session           ClinicalSession @relation(fields: [clinicalSessionId], references: [id])
+
+  distance          Float?
+  velocity          Float?
+  systolic          Float? @map("systolic")
+  diastolic         Float? @map("diastolic")
+  perceivedExertion Int?   @map("perceived_exertion")
+  peakHeartRate     Int?   @map("peak_heart_rate")
+  saturation        Int?
+
+  type BicycleType
+
+  @@map("aerobic_training_bicycle_sheets")
+}
+
+model AerobicTrainingTreadmillSheet {
+  id String @id @default(uuid())
+
+  clinicalSessionId Int             @map("clinical_session_id")
+  session           ClinicalSession @relation(fields: [clinicalSessionId], references: [id])
+
+  velocity          Float?
+  time              Int?
+  distance          Float?
+  repetitions       Int?
+  systolic          Float? @map("systolic")
+  diastolic         Float? @map("diastolic")
+  perceivedExertion Int?   @map("perceived_exertion")
+
+  type TreadmillType
+
+  @@map("aerobic_training_treadmill_sheets")
+}
+
+model StrengthTrainingSheet {
+  publicId String @unique @default(uuid()) @map("alert_id")
+  id       Int    @id @default(autoincrement())
+
+  clinicalSessionId Int             @unique @map("clinical_session_id")
+  session           ClinicalSession @relation(fields: [clinicalSessionId], references: [id])
+
+  restrictions String?
+
+  exercises StrengthExercise[]
+
+  @@map("strength_training_sheets")
+}
+
+model StrengthExercise {
+  id String @id @default(uuid())
+
+  sheetId Int                   @map("sheet_id")
+  sheet   StrengthTrainingSheet @relation(fields: [sheetId], references: [id])
+
+  professionalId String?             @map("professional_id")
+  professional   HealthProfessional? @relation(fields: [professionalId], references: [publicId])
+
+  notes       String?              @map("observacoes")
+  sets        Int                  @map("series")
+  repetitions Int                  @map("repeticoes")
+  load        Float?               @map("carga")
+  type        StrengthExerciseType
+
+  @@map("strength_exercises")
 }
