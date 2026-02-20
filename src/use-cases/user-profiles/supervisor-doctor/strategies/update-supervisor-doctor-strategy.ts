@@ -1,7 +1,7 @@
 import { ok, err, Result } from '@core/logic/result'
 import { SupervisorDoctor, User } from '@prisma/client'
 import { SupervisorDoctorPayload, SupervisorDoctorRepository } from '@repositories/supervisor-doctor-respository'
-import { IProfileStrategy } from '@tps/use-case/strategies/profile-strategy.interface'
+import { IProfileStrategy } from '@tps/use-case/user-profiles/strategies/profile-strategy.interface'
 import { IValidator } from '@tps/validation/validator.interface'
 import { filterUndefinedValues } from '@utils/filter-undefined-values'
 

@@ -4,8 +4,8 @@ import { UserRole } from '@prisma/client'
 import {
   IProfileStrategyFactory,
   ProfileStrategyCreator,
-} from '@tps/use-case/factories/strategies/profile-strategy-factory'
-import { IProfileStrategy } from '@tps/use-case/strategies/profile-strategy.interface'
+} from '@tps/use-case/user-profiles/factories/profile-strategy-factory'
+import { IProfileStrategy } from '@tps/use-case/user-profiles/strategies/profile-strategy.interface'
 import { UserWithNoRoleError } from '@use-cases/errors/users/user-with-no-role-error'
 import { makeDeleteSupervisorDoctorStrategy } from '../supervisor-doctor/factories/make-delete-supervisor-doctor-strategy'
 

@@ -1,7 +1,7 @@
 import { ok, err, Result } from '@core/logic/result'
 import { User, UserRole } from '@prisma/client'
 import { UserRepository } from '@repositories/users-repository'
-import { IProfileStrategyFactory } from '@tps/use-case/factories/strategies/profile-strategy-factory'
+import { IProfileStrategyFactory } from '@tps/use-case/user-profiles/factories/profile-strategy-factory'
 import { UserAlreadyDeactivatedError } from '@use-cases/errors/users/user-already-deactivated-error'
 import { UserAlreadyExistsError } from '@use-cases/errors/users/user-already-exists-error'
 import { UserNotFoundError } from '@use-cases/errors/users/user-not-found-error'
