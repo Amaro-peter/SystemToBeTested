@@ -7,6 +7,7 @@ import {
 } from '@tps/use-case/user-profiles/factories/profile-strategy-factory'
 import { IProfileStrategy } from '@tps/use-case/user-profiles/strategies/profile-strategy.interface'
 import { UserWithNoRoleError } from '@use-cases/errors/users/user-with-no-role-error'
+import { makeRegisterPatientStrategy } from '../patients/factories/make-register-patient'
 import { makeRegisterSupervisorDoctorStrategy } from '../supervisor-doctor/factories/make-register-supervisor-doctor-strategy'
 
 const strategies: Record<UserRole, ProfileStrategyCreator> = {
@@ -14,8 +15,8 @@ const strategies: Record<UserRole, ProfileStrategyCreator> = {
     return makeRegisterSupervisorDoctorStrategy(dbContext)
   },
 
-  [UserRole.PATIENT]: () => {
-    throw new Error('RegisterPatientStrategy not implemented')
+  [UserRole.PATIENT]: (dbContext) => {
+    return makeRegisterPatientStrategy(dbContext)
   },
 
   [UserRole.HEALTH_PROFESSIONAL]: () => {

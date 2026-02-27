@@ -27,8 +27,6 @@ export class AuthenticateUserUseCase {
 
     if (emailSchema.safeParse(login).success) {
       user = await this.usersRepository.findBy({ email: login })
-    } else {
-      user = await this.usersRepository.findBy({ username: login })
     }
 
     const hashToCompare = user?.passwordHash || DUMMY_HASH
@@ -48,10 +46,10 @@ export class AuthenticateUserUseCase {
       throw new InvalidCredentialsError()
     }
 
-    await this.authenticationAuditsRepository.create({
+    /*await this.authenticationAuditsRepository.create({
       userId: user.id,
       status: 'SUCCESS',
-    })
+    })*/
 
     //if (!user || !doesPasswordMatch) throw new InvalidCredentialsError()
 
