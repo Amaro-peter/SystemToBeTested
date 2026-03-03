@@ -1,6 +1,6 @@
 import { User, UserRole } from '@prisma/client'
 
-type HTTPUser = {
+export type IUserHTTP = {
   publicId: string
   name: string
   email: string
@@ -8,14 +8,14 @@ type HTTPUser = {
   role: UserRole
   phoneNumber: string
   isActive: boolean
-  createdAt: Date
-  updatedAt: Date
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export class UserPresenter {
-  static toHTTP(user: User): HTTPUser
-  static toHTTP(users: User[]): HTTPUser[]
-  static toHTTP(input: User | User[]): HTTPUser | HTTPUser[] {
+  static toHTTP(user: User): IUserHTTP
+  static toHTTP(users: User[]): IUserHTTP[]
+  static toHTTP(input: User | User[]): IUserHTTP | IUserHTTP[] {
     if (Array.isArray(input)) {
       return input.map((u) => this.toHTTP(u))
     }

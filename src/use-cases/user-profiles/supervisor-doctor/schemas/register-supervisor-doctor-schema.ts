@@ -1,27 +1,20 @@
-import { DoctorStatus, TipoCRM, UF } from '@prisma/client'
+import { TipoCRM } from '@prisma/client'
+import { SupervisorDoctorSchemaMessages } from 'messages/schemas/supervisor-doctor/supervisor-doctor-schema-messages'
 import z from 'zod'
 import { crmSchema } from './utils/crm'
+import { crmUfSchema } from './utils/crm-uf'
+import { statusCrmSchema } from './utils/status-crm-schema'
+import { tipoCrmSchema } from './utils/tipo-crm'
 
 export const registerSupervisorDoctorPayloadSchema = z
   .object({
     crm: crmSchema,
-
-    crmUf: z.enum(Object.values(UF), {
-      message: 'Unidade Federativa inválida.',
-    }),
-
-    tipoCrm: z.enum(Object.values(TipoCRM), {
-      message: 'Tipo de CRM inválido. Deve ser PROVISORIO, DEFINITIVO ou ESTRANGEIRO.',
-    }),
-
-    status: z.enum(Object.values(DoctorStatus), {
-      message: 'Status inválido. Deve ser ATIVO, INATIVO ou SUSPENSO.',
-    }),
-
+    crmUf: crmUfSchema,
+    tipoCrm: tipoCrmSchema,
+    status: statusCrmSchema,
     dataRegistro: z.coerce
-      .date({ message: 'Data de registro é obrigatória' })
-      .max(new Date(), { message: 'Data de registro não pode ser futura' }),
-
+      .date({ message: SupervisorDoctorSchemaMessages.dataRegistro.required })
+      .max(new Date(), { message: SupervisorDoctorSchemaMessages.dataRegistro.futureDate }),
     dataValidade: z.coerce.date().optional(),
   })
   .superRefine((data, ctx) => {
@@ -31,7 +24,7 @@ export const registerSupervisorDoctorPayloadSchema = z
     if (isProvisorio && !hasValidade) {
       ctx.addIssue({
         code: 'custom',
-        message: 'A data de validade é obrigatória para registros com tipo de CRM PROVISÓRIO',
+        message: SupervisorDoctorSchemaMessages.dataValidade.requiredForProvisorio,
         path: ['dataValidade'],
       })
     }
@@ -39,7 +32,7 @@ export const registerSupervisorDoctorPayloadSchema = z
     if (!isProvisorio && hasValidade) {
       ctx.addIssue({
         code: 'custom',
-        message: `A data de validade não deve ser preenchida para o tipo de CRM ${data.tipoCrm}`,
+        message: SupervisorDoctorSchemaMessages.dataValidade.notAllowedForType(data.tipoCrm),
         path: ['dataValidade'],
       })
     }
@@ -48,7 +41,7 @@ export const registerSupervisorDoctorPayloadSchema = z
       if (data.dataValidade && data.dataValidade <= data.dataRegistro) {
         ctx.addIssue({
           code: 'custom',
-          message: 'A data de validade deve ser posterior à data de registro',
+          message: SupervisorDoctorSchemaMessages.dataValidade.mustBeAfterRegistro,
           path: ['dataValidade'],
         })
       }

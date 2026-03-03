@@ -1,10 +1,10 @@
 import { ok, err, Result } from '@core/logic/result'
-import { SupervisorDoctor, User } from '@prisma/client'
-import { SupervisorDoctorRepository } from '@repositories/supervisor-doctor-respository'
+import { User } from '@prisma/client'
+import { ISupervisorDoctor, SupervisorDoctorRepository } from '@repositories/supervisor-doctor-respository'
 import { IProfileStrategy } from '@tps/use-case/user-profiles/strategies/profile-strategy.interface'
 
 type DeleteSupervisorDoctorStrategyResponse = {
-  supervisorDoctor: SupervisorDoctor
+  supervisorDoctor: ISupervisorDoctor
 }
 
 export class DeleteSupervisorDoctorStrategy implements IProfileStrategy<DeleteSupervisorDoctorStrategyResponse> {

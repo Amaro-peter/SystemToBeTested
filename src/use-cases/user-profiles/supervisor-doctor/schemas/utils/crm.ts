@@ -1,9 +1,9 @@
-import { messages } from '@constants/messages'
+import { SupervisorDoctorSchemaMessages } from 'messages/schemas/supervisor-doctor/supervisor-doctor-schema-messages'
 import z from 'zod'
 
 export const crmSchema = z
-  .string({ message: 'O CRM é obrigatório' })
+  .string({ message: SupervisorDoctorSchemaMessages.crm.required })
   .trim()
-  .min(4, 'CRM deve ter no mínimo 4 dígitos')
-  .max(6, 'CRM deve ter no máximo 6 dígitos')
-  .regex(/^\d+$/, messages.validation.invalidCRM)
+  .min(4, SupervisorDoctorSchemaMessages.crm.minLength)
+  .max(6, SupervisorDoctorSchemaMessages.crm.maxLength)
+  .regex(/^\d+$/, SupervisorDoctorSchemaMessages.crm.invalid)
