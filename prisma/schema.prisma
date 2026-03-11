@@ -22,7 +22,7 @@ enum AuthenticationStatus {
 enum UserRole {
   ADMIN
   SUPERVISOR_DOCTOR
-  HEALTH_PROFESSIONAL
+  INSTRUCTOR
   PATIENT
 }
 
@@ -145,7 +145,7 @@ model User {
   // Relações (camelCase)
   supervisorDoctor        SupervisorDoctor?
   admin                   Admin?
-  healthProfessional      HealthProfessional?
+  Instructor      Instructor?
   patient                 Patient?
   authenticationAudits    AuthenticationAudit[]
   clinicalSessionVersions ClinicalSessionVersion[]
@@ -217,7 +217,7 @@ model SupervisorDoctor {
   @@map("supervisor_doctors")
 }
 
-model HealthProfessional {
+model Instructor {
   id       Int    @id @default(autoincrement())
   publicId String @unique @default(uuid(7))
 
@@ -231,7 +231,7 @@ model HealthProfessional {
   executedExercises StrengthExercise[]
   logs              Log[]
 
-  @@map("health_professionals")
+  @@map("instructors")
 }
 
 model Patient {
@@ -369,14 +369,14 @@ model Log {
   clinicalSessionId Int             @map("clinical_session_id")
   session           ClinicalSession @relation(fields: [clinicalSessionId], references: [id], onDelete: Cascade)
 
-  healthProfessionalId Int                @map("health_professional_id")
-  healthProfessional   HealthProfessional @relation(fields: [healthProfessionalId], references: [id])
+  instructorId Int                @map("instructor_id")
+  instructor   Instructor @relation(fields: [instructorId], references: [id])
 
   patientId Int     @map("patient_id")
   patient   Patient @relation(fields: [patientId], references: [id])
 
   @@index([clinicalSessionId])
-  @@index([healthProfessionalId])
+  @@index([instructorId])
   @@map("logs")
 }
 
@@ -503,8 +503,8 @@ model StrengthExercise {
   strengthTrainingSheetId Int                   @map("strength_training_sheet_id")
   strengthTrainingSheet   StrengthTrainingSheet @relation(fields: [strengthTrainingSheetId], references: [id], onDelete: Cascade)
 
-  professionalId Int?                @map("professional_id")
-  professional   HealthProfessional? @relation(fields: [professionalId], references: [id], onDelete: SetNull)
+  instructorId Int?                @map("instructor_id")
+  instructor   Instructor? @relation(fields: [instructorId], references: [id], onDelete: SetNull)
 
   @@index([strengthTrainingSheetId])
   @@map("strength_exercises")
