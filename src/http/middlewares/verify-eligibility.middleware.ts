@@ -20,7 +20,7 @@ export async function verifyEligibility(request: FastifyRequest, reply: FastifyR
       return
 
     case UserRole.SUPERVISOR_DOCTOR:
-    case UserRole.HEALTH_PROFESSIONAL:
+    case UserRole.INSTRUCTOR:
       // Supervisors and HealthProfs can ONLY register PATIENTS.
       // They cannot create Admins, other Supervisors, or HealthProfs.
       if (roleToCreate === UserRole.PATIENT) {

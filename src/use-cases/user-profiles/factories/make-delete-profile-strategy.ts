@@ -18,8 +18,8 @@ const strategies: Record<UserRole, ProfileStrategyCreator> = {
     throw new Error('DeletePatientStrategy not implemented')
   },
 
-  [UserRole.HEALTH_PROFESSIONAL]: () => {
-    throw new Error('DeleteHealthProfessionalStrategy not implemented')
+  [UserRole.INSTRUCTOR]: () => {
+    throw new Error('DeleteInstructorStrategy not implemented')
   },
 
   [UserRole.ADMIN]: () => {

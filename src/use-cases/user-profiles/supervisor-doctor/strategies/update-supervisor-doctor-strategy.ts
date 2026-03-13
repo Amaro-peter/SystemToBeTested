@@ -1,4 +1,5 @@
 import { ok, err, Result } from '@core/logic/result'
+import { filterUndefinedValues } from '@core/shared/filter-undefined-values'
 import { User } from '@prisma/client'
 import {
   ISupervisorDoctor,
@@ -7,7 +8,6 @@ import {
 } from '@repositories/supervisor-doctor-respository'
 import { IProfileStrategy } from '@tps/use-case/user-profiles/strategies/profile-strategy.interface'
 import { IValidator } from '@tps/validation/validator.interface'
-import { filterUndefinedValues } from '@utils/filter-undefined-values'
 
 type SupervisorDoctorStrategyResponse = {
   supervisorDoctor: ISupervisorDoctor

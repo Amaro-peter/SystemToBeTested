@@ -18,8 +18,8 @@ const strategies: Record<UserRole, ProfileStrategyCreator> = {
     throw new Error('UpdatePatientStrategy not implemented')
   },
 
-  [UserRole.HEALTH_PROFESSIONAL]: () => {
-    throw new Error('UpdateHealthProfessionalStrategy not implemented')
+  [UserRole.INSTRUCTOR]: () => {
+    throw new Error('UpdateInstructorStrategy not implemented')
   },
 
   [UserRole.ADMIN]: () => {

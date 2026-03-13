@@ -8,12 +8,12 @@ import {
   SupervisorDoctorPayload,
   SupervisorDoctorRepository,
 } from '@repositories/supervisor-doctor-respository'
-import { supervisorDoctorErrorMapping } from '@use-cases/errors/supervisor-doctor/supervisor-doctor-error-mapper'
 
 export class PrismaSupervisorDoctorRepository implements SupervisorDoctorRepository {
-  private errorMapper = new PrismaErrorMapper(supervisorDoctorErrorMapping)
-
-  constructor(private readonly dbContext: DatabaseContext) {}
+  constructor(
+    private readonly dbContext: DatabaseContext,
+    private errorMapper: PrismaErrorMapper,
+  ) {}
 
   async create(publicId: string, data: SupervisorDoctorPayload): Promise<Result<ISupervisorDoctor, Error>> {
     try {
