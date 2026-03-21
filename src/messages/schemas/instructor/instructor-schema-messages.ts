@@ -1,5 +1,6 @@
 export const InstructorSchemaMessages = {
   registration: {
+    invalid: 'O registro profissional deve ser um texto válido',
     required: 'O registro profissional é obrigatório',
     minLength: 'O registro profissional deve ter no mínimo 4 caracteres',
     maxLength: 'O registro profissional deve ter no máximo 20 caracteres',

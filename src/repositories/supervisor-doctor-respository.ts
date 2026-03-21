@@ -44,7 +44,7 @@ export interface SupervisorDoctorRepository {
   create(publicId: string, data: SupervisorDoctorPayload): Promise<Result<ISupervisorDoctor, Error>>
   update(userId: number, data: Partial<SupervisorDoctorPayload>): Promise<Result<ISupervisorDoctor, Error>>
   deactivateSupervisorDoctor(userId: number): Promise<Result<ISupervisorDoctor, Error>>
-  findMany(page: number, pageSize: number): Promise<Result<ISupervisorDoctor[], Error>>
+  list(page: number, pageSize: number): Promise<Result<ISupervisorDoctor[], Error>>
   search(
     filters: ISearchSupervisorDoctorFilters,
     page: number,

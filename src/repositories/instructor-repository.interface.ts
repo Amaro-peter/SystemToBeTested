@@ -33,6 +33,6 @@ export interface InstructorRepository {
   create(publicId: string, data: InstructorPayload): Promise<Result<IInstructor, Error>>
   update(userId: number, data: Partial<InstructorPayload>): Promise<Result<IInstructor, Error>>
   deactivateInstructor(userId: number): Promise<Result<IInstructor, Error>>
-  findMany(page: number, pageSize: number): Promise<Result<IInstructor[], Error>>
+  list(page: number, pageSize: number): Promise<Result<IInstructor[], Error>>
   search(filters: ISearchInstructorFilters, page: number, pageSize: number): Promise<Result<IInstructor[], Error>>
 }

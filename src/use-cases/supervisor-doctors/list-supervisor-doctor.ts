@@ -12,7 +12,7 @@ export class ListSupervisorDoctorUseCase {
   constructor(private supervisorDoctorRepository: SupervisorDoctorRepository) {}
 
   async execute({ page, pageSize }: ListSupervisorDoctorUseCaseRequest): Promise<ListSupervisorDoctorUseCaseResponse> {
-    const supervisorDoctorsResult = await this.supervisorDoctorRepository.findMany(page, pageSize)
+    const supervisorDoctorsResult = await this.supervisorDoctorRepository.list(page, pageSize)
 
     return supervisorDoctorsResult
   }

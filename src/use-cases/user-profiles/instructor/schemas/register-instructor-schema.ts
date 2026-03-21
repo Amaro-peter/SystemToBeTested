@@ -8,7 +8,7 @@ export const specialitySchema = z.enum(Object.values(EnumProfessionalCategory), 
 
 export const registerInstructorPayloadSchema = z.object({
   registration: z
-    .string({ message: InstructorSchemaMessages.registration.required })
+    .string({ message: InstructorSchemaMessages.registration.invalid })
     .trim()
     .min(4, InstructorSchemaMessages.registration.minLength)
     .max(20, InstructorSchemaMessages.registration.maxLength),

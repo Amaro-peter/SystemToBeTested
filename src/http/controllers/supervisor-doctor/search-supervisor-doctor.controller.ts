@@ -1,6 +1,6 @@
 import { HttpErrorMapper } from '@http/errors/http-error-mapper'
 import { SupervisorDoctorPresenter } from '@http/presenters/supervisor-doctor/supervisor-doctor-presenter'
-import { searchSupervisorDoctorByNameSchema } from '@http/schemas/supervisor-doctor.ts/search-supervisor-doctor-schema'
+import { searchSupervisorDoctorByNameSchema } from '@http/schemas/supervisor-doctor/search-supervisor-doctor-schema'
 import { makeSearchSupervisorDoctorUseCase } from '@use-cases/supervisor-doctors/factories/make-search-supervisor-doctor-use-case'
 import { FastifyReply, FastifyRequest } from 'fastify'
 

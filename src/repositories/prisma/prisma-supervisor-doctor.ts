@@ -69,7 +69,7 @@ export class PrismaSupervisorDoctorRepository implements SupervisorDoctorReposit
     }
   }
 
-  async findMany(page: number, pageSize: number): Promise<Result<ISupervisorDoctor[], Error>> {
+  async list(page: number, pageSize: number): Promise<Result<ISupervisorDoctor[], Error>> {
     try {
       const supervisorDoctors = await this.dbContext.client.supervisorDoctor.findMany({
         take: pageSize,

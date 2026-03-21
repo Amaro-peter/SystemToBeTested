@@ -67,7 +67,7 @@ export class PrismaInstructorRepository implements InstructorRepository {
     }
   }
 
-  async findMany(page: number, pageSize: number): Promise<Result<IInstructor[], Error>> {
+  async list(page: number, pageSize: number): Promise<Result<IInstructor[], Error>> {
     try {
       const instructors = await this.dbContext.client.instructor.findMany({
         take: pageSize,
@@ -79,7 +79,6 @@ export class PrismaInstructorRepository implements InstructorRepository {
           user: true,
         },
       })
-
       return ok(instructors as unknown as IInstructor[])
     } catch (error) {
       const domainError = this.errorMapper.mapToKnownError(error)

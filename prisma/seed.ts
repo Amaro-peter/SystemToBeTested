@@ -93,6 +93,81 @@ export async function seed() {
   })
 
   // =====================
+  // INSTRUCTOR USERS
+  // =====================
+  const instructorUser1 = await prisma.user.upsert({
+    where: { email: 'instrutor.bruno@example.com' },
+    update: {},
+    create: {
+      name: 'Bruno Almeida',
+      email: 'instrutor.bruno@example.com',
+      phoneNumber: '11966661111',
+      cpf: '515.724.170-18',
+      passwordHash: '$2a$12$y7AWvv8D1P9AVn2G8XkNZOXyrMZ658QFJyR.2kxM.oP/wmgB/.7.2',
+      role: 'INSTRUCTOR',
+    },
+  })
+
+  const instructorUser2 = await prisma.user.upsert({
+    where: { email: 'instrutora.larissa@example.com' },
+    update: {},
+    create: {
+      name: 'Larissa Nunes',
+      email: 'instrutora.larissa@example.com',
+      phoneNumber: '11966662222',
+      cpf: '675.306.710-20',
+      passwordHash: '$2a$12$y7AWvv8D1P9AVn2G8XkNZOXyrMZ658QFJyR.2kxM.oP/wmgB/.7.2',
+      role: 'INSTRUCTOR',
+    },
+  })
+
+  const instructorUser3 = await prisma.user.upsert({
+    where: { email: 'instrutor.caio@example.com' },
+    update: {},
+    create: {
+      name: 'Caio Ferreira',
+      email: 'instrutor.caio@example.com',
+      phoneNumber: '11966663333',
+      cpf: '378.815.330-34',
+      passwordHash: '$2a$12$y7AWvv8D1P9AVn2G8XkNZOXyrMZ658QFJyR.2kxM.oP/wmgB/.7.2',
+      role: 'INSTRUCTOR',
+    },
+  })
+
+  // =====================
+  // INSTRUCTORS
+  // =====================
+  await Promise.all([
+    prisma.instructor.upsert({
+      where: { userId: instructorUser1.id },
+      update: {},
+      create: {
+        registration: 'INST1001',
+        speciality: 'EDUCADOR_FISICO',
+        userId: instructorUser1.id,
+      },
+    }),
+    prisma.instructor.upsert({
+      where: { userId: instructorUser2.id },
+      update: {},
+      create: {
+        registration: 'INST1002',
+        speciality: 'TECNICO_DE_ENFERMAGEM',
+        userId: instructorUser2.id,
+      },
+    }),
+    prisma.instructor.upsert({
+      where: { userId: instructorUser3.id },
+      update: {},
+      create: {
+        registration: 'INST1003',
+        speciality: 'EDUCADOR_FISICO',
+        userId: instructorUser3.id,
+      },
+    }),
+  ])
+
+  // =====================
   // PATIENT USERS
   // =====================
   const patientUsers = await Promise.all([
