@@ -168,4 +168,13 @@ export class PrismaSupervisorDoctorRepository implements SupervisorDoctorReposit
       patientCount: supervisorDoctor._count?.patients,
     }
   }
+
+  async findByUserId(userId: number): Promise<SupervisorDoctor | null> {
+    const supervisorDoctor = await this.dbContext.client.supervisorDoctor.findUnique({
+      where: {
+        userId,
+      },
+    })
+    return supervisorDoctor
+  }
 }

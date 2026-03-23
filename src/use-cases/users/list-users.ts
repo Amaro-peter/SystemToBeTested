@@ -1,16 +1,20 @@
+import { Result } from '@core/logic/result'
 import { User } from '@prisma/client'
 import { UserRepository } from '@repositories/users-repository'
 
-type ListUsersUseCaseResponse = {
-  users: User[]
+interface ListUsersUseCaseRequest {
+  page: number
+  pageSize: number
 }
+
+type ListUsersUseCaseResponse = Result<User[], Error>
 
 export class ListUsersUseCase {
   constructor(private usersRepository: UserRepository) {}
 
-  async execute(): Promise<ListUsersUseCaseResponse> {
-    const users = await this.usersRepository.list()
+  async execute({ page, pageSize }: ListUsersUseCaseRequest): Promise<ListUsersUseCaseResponse> {
+    const users = await this.usersRepository.list(page, pageSize)
 
-    return { users }
+    return users
   }
 }

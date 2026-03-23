@@ -10,6 +10,7 @@ import { getUserByPublicId, getUserProfile } from './get-user-profile.controller
 import { listUsers } from './list-users.controller'
 import { register } from './register-user.controller'
 import { resetPassword } from './reset-password.controller'
+import { searchUsersController } from './search-users.controller'
 import { updateUser } from './update-user.controller'
 
 export async function usersRoutes(app: FastifyInstance) {
@@ -36,4 +37,7 @@ export async function usersRoutes(app: FastifyInstance) {
   // Users administration routes:
   app.get('/:publicId', { onRequest: [verifyJwt, verifyUserRole([UserRole.ADMIN])] }, getUserByPublicId)
   app.get('/', { onRequest: [verifyJwt, verifyUserRole([UserRole.ADMIN])] }, listUsers)
+
+  //app.get('/search', { onRequest: [verifyJwt, verifyUserRole([UserRole.ADMIN])] }, searchUsersController)
+  app.post('/search', { onRequest: [verifyJwt, verifyUserRole([UserRole.ADMIN])] }, searchUsersController)
 }

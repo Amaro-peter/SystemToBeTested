@@ -19,4 +19,5 @@ export interface PatientRepository {
   create(publicId: string, data: CreatePatientPayload): Promise<Result<Patient, Error>>
   update(userId: number, data: Partial<CreatePatientPayload>): Promise<Result<Patient, Error>>
   deactivatePatient(userId: number): Promise<Result<Patient, Error>>
+  findByUserId(userId: number): Promise<Patient | null>
 }

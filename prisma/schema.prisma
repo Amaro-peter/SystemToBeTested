@@ -145,7 +145,7 @@ model User {
   // Relações (camelCase)
   supervisorDoctor        SupervisorDoctor?
   admin                   Admin?
-  Instructor      Instructor?
+  instructor              Instructor?
   patient                 Patient?
   authenticationAudits    AuthenticationAudit[]
   clinicalSessionVersions ClinicalSessionVersion[]
@@ -369,7 +369,7 @@ model Log {
   clinicalSessionId Int             @map("clinical_session_id")
   session           ClinicalSession @relation(fields: [clinicalSessionId], references: [id], onDelete: Cascade)
 
-  instructorId Int                @map("instructor_id")
+  instructorId Int        @map("instructor_id")
   instructor   Instructor @relation(fields: [instructorId], references: [id])
 
   patientId Int     @map("patient_id")
@@ -503,7 +503,7 @@ model StrengthExercise {
   strengthTrainingSheetId Int                   @map("strength_training_sheet_id")
   strengthTrainingSheet   StrengthTrainingSheet @relation(fields: [strengthTrainingSheetId], references: [id], onDelete: Cascade)
 
-  instructorId Int?                @map("instructor_id")
+  instructorId Int?        @map("instructor_id")
   instructor   Instructor? @relation(fields: [instructorId], references: [id], onDelete: SetNull)
 
   @@index([strengthTrainingSheetId])

@@ -1,5 +1,5 @@
 import { Result } from '@core/logic/result'
-import { DoctorStatus, Patient, TipoCRM, UF, User } from '@prisma/client'
+import { DoctorStatus, Patient, SupervisorDoctor, TipoCRM, UF, User } from '@prisma/client'
 
 export interface ISupervisorDoctor {
   id: number
@@ -50,4 +50,6 @@ export interface SupervisorDoctorRepository {
     page: number,
     pageSize: number,
   ): Promise<Result<ISupervisorDoctor[], Error>>
+
+  findByUserId(userId: number): Promise<SupervisorDoctor | null>
 }

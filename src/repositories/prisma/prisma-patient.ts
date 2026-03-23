@@ -62,4 +62,13 @@ export class PrismaPatientRepository implements PatientRepository {
       return err(this.errorMapper.mapToKnownError(error))
     }
   }
+
+  async findByUserId(userId: number): Promise<Patient | null> {
+    const patient = await this.dbContext.client.patient.findUnique({
+      where: {
+        userId,
+      },
+    })
+    return patient
+  }
 }

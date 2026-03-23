@@ -2,13 +2,13 @@ import { ok, err, Result } from '@core/logic/result'
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { PrismaErrorMapper } from '@lib/prisma/utils/prisma-error-mapper'
 import { Prisma, User } from '@prisma/client'
-import { UserRepository } from '@repositories/users-repository'
-import { userErrorMapping } from '@use-cases/errors/users/user-error-mapper'
+import { ISearchUserFilters, UserRepository } from '@repositories/users-repository'
 
 export class PrismaUsersRepository implements UserRepository {
-  private errorMapper = new PrismaErrorMapper(userErrorMapping)
-
-  constructor(private readonly dbContext: DatabaseContext) {}
+  constructor(
+    private readonly dbContext: DatabaseContext,
+    private readonly errorMapper: PrismaErrorMapper,
+  ) {}
 
   async create(data: Prisma.UserCreateInput): Promise<Result<User, Error>> {
     try {
@@ -37,8 +37,17 @@ export class PrismaUsersRepository implements UserRepository {
     })
   }
 
-  async list(): Promise<User[]> {
-    return await this.dbContext.client.user.findMany()
+  async list(page: number, pageSize: number): Promise<Result<User[], Error>> {
+    try {
+      const users = await this.dbContext.client.user.findMany({
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+      })
+      return ok(users)
+    } catch (error) {
+      const domainError = this.errorMapper.mapToKnownError(error)
+      return err(domainError)
+    }
   }
 
   async update(publicId: string, data: Prisma.UserUpdateInput): Promise<Result<User, Error>> {
@@ -69,6 +78,56 @@ export class PrismaUsersRepository implements UserRepository {
       return ok(user)
     } catch (error) {
       return err(this.errorMapper.mapToKnownError(error))
+    }
+  }
+
+  async search(filters: ISearchUserFilters, page: number, pageSize: number): Promise<Result<User[], Error>> {
+    try {
+      const { name, email, cpf, isActive } = filters ?? {}
+
+      const where: Prisma.UserWhereInput = {}
+
+      if (name) {
+        where.name = {
+          contains: name,
+          mode: 'insensitive',
+        }
+      }
+
+      if (email) {
+        where.email = {
+          contains: email,
+          mode: 'insensitive',
+        }
+      }
+
+      if (cpf) {
+        where.cpf = cpf
+      }
+
+      if (isActive !== undefined) {
+        where.isActive = isActive
+      }
+
+      const users = await this.dbContext.client.user.findMany({
+        where,
+        take: pageSize,
+        skip: (page - 1) * pageSize,
+        orderBy: {
+          name: 'asc',
+        },
+        include: {
+          admin: true,
+          patient: true,
+          supervisorDoctor: true,
+          instructor: true,
+        },
+      })
+
+      return ok(users)
+    } catch (error) {
+      const domainError = this.errorMapper.mapToKnownError(error)
+      return err(domainError)
     }
   }
 }

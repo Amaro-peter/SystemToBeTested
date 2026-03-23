@@ -2,13 +2,14 @@ import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { PrismaErrorMapper } from '@lib/prisma/utils/prisma-error-mapper'
 import { PrismaUsersRepository } from '@repositories/prisma/prisma-users-repository'
 import { userErrorMapping } from '@use-cases/errors/users/user-error-mapper'
-import { GetUserProfileUseCase } from '@use-cases/users/get-user-profile'
+import { SearchUsersUseCase } from '../search-users'
 
-export function makeGetUserProfileUseCase() {
-  const dbContext = new DatabaseContext()
+export function makeSearchUsersUseCase() {
+  const databaseContext = new DatabaseContext()
   const errorMapper = new PrismaErrorMapper(userErrorMapping)
-  const usersRepository = new PrismaUsersRepository(dbContext, errorMapper)
-  const getUserProfileUseCase = new GetUserProfileUseCase(usersRepository)
+  const usersRepository = new PrismaUsersRepository(databaseContext, errorMapper)
 
-  return getUserProfileUseCase
+  const searchUsersUseCase = new SearchUsersUseCase(usersRepository)
+
+  return searchUsersUseCase
 }
