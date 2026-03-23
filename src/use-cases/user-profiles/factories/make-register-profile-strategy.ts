@@ -7,6 +7,7 @@ import {
 } from '@tps/use-case/user-profiles/factories/profile-strategy-factory'
 import { IProfileStrategy } from '@tps/use-case/user-profiles/strategies/profile-strategy.interface'
 import { UserWithNoRoleError } from '@use-cases/errors/users/user-with-no-role-error'
+import { MakeAdminRegisterStrategy } from '../admin/factories/make-register-admin'
 import { makeRegisterInstructorStrategy } from '../instructor/factories/make-register-instructor-strategy'
 import { makeRegisterPatientStrategy } from '../patients/factories/make-register-patient'
 import { makeRegisterSupervisorDoctorStrategy } from '../supervisor-doctor/factories/make-register-supervisor-doctor-strategy'
@@ -24,8 +25,8 @@ const strategies: Record<UserRole, ProfileStrategyCreator> = {
     return makeRegisterInstructorStrategy(dbContext)
   },
 
-  [UserRole.ADMIN]: () => {
-    throw new Error('RegisterAdminStrategy not implemented')
+  [UserRole.ADMIN]: (dbContext) => {
+    return MakeAdminRegisterStrategy(dbContext)
   },
 }
 
