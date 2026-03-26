@@ -16,7 +16,7 @@ export interface PrismaHTTPErrorMapping {
   [key: string]: (() => HTTPDomainError) | undefined
 }
 
-export class PrismaErrorMapper implements IErrorMapper<HTTPDomainError> {
+export class PrismaHTTPErrorMapper implements IErrorMapper<HTTPDomainError> {
   constructor(private readonly errorMapping: PrismaHTTPErrorMapping) {}
 
   mapToKnownError(error: unknown): HTTPDomainError | unknown {

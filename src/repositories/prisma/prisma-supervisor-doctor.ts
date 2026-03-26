@@ -7,12 +7,12 @@ import {
 } from '@core/contracts/repositories/supervisor-doctor-respository'
 import { ok, err, Result } from '@core/shared/result'
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
-import { PrismaErrorMapper } from '@lib/prisma/utils/prisma-error-mapper'
+import { PrismaHTTPErrorMapper } from '@lib/prisma/utils/prisma-error-mapper'
 
 export class PrismaSupervisorDoctorRepository implements SupervisorDoctorRepository {
   constructor(
     private readonly dbContext: DatabaseContext,
-    private errorMapper: PrismaErrorMapper,
+    private errorMapper: PrismaHTTPErrorMapper,
   ) {}
 
   async create(publicId: string, data: SupervisorDoctorPayload): Promise<Result<ISupervisorDoctor, Error>> {

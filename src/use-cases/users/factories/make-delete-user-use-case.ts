@@ -1,5 +1,5 @@
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
-import { PrismaErrorMapper } from '@lib/prisma/utils/prisma-error-mapper'
+import { PrismaHTTPErrorMapper } from '@lib/prisma/utils/prisma-error-mapper'
 import { PrismaUsersRepository } from '@repositories/prisma/prisma-users-repository'
 import { TransactionalUseCaseDecorator } from '@use-cases/decorators/transactional-use-case.decorator'
 import { userHTTPErrorMapping } from '@use-cases/errors/users/user-error-mapper'
@@ -9,7 +9,7 @@ import { DeleteProfileStrategyFactory } from '../../user-profiles/factories/make
 export function makeDeleteUserUseCase() {
   const dbContext = new DatabaseContext()
 
-  const errorMapper = new PrismaErrorMapper(userHTTPErrorMapping)
+  const errorMapper = new PrismaHTTPErrorMapper(userHTTPErrorMapping)
 
   const usersRepository = new PrismaUsersRepository(dbContext, errorMapper)
 

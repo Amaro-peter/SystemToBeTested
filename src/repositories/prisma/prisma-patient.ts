@@ -2,12 +2,12 @@ import { Patient } from '@prisma/client'
 import { CreatePatientPayload, PatientRepository } from '@core/contracts/repositories/patient-repository'
 import { ok, err, Result } from '@core/shared/result'
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
-import { PrismaErrorMapper } from '@lib/prisma/utils/prisma-error-mapper'
+import { PrismaHTTPErrorMapper } from '@lib/prisma/utils/prisma-error-mapper'
 
 export class PrismaPatientRepository implements PatientRepository {
   constructor(
     private readonly dbContext: DatabaseContext,
-    private readonly errorMapper: PrismaErrorMapper,
+    private readonly errorMapper: PrismaHTTPErrorMapper,
   ) {}
 
   async create(publicId: string, data: CreatePatientPayload): Promise<Result<Patient, Error>> {

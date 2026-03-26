@@ -1,7 +1,7 @@
 // src/use-cases/factories/users/make-register-user-use-case.ts
 
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
-import { PrismaErrorMapper } from '@lib/prisma/utils/prisma-error-mapper'
+import { PrismaHTTPErrorMapper } from '@lib/prisma/utils/prisma-error-mapper'
 import { PrismaUsersRepository } from '@repositories/prisma/prisma-users-repository'
 import { TransactionalUseCaseDecorator } from '@use-cases/decorators/transactional-use-case.decorator'
 import { userHTTPErrorMapping } from '@use-cases/errors/users/user-error-mapper'
@@ -10,7 +10,7 @@ import { RegisterProfileStrategyFactory } from '../../user-profiles/factories/ma
 
 export function makeRegisterUserUseCase() {
   const dbContext = new DatabaseContext()
-  const errorMapper = new PrismaErrorMapper(userHTTPErrorMapping)
+  const errorMapper = new PrismaHTTPErrorMapper(userHTTPErrorMapping)
   const usersRepository = new PrismaUsersRepository(dbContext, errorMapper)
 
   // 1. Instanciamos a Factory CONCRETA passando o banco

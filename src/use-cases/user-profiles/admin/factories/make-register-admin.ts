@@ -1,5 +1,5 @@
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
-import { PrismaErrorMapper } from '@lib/prisma/utils/prisma-error-mapper'
+import { PrismaHTTPErrorMapper } from '@lib/prisma/utils/prisma-error-mapper'
 import { ZodValidator } from '@lib/validation/zod-validator'
 import { PrismaAdminRepository } from '@repositories/prisma/prisma-admin-repository'
 import { adminHTTPErrorMapping } from '@use-cases/errors/admin/admin-error-mapper'
@@ -7,7 +7,7 @@ import { registerAdminPayloadSchema } from '../../../../schemas/use-cases/user-p
 import { RegisterAdminStrategy } from '../strategies/register-admin-strategy'
 
 export function MakeAdminRegisterStrategy(dbContext: DatabaseContext) {
-  const errorMapper = new PrismaErrorMapper(adminHTTPErrorMapping)
+  const errorMapper = new PrismaHTTPErrorMapper(adminHTTPErrorMapping)
   const adminRepository = new PrismaAdminRepository(dbContext, errorMapper)
   const validator = new ZodValidator(registerAdminPayloadSchema)
 

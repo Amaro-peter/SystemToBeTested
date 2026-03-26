@@ -7,12 +7,12 @@ import {
 } from '@core/contracts/repositories/instructor-repository.interface'
 import { ok, err, Result } from '@core/shared/result'
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
-import { PrismaErrorMapper } from '@lib/prisma/utils/prisma-error-mapper'
+import { PrismaHTTPErrorMapper } from '@lib/prisma/utils/prisma-error-mapper'
 
 export class PrismaInstructorRepository implements InstructorRepository {
   constructor(
     private readonly dbContext: DatabaseContext,
-    private readonly errorMapper: PrismaErrorMapper,
+    private readonly errorMapper: PrismaHTTPErrorMapper,
   ) {}
 
   async create(publicId: string, data: InstructorPayload): Promise<Result<IInstructor, Error>> {

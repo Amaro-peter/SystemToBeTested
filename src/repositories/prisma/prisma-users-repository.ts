@@ -2,12 +2,12 @@ import { Prisma, User } from '@prisma/client'
 import { ISearchUserFilters, UserRepository } from '@core/contracts/repositories/users-repository'
 import { ok, err, Result } from '@core/shared/result'
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
-import { PrismaErrorMapper } from '@lib/prisma/utils/prisma-error-mapper'
+import { PrismaHTTPErrorMapper } from '@lib/prisma/utils/prisma-error-mapper'
 
 export class PrismaUsersRepository implements UserRepository {
   constructor(
     private readonly dbContext: DatabaseContext,
-    private readonly errorMapper: PrismaErrorMapper,
+    private readonly errorMapper: PrismaHTTPErrorMapper,
   ) {}
 
   async create(data: Prisma.UserCreateInput): Promise<Result<User, Error>> {
@@ -120,7 +120,7 @@ export class PrismaUsersRepository implements UserRepository {
           admin: true,
           patient: true,
           supervisorDoctor: true,
-          instructor: true,
+          Instructor: true,
         },
       })
 
