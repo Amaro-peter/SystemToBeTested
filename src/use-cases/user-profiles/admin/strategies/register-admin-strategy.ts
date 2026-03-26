@@ -1,5 +1,5 @@
-import { err, ok, Result } from '@core/logic/result'
 import { Admin, User } from '@prisma/client'
+import { err, ok, Result } from '@core/logic/result'
 import { CreateAdminPayload } from '@repositories/admin-repository'
 import { PrismaAdminRepository } from '@repositories/prisma/prisma-admin-repository'
 import { IProfileStrategy } from '@tps/use-case/user-profiles/strategies/profile-strategy.interface'

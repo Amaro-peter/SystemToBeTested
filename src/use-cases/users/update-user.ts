@@ -1,5 +1,5 @@
-import { ok, err, Result } from '@core/logic/result'
 import { User, UserRole } from '@prisma/client'
+import { ok, err, Result } from '@core/logic/result'
 import { UserRepository } from '@repositories/users-repository'
 import { IProfileStrategyFactory } from '@tps/use-case/user-profiles/factories/profile-strategy-factory'
 import { UserAlreadyDeactivatedError } from '@use-cases/errors/users/user-already-deactivated-error'

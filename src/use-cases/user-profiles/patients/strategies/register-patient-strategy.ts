@@ -1,5 +1,5 @@
-import { err, ok, Result } from '@core/logic/result'
 import { Patient, User } from '@prisma/client'
+import { err, ok, Result } from '@core/logic/result'
 import { CreatePatientPayload, PatientRepository } from '@repositories/patient-repository'
 import { IProfileStrategy } from '@tps/use-case/user-profiles/strategies/profile-strategy.interface'
 import { IValidator } from '@tps/validation/validator.interface'

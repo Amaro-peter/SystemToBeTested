@@ -1,11 +1,11 @@
+import { User, UserRole } from '@prisma/client'
+import { hash } from 'bcryptjs'
 import { err, ok, Result } from '@core/logic/result'
 import { env } from '@env/index'
-import { User, UserRole } from '@prisma/client'
 import { UserRepository } from '@repositories/users-repository'
 import { IProfileStrategyFactory } from '@tps/use-case/user-profiles/factories/profile-strategy-factory'
 import { UserAlreadyExistsError } from '@use-cases/errors/users/user-already-exists-error'
 import { UserCouldNotBeCreatedError } from '@use-cases/errors/users/user-could-not-be-created-error'
-import { hash } from 'bcryptjs'
 
 interface RegisterUserUseCaseRequest {
   name: string

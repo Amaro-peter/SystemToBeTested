@@ -1,5 +1,5 @@
-import { ok, err, Result } from '@core/logic/result'
 import { User } from '@prisma/client'
+import { ok, err, Result } from '@core/logic/result'
 import {
   ISupervisorDoctor,
   SupervisorDoctorPayload,

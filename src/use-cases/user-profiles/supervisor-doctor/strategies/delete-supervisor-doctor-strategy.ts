@@ -1,5 +1,5 @@
-import { ok, err, Result } from '@core/logic/result'
 import { User } from '@prisma/client'
+import { ok, err, Result } from '@core/logic/result'
 import { ISupervisorDoctor, SupervisorDoctorRepository } from '@repositories/supervisor-doctor-respository'
 import { IProfileStrategy } from '@tps/use-case/user-profiles/strategies/profile-strategy.interface'
 

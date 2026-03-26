@@ -1,8 +1,8 @@
+import type { FastifyReply, FastifyRequest } from 'fastify'
 import { HttpErrorMapper } from '@http/errors/http-error-mapper'
-import { deleteSchema } from '@http/schemas/users/delete-schema'
 import { logger } from '@lib/logger'
 import { makeDeleteUserUseCase } from '@use-cases/users/factories/make-delete-user-use-case'
-import type { FastifyReply, FastifyRequest } from 'fastify'
+import { deleteSchema } from 'schemas/http/users/delete-schema'
 
 export async function deleteUser(request: FastifyRequest, reply: FastifyReply) {
   const { role } = deleteSchema.parse(request.body)

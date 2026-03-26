@@ -1,9 +1,9 @@
+import { FastifyReply, FastifyRequest } from 'fastify'
 import { HttpErrorMapper } from '@http/errors/http-error-mapper'
 import { SupervisorDoctorPresenter } from '@http/presenters/supervisor-doctor/supervisor-doctor-presenter'
-import { listSupervisorDoctorSchema } from '@http/schemas/supervisor-doctor/list-supervisor-doctor-schema'
 import { logger } from '@lib/logger'
 import { makeListSupervisorDoctorUseCase } from '@use-cases/supervisor-doctors/factories/make-list-supervisor-doctor-use-case'
-import { FastifyReply, FastifyRequest } from 'fastify'
+import { listSupervisorDoctorSchema } from 'schemas/http/supervisor-doctor/list-supervisor-doctor-schema'
 
 export async function listSupervisorDoctorController(request: FastifyRequest, reply: FastifyReply) {
   const { page, pageSize } = listSupervisorDoctorSchema.parse(request.query)

@@ -1,5 +1,5 @@
-import { Result } from '@core/logic/result'
 import { Prisma, User } from '@prisma/client'
+import { Result } from '@core/logic/result'
 
 export interface TokenData {
   token: string | null

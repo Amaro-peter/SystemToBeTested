@@ -1,5 +1,5 @@
-import { Result } from '@core/logic/result'
 import { User } from '@prisma/client'
+import { Result } from '@core/logic/result'
 
 export enum EnumProfessionalCategory {
   TECNICO_DE_ENFERMAGEM = 'TECNICO_DE_ENFERMAGEM',

@@ -15,6 +15,17 @@ export default [
     languageOptions: {
       globals: globals.node,
     },
+    settings: {
+      'import/resolver': {
+        typescript: {
+          project: './tsconfig.json',
+          alwaysTryTypes: true,
+        },
+        node: {
+          extensions: ['.js', '.mjs', '.cjs', '.ts', '.d.ts'],
+        },
+      },
+    },
   },
   pluginJs.configs.recommended,
   ...tseslint.configs.strict,
@@ -46,6 +57,11 @@ export default [
           },
         },
       ],
+      'import/no-unresolved': 'error',
+      'import/named': 'error',
+      'import/default': 'error',
+      'import/namespace': 'error',
+      'import/no-duplicates': 'error',
     },
   },
 ]

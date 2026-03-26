@@ -1,6 +1,6 @@
+import { UserRole } from '@prisma/client'
 import { err, ok, Result } from '@core/logic/result'
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
-import { UserRole } from '@prisma/client'
 import {
   IProfileStrategyFactory,
   ProfileStrategyCreator,

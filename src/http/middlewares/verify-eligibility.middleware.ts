@@ -1,6 +1,6 @@
-import { messages } from '@constants/messages'
 import { UserRole } from '@prisma/client'
 import type { FastifyReply, FastifyRequest } from 'fastify'
+import { messages } from '@constants/messages'
 
 interface RegisterBody {
   role?: UserRole

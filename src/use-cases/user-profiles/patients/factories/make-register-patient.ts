@@ -3,7 +3,7 @@ import { PrismaErrorMapper } from '@lib/prisma/utils/prisma-error-mapper'
 import { ZodValidator } from '@lib/validation/zod-validator'
 import { PrismaPatientRepository } from '@repositories/prisma/prisma-patient'
 import { patientErrorMapping } from '@use-cases/errors/patients/patient-error-mapper'
-import { registerPatientPayloadSchema } from '../schemas/register-patient-schema'
+import { registerPatientPayloadSchema } from '../../../../schemas/use-cases/user-profiles/patients/register-patient-schema'
 import { RegisterPatientStrategy } from '../strategies/register-patient-strategy'
 
 export function makeRegisterPatientStrategy(dbContext: DatabaseContext) {

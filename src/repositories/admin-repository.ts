@@ -1,5 +1,5 @@
-import { Result } from '@core/logic/result'
 import { Admin } from '@prisma/client'
+import { Result } from '@core/logic/result'
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface CreateAdminPayload {}

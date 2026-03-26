@@ -1,9 +1,9 @@
+import type { FastifyReply, FastifyRequest } from 'fastify'
 import { HttpErrorMapper } from '@http/errors/http-error-mapper'
 import { UserPresenter } from '@http/presenters/users/user-presenter'
-import { listUsersSchema } from '@http/schemas/users/list-users-schema'
 import { logger } from '@lib/logger'
 import { makeListUsersUseCase } from '@use-cases/users/factories/make-list-users-use-case'
-import type { FastifyReply, FastifyRequest } from 'fastify'
+import { listUsersSchema } from 'schemas/http/users/list-users-schema'
 
 export async function listUsers(request: FastifyRequest, reply: FastifyReply) {
   const { page, pageSize } = listUsersSchema.parse(request.query)

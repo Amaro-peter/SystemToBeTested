@@ -1,6 +1,6 @@
+import z from 'zod'
 import { err, ok, Result } from '@core/logic/result'
 import { ValidationError } from '@lib/errors/validation-errors/validation-error'
-import z from 'zod'
 import { IValidator } from '../../@types/validation/validator.interface'
 
 export class ZodValidator<T> implements IValidator<T> {

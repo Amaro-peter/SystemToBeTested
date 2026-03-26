@@ -1,9 +1,9 @@
+import type { FastifyReply, FastifyRequest } from 'fastify'
 import { UserPresenter } from '@http/presenters/users/user-presenter'
-import { authenticateSchema } from '@http/schemas/users/authenticate-schema'
 import { logger } from '@lib/logger'
 import { InvalidCredentialsError } from '@use-cases/errors/invalid-credentials-error'
 import { makeAuthenticateUserUseCase } from '@use-cases/users/factories/make-authenticate-user-use-case'
-import type { FastifyReply, FastifyRequest } from 'fastify'
+import { authenticateSchema } from 'schemas/http/users/authenticate-schema'
 
 export async function authenticateUser(request: FastifyRequest, reply: FastifyReply) {
   try {

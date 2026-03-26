@@ -29,6 +29,6 @@
     },
     "typeRoots": ["./node_modules/@types", "./src/types"],
   },
-  "include": ["src/**/*.ts", "src/messages/error/supervisor-doctor", "src/messages/error/user", "src/messages/error/validation-messages", "src/http/schemas/supervisor-doctor"],
+  "include": ["src/**/*.ts", "src/messages/error/supervisor-doctor", "src/messages/error/user", "src/messages/error/validation-messages", "src/schemas/http/supervisor-doctor"],
   "exclude": ["node_modules", "dist"]
 }

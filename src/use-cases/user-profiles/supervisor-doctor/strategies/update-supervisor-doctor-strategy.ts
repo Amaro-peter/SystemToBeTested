@@ -1,6 +1,6 @@
+import { User } from '@prisma/client'
 import { ok, err, Result } from '@core/logic/result'
 import { filterUndefinedValues } from '@core/shared/filter-undefined-values'
-import { User } from '@prisma/client'
 import {
   ISupervisorDoctor,
   SupervisorDoctorPayload,
