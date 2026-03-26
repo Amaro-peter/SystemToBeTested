@@ -2,7 +2,7 @@ import { Prisma } from '@prisma/client'
 import { IErrorMapper } from '@core/contracts/errors/error-mapper.interface'
 import { HTTPDomainError } from 'errors/http/http-domain-error'
 
-export interface PrismaErrorMapping {
+export interface PrismaHTTPErrorMapping {
   P2000?: () => HTTPDomainError // Value too long for column
   P2001?: () => HTTPDomainError // Record not found in where condition
   P2002?: () => HTTPDomainError // Unique constraint violation
@@ -17,7 +17,7 @@ export interface PrismaErrorMapping {
 }
 
 export class PrismaErrorMapper implements IErrorMapper<HTTPDomainError> {
-  constructor(private readonly errorMapping: PrismaErrorMapping) {}
+  constructor(private readonly errorMapping: PrismaHTTPErrorMapping) {}
 
   mapToKnownError(error: unknown): HTTPDomainError | unknown {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
