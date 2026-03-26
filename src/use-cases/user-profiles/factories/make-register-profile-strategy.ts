@@ -2,7 +2,7 @@ import { UserRole } from '@prisma/client'
 import {
   IProfileStrategyFactory,
   ProfileStrategyCreator,
-} from '@core/contracts/use-case/user-profiles/factories/profile-strategy-factory'
+} from '@core/contracts/use-case/user-profiles/factories/profile-strategy-factory.interface'
 import { IProfileStrategy } from '@core/contracts/use-case/user-profiles/strategies/profile-strategy.interface'
 import { err, ok, Result } from '@core/shared/result'
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
