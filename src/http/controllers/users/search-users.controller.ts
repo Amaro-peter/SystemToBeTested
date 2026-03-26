@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
-import { HttpErrorMapper } from '@http/errors/http-error-mapper'
 import { UserPresenter } from '@http/presenters/users/user-presenter'
 import { makeSearchUsersUseCase } from '@use-cases/users/factories/make-search-user-use-case'
+import { HttpErrorMapper } from 'errors/http/http-error-mapper'
 import { searchUsersSchema } from 'schemas/http/users/search-users-schema'
 
 export async function searchUsersController(request: FastifyRequest, reply: FastifyReply) {

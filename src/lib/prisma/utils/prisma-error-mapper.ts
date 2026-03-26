@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client'
-import { HTTPDomainError } from '@http/errors/http-domain-error'
-import { IErrorMapper } from '@tps/error-interfaces/error-mapper.interface'
+import { IErrorMapper } from '@core/contracts/errors/error-mapper.interface'
+import { HTTPDomainError } from 'errors/http/http-domain-error'
 
 export interface PrismaErrorMapping {
   P2000?: () => HTTPDomainError // Value too long for column

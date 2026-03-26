@@ -1,5 +1,5 @@
-import { IAppError } from '@tps/error-interfaces/app-error.interface'
-import { IErrorDetail } from '@tps/error-interfaces/error-detail.interface'
+import { IAppError } from '@core/contracts/errors/app-error.interface'
+import { IErrorDetail } from '@core/contracts/errors/error-detail.interface'
 
 export abstract class BaseError extends Error implements IAppError {
   public statusCode: number

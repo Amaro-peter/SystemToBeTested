@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
-import { HttpErrorMapper } from '@http/errors/http-error-mapper'
 import { SupervisorDoctorPresenter } from '@http/presenters/supervisor-doctor/supervisor-doctor-presenter'
 import { makeSearchSupervisorDoctorUseCase } from '@use-cases/supervisor-doctors/factories/make-search-supervisor-doctor-use-case'
+import { HttpErrorMapper } from 'errors/http/http-error-mapper'
 import { searchSupervisorDoctorByNameSchema } from 'schemas/http/supervisor-doctor/search-supervisor-doctor-schema'
 
 export async function searchSupervisorDoctorController(request: FastifyRequest, reply: FastifyReply) {

@@ -1,11 +1,11 @@
 import { UserRole } from '@prisma/client'
-import { err, ok, Result } from '@core/logic/result'
-import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import {
   IProfileStrategyFactory,
   ProfileStrategyCreator,
-} from '@tps/use-case/user-profiles/factories/profile-strategy-factory'
-import { IProfileStrategy } from '@tps/use-case/user-profiles/strategies/profile-strategy.interface'
+} from '@core/contracts/use-case/user-profiles/factories/profile-strategy-factory'
+import { IProfileStrategy } from '@core/contracts/use-case/user-profiles/strategies/profile-strategy.interface'
+import { err, ok, Result } from '@core/shared/result'
+import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { UserWithNoRoleError } from '@use-cases/errors/users/user-with-no-role-error'
 import { MakeAdminRegisterStrategy } from '../admin/factories/make-register-admin'
 import { makeRegisterInstructorStrategy } from '../instructor/factories/make-register-instructor-strategy'

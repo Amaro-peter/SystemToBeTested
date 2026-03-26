@@ -1,8 +1,8 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
-import { HttpErrorMapper } from '@http/errors/http-error-mapper'
 import { InstructorPresenter } from '@http/presenters/instructor/instructor-presenter'
 import { logger } from '@lib/logger'
 import { makeListInstructorUseCase } from '@use-cases/instructor/factories/make-list-instructor-use-case'
+import { HttpErrorMapper } from 'errors/http/http-error-mapper'
 import { listInstructorSchema } from 'schemas/http/instructor/list-instructor-schema'
 
 export async function listInstructorController(request: FastifyRequest, reply: FastifyReply) {

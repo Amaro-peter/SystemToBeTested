@@ -1,4 +1,4 @@
-import { HTTPDomainError } from '@http/errors/http-domain-error'
+import { HTTPDomainError } from 'errors/http/http-domain-error'
 import { ADMIN_ALREADY_EXISTS_ERROR } from 'messages/error/admin/admin-error-message'
 
 export class AdminAlreadyExistsError extends HTTPDomainError {

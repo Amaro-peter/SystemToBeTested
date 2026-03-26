@@ -1,4 +1,4 @@
-import { IInstructor } from '@repositories/instructor-repository.interface'
+import { IInstructor } from '@core/contracts/repositories/instructor-repository.interface'
 import { IUserHTTP, UserPresenter } from '../users/user-presenter'
 
 interface IInstructorHTTP {

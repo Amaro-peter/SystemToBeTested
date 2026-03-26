@@ -1,8 +1,8 @@
 import { Prisma, User } from '@prisma/client'
-import { ok, err, Result } from '@core/logic/result'
+import { ISearchUserFilters, UserRepository } from '@core/contracts/repositories/users-repository'
+import { ok, err, Result } from '@core/shared/result'
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { PrismaErrorMapper } from '@lib/prisma/utils/prisma-error-mapper'
-import { ISearchUserFilters, UserRepository } from '@repositories/users-repository'
 
 export class PrismaUsersRepository implements UserRepository {
   constructor(

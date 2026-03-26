@@ -1,4 +1,4 @@
-import { HTTPDomainError } from '@http/errors/http-domain-error'
+import { HTTPDomainError } from 'errors/http/http-domain-error'
 import { INSTRUCTOR_OPERATION_FAILED_ERROR } from 'messages/error/health-professional/health-professional-error-message'
 
 export class InstructorOperationFailedError extends HTTPDomainError {

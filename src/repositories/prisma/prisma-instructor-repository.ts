@@ -1,13 +1,13 @@
 import { Prisma } from '@prisma/client'
-import { ok, err, Result } from '@core/logic/result'
-import { DatabaseContext } from '@lib/prisma/helpers/database-context'
-import { PrismaErrorMapper } from '@lib/prisma/utils/prisma-error-mapper'
 import {
   IInstructor,
   ISearchInstructorFilters,
   InstructorPayload,
   InstructorRepository,
-} from '@repositories/instructor-repository.interface'
+} from '@core/contracts/repositories/instructor-repository.interface'
+import { ok, err, Result } from '@core/shared/result'
+import { DatabaseContext } from '@lib/prisma/helpers/database-context'
+import { PrismaErrorMapper } from '@lib/prisma/utils/prisma-error-mapper'
 
 export class PrismaInstructorRepository implements InstructorRepository {
   constructor(

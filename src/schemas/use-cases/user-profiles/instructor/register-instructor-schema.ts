@@ -1,5 +1,5 @@
 import z from 'zod'
-import { EnumProfessionalCategory } from '@repositories/instructor-repository.interface'
+import { EnumProfessionalCategory } from '@core/contracts/repositories/instructor-repository.interface'
 import { InstructorSchemaMessages } from 'messages/schemas/instructor/instructor-schema-messages'
 
 export const specialitySchema = z.enum(Object.values(EnumProfessionalCategory), {

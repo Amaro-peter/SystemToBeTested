@@ -1,4 +1,4 @@
-import { Result } from '@core/logic/result'
+import { Result } from '@core/shared/result'
 
 export interface IValidator<T> {
   validate(data: unknown): Result<T, Error>

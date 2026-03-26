@@ -1,5 +1,5 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import { messages } from '@constants/messages'
+import { messages } from '@core/constants/messages'
 import { logger } from '@lib/logger'
 import { forgotPasswordHtmlTemplate } from '@templates/forgot-password/forgot-password-html'
 import { forgotPasswordTextTemplate } from '@templates/forgot-password/forgot-password-text'

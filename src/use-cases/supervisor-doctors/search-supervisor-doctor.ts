@@ -1,9 +1,9 @@
-import { Result } from '@core/logic/result'
 import {
   ISearchSupervisorDoctorFilters,
   ISupervisorDoctor,
   SupervisorDoctorRepository,
-} from '@repositories/supervisor-doctor-respository'
+} from '@core/contracts/repositories/supervisor-doctor-respository'
+import { Result } from '@core/shared/result'
 
 interface ISearchSupervisorDoctorUseCaseRequest {
   filters: ISearchSupervisorDoctorFilters

@@ -1,5 +1,5 @@
 import { ZodError } from 'zod'
-import { IErrorDetail } from '@tps/error-interfaces/error-detail.interface'
+import { IErrorDetail } from '@core/contracts/errors/error-detail.interface'
 import { BaseError } from 'errors/base-error'
 import { VALIDATION_ERROR } from 'messages/error/validation-messages/validation-error-messages'
 

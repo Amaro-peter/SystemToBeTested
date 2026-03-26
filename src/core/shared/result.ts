@@ -1,5 +1,5 @@
 import { ensureError } from '@core/shared/error-handlers'
-import { ResultPattern } from '@tps/custom/result-pattern'
+import { ResultPattern } from '@core/types/result-pattern'
 
 type ResultSuccess<T> = { success: true; value: T }
 type ResultFailure<E> = { success: false; error: E }

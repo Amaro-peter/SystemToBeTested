@@ -1,7 +1,7 @@
 import z from 'zod'
-import { err, ok, Result } from '@core/logic/result'
+import { err, ok, Result } from '@core/shared/result'
 import { ValidationError } from '@lib/errors/validation-errors/validation-error'
-import { IValidator } from '../../@types/validation/validator.interface'
+import { IValidator } from '../../core/contracts/validation/validator.interface'
 
 export class ZodValidator<T> implements IValidator<T> {
   constructor(private schema: z.ZodType<T>) {}

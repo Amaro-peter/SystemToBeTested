@@ -1,4 +1,4 @@
-import { Result } from '@core/logic/result'
+import { Result } from '@core/shared/result'
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 
 interface IUseCase<IRequest, IResponse> {

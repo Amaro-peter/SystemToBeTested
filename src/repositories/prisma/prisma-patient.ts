@@ -1,8 +1,8 @@
 import { Patient } from '@prisma/client'
-import { ok, err, Result } from '@core/logic/result'
+import { CreatePatientPayload, PatientRepository } from '@core/contracts/repositories/patient-repository'
+import { ok, err, Result } from '@core/shared/result'
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { PrismaErrorMapper } from '@lib/prisma/utils/prisma-error-mapper'
-import { CreatePatientPayload, PatientRepository } from '@repositories/patient-repository'
 
 export class PrismaPatientRepository implements PatientRepository {
   constructor(

@@ -1,5 +1,5 @@
 import { DoctorStatus, Patient, SupervisorDoctor, TipoCRM, UF, User } from '@prisma/client'
-import { Result } from '@core/logic/result'
+import { Result } from '@core/shared/result'
 
 export interface ISupervisorDoctor {
   id: number
