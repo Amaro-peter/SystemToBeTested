@@ -1,5 +1,5 @@
-import { Result } from '@core/shared/result'
 import { Gender, Patient, RiskLevel } from '@prisma/client'
+import { Result } from '@core/shared/result'
 
 export type CreatePatientPayload = {
   birthDate: Date

@@ -1,8 +1,8 @@
+import z from 'zod'
 import { SearchSupervisorDoctorMessages } from 'messages/schemas/supervisor-doctor/supervisor-doctor-schema-messages'
 import { crmSchema } from 'schemas/utils/crm'
 import { crmUfSchema } from 'schemas/utils/crm-uf'
 import { statusCrmSchema } from 'schemas/utils/status-crm-schema'
-import z from 'zod'
 
 export const searchSupervisorDoctorByNameSchema = z.object({
   name: z

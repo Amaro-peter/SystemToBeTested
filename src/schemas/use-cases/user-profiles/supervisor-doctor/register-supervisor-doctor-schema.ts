@@ -1,5 +1,5 @@
-import { SupervisorDoctorSchemaMessages } from 'messages/schemas/supervisor-doctor/supervisor-doctor-schema-messages'
 import z from 'zod'
+import { SupervisorDoctorSchemaMessages } from 'messages/schemas/supervisor-doctor/supervisor-doctor-schema-messages'
 import { crmSchema } from '../../../utils/crm'
 import { crmUfSchema } from '../../../utils/crm-uf'
 import { statusCrmSchema } from '../../../utils/status-crm-schema'
@@ -14,6 +14,6 @@ export const registerSupervisorDoctorPayloadSchema = z
       .max(new Date(), { message: SupervisorDoctorSchemaMessages.dataRegistro.futureDate }),
     dataValidade: z.coerce.date().optional(),
   })
-  .superRefine((_data, _ctx) => {})
+  .superRefine(() => {})
 
 export type RegisterSupervisorDoctorPayloadType = z.infer<typeof registerSupervisorDoctorPayloadSchema>

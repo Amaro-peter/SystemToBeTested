@@ -1,6 +1,6 @@
+import { User } from '@prisma/client'
 import { UserRepository } from '@core/contracts/repositories/users-repository'
 import { Result } from '@core/shared/result'
-import { User } from '@prisma/client'
 
 interface ListUsersUseCaseRequest {
   page: number

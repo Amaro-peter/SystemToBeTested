@@ -1,5 +1,5 @@
-import { Result } from '@core/shared/result'
 import { DoctorStatus, Patient, SupervisorDoctor, UF, User } from '@prisma/client'
+import { Result } from '@core/shared/result'
 
 export interface ISupervisorDoctor {
   id: number

@@ -1,6 +1,6 @@
+import { AuthenticationAudit, Prisma } from '@prisma/client'
 import { AuthenticationAuditsRepository } from '@core/contracts/repositories/authentication-audits-repository'
 import { prisma } from '@lib/prisma'
-import { AuthenticationAudit, Prisma } from '@prisma/client'
 
 export class PrismaAuthenticationAuditsRepository implements AuthenticationAuditsRepository {
   async create(data: Prisma.AuthenticationAuditUncheckedCreateInput): Promise<AuthenticationAudit> {

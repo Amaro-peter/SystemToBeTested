@@ -1,5 +1,5 @@
-import { ListUserSchemaMessages } from 'messages/schemas/users/user-schema-messages'
 import z from 'zod'
+import { ListUserSchemaMessages } from 'messages/schemas/users/user-schema-messages'
 
 export const listUsersSchema = z.object({
   page: z.coerce

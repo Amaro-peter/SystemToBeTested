@@ -1,9 +1,9 @@
+import type { FastifyReply, FastifyRequest } from 'fastify'
 import { UserPresenter } from '@http/presenters/users/user-presenter'
 import { UserProfilePresenter } from '@http/presenters/users/user-profile-presenter'
 import { logger } from '@lib/logger'
 import { makeUpdateUserUseCase } from '@use-cases/users/factories/make-update-user-use-case'
 import { HttpErrorMapper } from 'errors/http/http-error-mapper'
-import type { FastifyReply, FastifyRequest } from 'fastify'
 import { updateSchema } from 'schemas/http/users/update-schema'
 
 export async function updateUser(request: FastifyRequest, reply: FastifyReply) {

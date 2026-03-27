@@ -1,5 +1,5 @@
-import { SupervisorDoctorSchemaMessages } from 'messages/schemas/supervisor-doctor/supervisor-doctor-schema-messages'
 import z from 'zod'
+import { SupervisorDoctorSchemaMessages } from 'messages/schemas/supervisor-doctor/supervisor-doctor-schema-messages'
 import { crmSchema } from '../../../utils/crm'
 import { crmUfSchema } from '../../../utils/crm-uf'
 import { statusCrmSchema } from '../../../utils/status-crm-schema'

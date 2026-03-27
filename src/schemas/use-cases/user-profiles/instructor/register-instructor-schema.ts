@@ -1,6 +1,6 @@
+import z from 'zod'
 import { EnumProfessionalCategory } from '@core/contracts/repositories/instructor-repository.interface'
 import { InstructorSchemaMessages } from 'messages/schemas/instructor/instructor-schema-messages'
-import z from 'zod'
 
 export const specialitySchema = z.enum(Object.values(EnumProfessionalCategory), {
   message: InstructorSchemaMessages.speciality.invalid,

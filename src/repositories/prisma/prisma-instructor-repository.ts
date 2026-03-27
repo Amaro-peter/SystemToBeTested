@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client'
 import {
   IInstructor,
   ISearchInstructorFilters,
@@ -7,7 +8,6 @@ import {
 import { ok, err, Result } from '@core/shared/result'
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { PrismaHTTPErrorMapper } from '@lib/prisma/utils/prisma-error-mapper'
-import { Prisma } from '@prisma/client'
 
 export class PrismaInstructorRepository implements InstructorRepository {
   constructor(

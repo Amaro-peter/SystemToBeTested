@@ -1,5 +1,5 @@
-import { ListInstructorMessages } from 'messages/schemas/instructor/instructor-schema-messages'
 import z from 'zod'
+import { ListInstructorMessages } from 'messages/schemas/instructor/instructor-schema-messages'
 
 export const listInstructorSchema = z.object({
   page: z.coerce
