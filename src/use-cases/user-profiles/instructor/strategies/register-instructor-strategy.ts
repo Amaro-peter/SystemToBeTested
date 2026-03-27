@@ -1,4 +1,3 @@
-import { User } from '@prisma/client'
 import {
   IInstructor,
   InstructorPayload,
@@ -7,6 +6,7 @@ import {
 import { IProfileStrategy } from '@core/contracts/use-case/user-profiles/strategies/profile-strategy.interface'
 import { IValidator } from '@core/contracts/validation/validator.interface'
 import { err, ok, Result } from '@core/shared/result'
+import { User } from '@prisma/client'
 
 type InstructorStrategyResponse = {
   instructor: IInstructor

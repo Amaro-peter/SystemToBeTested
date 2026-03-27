@@ -1,9 +1,9 @@
-import type { FastifyReply, FastifyRequest } from 'fastify'
 import { UserPresenter } from '@http/presenters/users/user-presenter'
 import { UserProfilePresenter } from '@http/presenters/users/user-profile-presenter'
 import { logger } from '@lib/logger'
 import { makeRegisterUserUseCase } from '@use-cases/users/factories/make-register-user-use-case'
 import { HttpErrorMapper } from 'errors/http/http-error-mapper'
+import type { FastifyReply, FastifyRequest } from 'fastify'
 import { registerSchema } from 'schemas/http/users/register-schema'
 
 export async function register(request: FastifyRequest, reply: FastifyReply) {

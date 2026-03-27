@@ -1,9 +1,9 @@
-import z from 'zod'
 import {
   InstructorSchemaMessages,
   SearchInstructorMessages,
 } from 'messages/schemas/instructor/instructor-schema-messages'
 import { specialitySchema } from 'schemas/use-cases/user-profiles/instructor/register-instructor-schema'
+import z from 'zod'
 
 export const searchInstructorSchema = z.object({
   name: z

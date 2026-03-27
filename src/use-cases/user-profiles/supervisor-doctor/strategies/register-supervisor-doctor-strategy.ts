@@ -1,4 +1,3 @@
-import { User } from '@prisma/client'
 import {
   ISupervisorDoctor,
   SupervisorDoctorPayload,
@@ -7,6 +6,7 @@ import {
 import { IProfileStrategy } from '@core/contracts/use-case/user-profiles/strategies/profile-strategy.interface'
 import { IValidator } from '@core/contracts/validation/validator.interface'
 import { ok, err, Result } from '@core/shared/result'
+import { User } from '@prisma/client'
 
 type SupervisorDoctorStrategyResponse = {
   supervisorDoctor: ISupervisorDoctor

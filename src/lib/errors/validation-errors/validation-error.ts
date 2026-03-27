@@ -1,7 +1,7 @@
-import { ZodError } from 'zod'
 import { IErrorDetail } from '@core/contracts/errors/error-detail.interface'
 import { BaseError } from 'errors/base-error'
 import { VALIDATION_ERROR } from 'messages/error/validation-messages/validation-error-messages'
+import { ZodError } from 'zod'
 
 export class ValidationError extends BaseError {
   constructor(zodError: ZodError) {

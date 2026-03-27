@@ -1,4 +1,3 @@
-import { Prisma, SupervisorDoctor, User } from '@prisma/client'
 import {
   ISearchSupervisorDoctorFilters,
   ISupervisorDoctor,
@@ -8,6 +7,7 @@ import {
 import { ok, err, Result } from '@core/shared/result'
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { PrismaHTTPErrorMapper } from '@lib/prisma/utils/prisma-error-mapper'
+import { Prisma, SupervisorDoctor, User } from '@prisma/client'
 
 export class PrismaSupervisorDoctorRepository implements SupervisorDoctorRepository {
   constructor(

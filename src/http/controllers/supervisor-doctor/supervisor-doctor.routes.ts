@@ -1,5 +1,5 @@
-import { FastifyInstance } from 'fastify'
 import { verifyJwt } from '@middlewares/verify-jwt.middleware'
+import { FastifyInstance } from 'fastify'
 import { listSupervisorDoctorController } from './list-supervisor-doctor.controller'
 import { searchSupervisorDoctorController } from './search-supervisor-doctor.controller'
 

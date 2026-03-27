@@ -1,5 +1,5 @@
-import z from 'zod'
 import { SearchUsersMessages } from 'messages/schemas/users/user-schema-messages'
+import z from 'zod'
 
 export const searchUsersSchema = z.object({
   name: z

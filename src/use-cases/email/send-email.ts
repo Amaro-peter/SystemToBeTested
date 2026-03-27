@@ -1,5 +1,5 @@
-import { Attachment } from 'nodemailer/lib/mailer'
 import { sendEmail } from '@utils/send-email'
+import { Attachment } from 'nodemailer/lib/mailer'
 
 interface SendEmailUseCaseRequest {
   to: string

@@ -1,5 +1,5 @@
-import { Prisma, User } from '@prisma/client'
 import { Result } from '@core/shared/result'
+import { Prisma, User } from '@prisma/client'
 
 export interface TokenData {
   token: string | null

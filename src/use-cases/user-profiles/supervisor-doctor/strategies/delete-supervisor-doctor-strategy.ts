@@ -1,10 +1,10 @@
-import { User } from '@prisma/client'
 import {
   ISupervisorDoctor,
   SupervisorDoctorRepository,
 } from '@core/contracts/repositories/supervisor-doctor-respository'
 import { IProfileStrategy } from '@core/contracts/use-case/user-profiles/strategies/profile-strategy.interface'
 import { ok, err, Result } from '@core/shared/result'
+import { User } from '@prisma/client'
 
 type DeleteSupervisorDoctorStrategyResponse = {
   supervisorDoctor: ISupervisorDoctor

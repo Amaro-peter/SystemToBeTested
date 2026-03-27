@@ -1,5 +1,5 @@
-import { z } from 'zod'
 import { userRoleSchema } from 'schemas/utils/role-schema'
+import { z } from 'zod'
 
 export const deleteSchema = z.object({
   role: userRoleSchema,

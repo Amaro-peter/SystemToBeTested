@@ -1,5 +1,5 @@
-import z from 'zod'
 import { ListSupervisorDoctorMessages } from 'messages/schemas/supervisor-doctor/supervisor-doctor-schema-messages'
+import z from 'zod'
 
 export const listSupervisorDoctorSchema = z.object({
   page: z.coerce
