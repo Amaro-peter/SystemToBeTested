@@ -74,7 +74,6 @@ export async function seed() {
     create: {
       crm: 'CRM12345',
       crmUf: 'SP',
-      tipoCrm: 'DEFINITIVO',
       status: 'ATIVO',
       userId: supervisorUser1.id,
     },
@@ -86,7 +85,6 @@ export async function seed() {
     create: {
       crm: 'CRM67890',
       crmUf: 'RJ',
-      tipoCrm: 'DEFINITIVO',
       status: 'ATIVO',
       userId: supervisorUser2.id,
     },

@@ -16,7 +16,6 @@ type SupervisorDoctorHTTP = {
   publicId: string
   crm: string
   crmUf: string
-  tipoCrm: string
   status: string
 }
 
@@ -86,7 +85,6 @@ export class UserPresenter {
             publicId: input.supervisorDoctor.publicId,
             crm: input.supervisorDoctor.crm,
             crmUf: input.supervisorDoctor.crmUf,
-            tipoCrm: input.supervisorDoctor.tipoCrm,
             status: input.supervisorDoctor.status,
           }
         }

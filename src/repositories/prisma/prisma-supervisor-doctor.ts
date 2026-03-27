@@ -123,10 +123,6 @@ export class PrismaSupervisorDoctorRepository implements SupervisorDoctorReposit
         where.crmUf = filters.crmUf
       }
 
-      if (filters.tipoCrm) {
-        where.tipoCrm = filters.tipoCrm
-      }
-
       if (filters.status) {
         where.status = filters.status
       }

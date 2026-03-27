@@ -3,7 +3,6 @@ import { SearchSupervisorDoctorMessages } from 'messages/schemas/supervisor-doct
 import { crmSchema } from 'schemas/utils/crm'
 import { crmUfSchema } from 'schemas/utils/crm-uf'
 import { statusCrmSchema } from 'schemas/utils/status-crm-schema'
-import { tipoCrmSchema } from 'schemas/utils/tipo-crm'
 
 export const searchSupervisorDoctorByNameSchema = z.object({
   name: z
@@ -14,7 +13,6 @@ export const searchSupervisorDoctorByNameSchema = z.object({
   crm: crmSchema.optional(),
   status: statusCrmSchema.optional(),
   crmUf: crmUfSchema.optional(),
-  tipoCrm: tipoCrmSchema.optional(),
   page: z
     .number({
       message: SearchSupervisorDoctorMessages.page.invalid,

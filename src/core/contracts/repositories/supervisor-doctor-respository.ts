@@ -1,4 +1,4 @@
-import { DoctorStatus, Patient, SupervisorDoctor, TipoCRM, UF, User } from '@prisma/client'
+import { DoctorStatus, Patient, SupervisorDoctor, UF, User } from '@prisma/client'
 import { Result } from '@core/shared/result'
 
 export interface ISupervisorDoctor {
@@ -7,7 +7,6 @@ export interface ISupervisorDoctor {
 
   crm: string
   crmUf: UF
-  tipoCrm: TipoCRM
   status: DoctorStatus
   dataRegistro: Date
   dataValidade: Date | null
@@ -26,7 +25,6 @@ export interface ISupervisorDoctor {
 export type SupervisorDoctorPayload = {
   crm: string
   crmUf: UF
-  tipoCrm: TipoCRM
   status: DoctorStatus
   dataRegistro: Date
   dataValidade?: Date
@@ -36,7 +34,6 @@ export interface ISearchSupervisorDoctorFilters {
   name?: string
   crm?: string
   crmUf?: UF
-  tipoCrm?: TipoCRM
   status?: DoctorStatus
 }
 

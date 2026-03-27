@@ -56,12 +56,6 @@ enum UF {
   TO
 }
 
-enum TipoCRM {
-  DEFINITIVO
-  PROVISORIO
-  ESTRANGEIRO
-}
-
 enum DoctorStatus {
   ATIVO
   SUSPENSO
@@ -196,7 +190,6 @@ model SupervisorDoctor {
 
   crm          String       @map("crm") @db.VarChar(20)
   crmUf        UF           @map("crm_uf")
-  tipoCrm      TipoCRM      @default(DEFINITIVO) @map("tipo_crm")
   status       DoctorStatus @default(ATIVO)
   dataRegistro DateTime     @default(now()) @map("data_registro")
   dataValidade DateTime?    @map("data_validade")
