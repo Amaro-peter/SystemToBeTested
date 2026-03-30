@@ -1,8 +1,9 @@
-import { HTTPDomainError } from '@http/errors/http-domain-error'
+import { ErrorType } from '@core/types/error-type'
+import { DomainError } from 'errors/domain-error'
 import { ADMIN_NOT_FOUND_ERROR } from 'messages/error/admin/admin-error-message'
 
-export class AdminNotFoundError extends HTTPDomainError {
+export class AdminNotFoundError extends DomainError {
   constructor() {
-    super(ADMIN_NOT_FOUND_ERROR, 404)
+    super(ADMIN_NOT_FOUND_ERROR, ErrorType.NOT_FOUND)
   }
 }

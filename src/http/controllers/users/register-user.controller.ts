@@ -1,10 +1,10 @@
-import { HttpErrorMapper } from '@http/errors/http-error-mapper'
+import type { FastifyReply, FastifyRequest } from 'fastify'
 import { UserPresenter } from '@http/presenters/users/user-presenter'
 import { UserProfilePresenter } from '@http/presenters/users/user-profile-presenter'
-import { registerSchema } from '@http/schemas/users/register-schema'
 import { logger } from '@lib/logger'
 import { makeRegisterUserUseCase } from '@use-cases/users/factories/make-register-user-use-case'
-import type { FastifyReply, FastifyRequest } from 'fastify'
+import { HttpErrorMapper } from 'errors/http/http-error.mapper'
+import { registerSchema } from 'schemas/http/users/register-schema'
 
 export async function register(request: FastifyRequest, reply: FastifyReply) {
   const { name, email, cpf, phoneNumber, role, password, specificData } = registerSchema.parse(request.body)

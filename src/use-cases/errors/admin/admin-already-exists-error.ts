@@ -1,8 +1,9 @@
-import { HTTPDomainError } from '@http/errors/http-domain-error'
+import { ErrorType } from '@core/types/error-type'
+import { DomainError } from 'errors/domain-error'
 import { ADMIN_ALREADY_EXISTS_ERROR } from 'messages/error/admin/admin-error-message'
 
-export class AdminAlreadyExistsError extends HTTPDomainError {
+export class AdminAlreadyExistsError extends DomainError {
   constructor() {
-    super(ADMIN_ALREADY_EXISTS_ERROR, 409)
+    super(ADMIN_ALREADY_EXISTS_ERROR, ErrorType.CONFLICT)
   }
 }

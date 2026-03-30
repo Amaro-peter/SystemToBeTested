@@ -6,8 +6,8 @@ import { ListUsersUseCase } from '@use-cases/users/list-users'
 
 export function makeListUsersUseCase() {
   const dbContext = new DatabaseContext()
-  const errorMappeer = new PrismaErrorMapper(userErrorMapping)
-  const usersRepository = new PrismaUsersRepository(dbContext, errorMappeer)
+  const errorMapper = new PrismaErrorMapper(userErrorMapping)
+  const usersRepository = new PrismaUsersRepository(dbContext, errorMapper)
   const listUsersUseCase = new ListUsersUseCase(usersRepository)
 
   return listUsersUseCase

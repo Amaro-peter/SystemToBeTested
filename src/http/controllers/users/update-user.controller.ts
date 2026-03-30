@@ -1,10 +1,10 @@
-import { HttpErrorMapper } from '@http/errors/http-error-mapper'
+import type { FastifyReply, FastifyRequest } from 'fastify'
 import { UserPresenter } from '@http/presenters/users/user-presenter'
 import { UserProfilePresenter } from '@http/presenters/users/user-profile-presenter'
-import { updateSchema } from '@http/schemas/users/update-schema'
 import { logger } from '@lib/logger'
 import { makeUpdateUserUseCase } from '@use-cases/users/factories/make-update-user-use-case'
-import type { FastifyReply, FastifyRequest } from 'fastify'
+import { HttpErrorMapper } from 'errors/http/http-error.mapper'
+import { updateSchema } from 'schemas/http/users/update-schema'
 
 export async function updateUser(request: FastifyRequest, reply: FastifyReply) {
   const { name, email, cpf, phoneNumber, role, specificData } = updateSchema.parse(request.body)

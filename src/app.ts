@@ -1,18 +1,19 @@
-import { messages } from '@constants/messages'
-import { env } from '@env/index'
 import fastifyCors from '@fastify/cors'
 import fastifyJwt from '@fastify/jwt'
+import * as Sentry from '@sentry/node'
+import { nodeProfilingIntegration } from '@sentry/profiling-node'
+import fastify from 'fastify'
+import { v7 as uuidv7 } from 'uuid'
+import z, { ZodError } from 'zod'
+import { messages } from '@core/constants/messages'
+import { env } from '@env/index'
 import { asyncContext } from '@http/plugins/async-context.plugin'
 import { appRoutes } from '@http/routes'
 import { asyncLocalStorage } from '@lib/async-local-storage'
 import { ValidationError } from '@lib/errors/validation-errors/validation-error'
 import { logger, runWithRequestId, runWithUserContext } from '@lib/logger'
 import { logError } from '@lib/logger/helpers'
-import * as Sentry from '@sentry/node'
-import { nodeProfilingIntegration } from '@sentry/profiling-node'
-import fastify from 'fastify'
-import { v7 as uuidv7 } from 'uuid'
-import z, { ZodError } from 'zod'
+import { toHttpStatus } from 'errors/http/http-error-status.mapper'
 
 z.config(z.locales.pt())
 
@@ -99,16 +100,18 @@ app.register(appRoutes)
 
 app.setErrorHandler((error, _request, reply) => {
   if (error instanceof ValidationError) {
+    const statusCode = toHttpStatus(error.type)
     logger.debug(error.body, 'Validation error occurred')
 
-    return reply.status(error.statusCode).send(error.body)
+    return reply.status(statusCode).send(error.body)
   }
 
   if (error instanceof ZodError) {
     const validationError = new ValidationError(error)
+    const statusCode = toHttpStatus(validationError.type)
     logger.debug(validationError.body, 'Validation error occurred')
 
-    return reply.status(validationError.statusCode).send(validationError.body)
+    return reply.status(statusCode).send(validationError.body)
   }
 
   if (error instanceof SyntaxError) {

@@ -1,6 +1,6 @@
-import { TOKEN_DURATION_REGEX } from '@constants/regex-constants'
 import ms from 'ms'
 import { z } from 'zod'
+import { TOKEN_DURATION_REGEX } from '@core/constants/regex-constants'
 
 const envSchema = z.object({
   // Environment

@@ -1,9 +1,9 @@
+import type { FastifyReply, FastifyRequest } from 'fastify'
 import { UserPresenter } from '@http/presenters/users/user-presenter'
-import { publicIdSchema } from '@http/schemas/utils/public-id-schema'
 import { logger } from '@lib/logger'
 import { ResourceNotFoundError } from '@use-cases/errors/resource-not-found-error'
 import { makeGetUserProfileUseCase } from '@use-cases/users/factories/make-get-user-profile-use-case'
-import type { FastifyReply, FastifyRequest } from 'fastify'
+import { publicIdSchema } from 'schemas/utils/public-id-schema'
 
 export async function getUserProfile(request: FastifyRequest, reply: FastifyReply) {
   try {

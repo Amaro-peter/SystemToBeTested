@@ -1,0 +1,52 @@
+import { DoctorStatus, Patient, SupervisorDoctor, UF, User } from '@prisma/client'
+import { Result } from '@core/shared/result'
+
+export interface ISupervisorDoctor {
+  id: number
+  publicId: string
+
+  crm: string
+  crmUf: UF
+  status: DoctorStatus
+  dataRegistro: Date
+  dataValidade: Date | null
+
+  userId: number
+  createdAt: Date
+  updatedAt: Date
+  deletedAt: Date | null
+
+  user?: User
+
+  patients?: Patient[]
+  patientCount?: number
+}
+
+export type SupervisorDoctorPayload = {
+  crm: string
+  crmUf: UF
+  status: DoctorStatus
+  dataRegistro: Date
+  dataValidade?: Date
+}
+
+export interface ISearchSupervisorDoctorFilters {
+  name?: string
+  crm?: string
+  crmUf?: UF
+  status?: DoctorStatus
+}
+
+export interface SupervisorDoctorRepository {
+  create(publicId: string, data: SupervisorDoctorPayload): Promise<Result<ISupervisorDoctor, Error>>
+  update(userId: number, data: Partial<SupervisorDoctorPayload>): Promise<Result<ISupervisorDoctor, Error>>
+  deactivateSupervisorDoctor(userId: number): Promise<Result<ISupervisorDoctor, Error>>
+  list(page: number, pageSize: number): Promise<Result<ISupervisorDoctor[], Error>>
+  search(
+    filters: ISearchSupervisorDoctorFilters,
+    page: number,
+    pageSize: number,
+  ): Promise<Result<ISupervisorDoctor[], Error>>
+
+  findByUserId(userId: number): Promise<SupervisorDoctor | null>
+}

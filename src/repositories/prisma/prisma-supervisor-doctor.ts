@@ -1,13 +1,13 @@
-import { ok, err, Result } from '@core/logic/result'
-import { DatabaseContext } from '@lib/prisma/helpers/database-context'
-import { PrismaErrorMapper } from '@lib/prisma/utils/prisma-error-mapper'
 import { Prisma, SupervisorDoctor, User } from '@prisma/client'
 import {
   ISearchSupervisorDoctorFilters,
   ISupervisorDoctor,
   SupervisorDoctorPayload,
   SupervisorDoctorRepository,
-} from '@repositories/supervisor-doctor-respository'
+} from '@core/contracts/repositories/supervisor-doctor-respository'
+import { ok, err, Result } from '@core/shared/result'
+import { DatabaseContext } from '@lib/prisma/helpers/database-context'
+import { PrismaErrorMapper } from '@lib/prisma/utils/prisma-error-mapper'
 
 export class PrismaSupervisorDoctorRepository implements SupervisorDoctorRepository {
   constructor(
@@ -121,10 +121,6 @@ export class PrismaSupervisorDoctorRepository implements SupervisorDoctorReposit
 
       if (filters.crmUf) {
         where.crmUf = filters.crmUf
-      }
-
-      if (filters.tipoCrm) {
-        where.tipoCrm = filters.tipoCrm
       }
 
       if (filters.status) {

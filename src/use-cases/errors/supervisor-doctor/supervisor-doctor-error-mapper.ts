@@ -3,7 +3,7 @@ import { SupervisorDoctorAlreadyExistsError } from '@use-cases/errors/supervisor
 import { SupervisorDoctorNotFoundError } from './supervisor-doctor-not-found-error'
 import { SupervisorDoctorOperationFailedError } from './supervisor-doctor-operation-failed-error'
 
-export const supervisorDoctorErrorMapping: PrismaErrorMapping = {
+export const supervisorErrorMapping: PrismaErrorMapping = {
   P2002: () => new SupervisorDoctorAlreadyExistsError(),
   P2025: () => new SupervisorDoctorNotFoundError(),
   P2003: () => new SupervisorDoctorOperationFailedError(),

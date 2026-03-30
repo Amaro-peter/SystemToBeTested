@@ -1,8 +1,8 @@
-import { HttpErrorMapper } from '@http/errors/http-error-mapper'
-import { UserPresenter } from '@http/presenters/users/user-presenter'
-import { searchUsersSchema } from '@http/schemas/users/search-users-schema'
-import { makeSearchUsersUseCase } from '@use-cases/users/factories/make-search-user-use-case'
 import { FastifyReply, FastifyRequest } from 'fastify'
+import { UserPresenter } from '@http/presenters/users/user-presenter'
+import { makeSearchUsersUseCase } from '@use-cases/users/factories/make-search-user-use-case'
+import { HttpErrorMapper } from 'errors/http/http-error.mapper'
+import { searchUsersSchema } from 'schemas/http/users/search-users-schema'
 
 export async function searchUsersController(request: FastifyRequest, reply: FastifyReply) {
   const { page, pageSize, name, email, cpf, isActive } = searchUsersSchema.parse(request.body)

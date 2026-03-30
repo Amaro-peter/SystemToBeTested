@@ -1,8 +1,12 @@
-import { err, ok, Result } from '@core/logic/result'
 import { User } from '@prisma/client'
-import { IInstructor, InstructorPayload, InstructorRepository } from '@repositories/instructor-repository.interface'
-import { IProfileStrategy } from '@tps/use-case/user-profiles/strategies/profile-strategy.interface'
-import { IValidator } from '@tps/validation/validator.interface'
+import {
+  IInstructor,
+  InstructorPayload,
+  InstructorRepository,
+} from '@core/contracts/repositories/instructor-repository.interface'
+import { IProfileStrategy } from '@core/contracts/use-case/user-profiles/strategies/profile-strategy.interface'
+import { IValidator } from '@core/contracts/validation/validator.interface'
+import { err, ok, Result } from '@core/shared/result'
 
 type InstructorStrategyResponse = {
   instructor: IInstructor

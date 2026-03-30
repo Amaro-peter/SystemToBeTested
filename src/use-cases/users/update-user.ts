@@ -1,7 +1,7 @@
-import { ok, err, Result } from '@core/logic/result'
 import { User, UserRole } from '@prisma/client'
-import { UserRepository } from '@repositories/users-repository'
-import { IProfileStrategyFactory } from '@tps/use-case/user-profiles/factories/profile-strategy-factory'
+import { UserRepository } from '@core/contracts/repositories/users-repository'
+import { IProfileStrategyFactory } from '@core/contracts/use-case/user-profiles/factories/profile-strategy-factory.interface'
+import { ok, err, Result } from '@core/shared/result'
 import { UserAlreadyDeactivatedError } from '@use-cases/errors/users/user-already-deactivated-error'
 import { UserAlreadyExistsError } from '@use-cases/errors/users/user-already-exists-error'
 import { UserNotFoundError } from '@use-cases/errors/users/user-not-found-error'
@@ -57,7 +57,7 @@ export class UpdateUserUseCase {
       phoneNumber: request.phoneNumber,
     })
 
-    if (!updatedUserResult.success) {
+    if (updatedUserResult.success === false) {
       return err(updatedUserResult.error)
     }
 
@@ -73,7 +73,7 @@ export class UpdateUserUseCase {
     if (request.specificData) {
       const strategyResult = this.profileFactory.createStrategy(request.role)
 
-      if (!strategyResult.success) {
+      if (strategyResult.success === false) {
         return err(strategyResult.error)
       }
 
@@ -82,7 +82,7 @@ export class UpdateUserUseCase {
       // O strategy deve retornar Result agora
       const profileResult = await updateProfileStrategy.execute(updatedUser, request.specificData)
 
-      if (!profileResult.success) {
+      if (profileResult.success === false) {
         return err(profileResult.error)
       }
 

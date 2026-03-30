@@ -1,9 +1,9 @@
-import { Result } from '@core/logic/result'
 import {
   IInstructor,
   InstructorRepository,
   ISearchInstructorFilters,
-} from '@repositories/instructor-repository.interface'
+} from '@core/contracts/repositories/instructor-repository.interface'
+import { Result } from '@core/shared/result'
 
 interface ISearchInstructorUseCaseRequest {
   filters: ISearchInstructorFilters

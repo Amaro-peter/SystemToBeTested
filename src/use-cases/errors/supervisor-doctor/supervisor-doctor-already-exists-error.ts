@@ -1,8 +1,9 @@
-import { HTTPDomainError } from '@http/errors/http-domain-error'
+import { ErrorType } from '@core/types/error-type'
+import { DomainError } from 'errors/domain-error'
 import { SUPERVISOR_DOCTOR_ALREADY_EXISTS_ERROR } from 'messages/error/supervisor-doctor/supervisor-doctor-error-messages'
 
-export class SupervisorDoctorAlreadyExistsError extends HTTPDomainError {
+export class SupervisorDoctorAlreadyExistsError extends DomainError {
   constructor() {
-    super(SUPERVISOR_DOCTOR_ALREADY_EXISTS_ERROR, 409)
+    super(SUPERVISOR_DOCTOR_ALREADY_EXISTS_ERROR, ErrorType.CONFLICT)
   }
 }

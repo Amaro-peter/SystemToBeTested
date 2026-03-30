@@ -1,11 +1,11 @@
-import { err, ok, Result } from '@core/logic/result'
-import { env } from '@env/index'
 import { User, UserRole } from '@prisma/client'
-import { UserRepository } from '@repositories/users-repository'
-import { IProfileStrategyFactory } from '@tps/use-case/user-profiles/factories/profile-strategy-factory'
+import { hash } from 'bcryptjs'
+import { UserRepository } from '@core/contracts/repositories/users-repository'
+import { IProfileStrategyFactory } from '@core/contracts/use-case/user-profiles/factories/profile-strategy-factory.interface'
+import { err, ok, Result } from '@core/shared/result'
+import { env } from '@env/index'
 import { UserAlreadyExistsError } from '@use-cases/errors/users/user-already-exists-error'
 import { UserCouldNotBeCreatedError } from '@use-cases/errors/users/user-could-not-be-created-error'
-import { hash } from 'bcryptjs'
 
 interface RegisterUserUseCaseRequest {
   name: string
@@ -57,7 +57,7 @@ export class RegisterUserUseCase {
       role,
     })
 
-    if (!userResult.success) {
+    if (userResult.success === false) {
       return err(userResult.error)
     }
 
@@ -71,7 +71,7 @@ export class RegisterUserUseCase {
     // Obtém a estratégia através da Factory injetada
     const strategyResult = this.profileFactory.createStrategy(role)
 
-    if (!strategyResult.success) {
+    if (strategyResult.success === false) {
       // Se estiver usando o Decorator de Transação, retornar erro aqui causará Rollback
       return err(strategyResult.error)
     }
@@ -81,7 +81,7 @@ export class RegisterUserUseCase {
     // Executa a estratégia (que também deve retornar Result)
     const profileResult = await registerProfileStrategy.execute(user, specificData)
 
-    if (!profileResult.success) {
+    if (profileResult.success === false) {
       return err(profileResult.error)
     }
 

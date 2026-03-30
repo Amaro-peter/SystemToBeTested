@@ -1,8 +1,9 @@
-import { HTTPDomainError } from '@http/errors/http-domain-error'
+import { ErrorType } from '@core/types/error-type'
+import { DomainError } from 'errors/domain-error'
 import { PATIENT_ALREADY_EXISTS_ERROR } from 'messages/error/patients/patient-error-message'
 
-export class PatientAlreadyExistsError extends HTTPDomainError {
+export class PatientAlreadyExistsError extends DomainError {
   constructor() {
-    super(PATIENT_ALREADY_EXISTS_ERROR, 409)
+    super(PATIENT_ALREADY_EXISTS_ERROR, ErrorType.CONFLICT)
   }
 }

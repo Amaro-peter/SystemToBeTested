@@ -1,4 +1,4 @@
-import { IErrorDetail } from '@tps/error-interfaces/error-detail.interface'
+import { IErrorDetail } from '@core/contracts/errors/error-detail.interface'
 
 export const USER_ALREADY_EXISTS_ERROR: IErrorDetail = {
   code: 'USER_ALREADY_EXISTS',

@@ -10,20 +10,12 @@ export const SupervisorDoctorSchemaMessages = {
     requiredWithCrm: 'A Unidade Federativa é obrigatória quando o CRM é fornecido para atualização.',
     requiredWithoutCrm: 'O CRM é obrigatório quando a Unidade Federativa do CRM é fornecida para atualização.',
   },
-  tipoCrm: {
-    invalid: 'Tipo de CRM inválido. Deve ser PROVISORIO, DEFINITIVO ou ESTRANGEIRO.',
-  },
   status: {
     invalid: 'Status inválido. O status deve ser ATIVO, INATIVO ou SUSPENSO.',
   },
   dataRegistro: {
     required: 'Data de registro é obrigatória',
     futureDate: 'Data de registro não pode ser futura',
-  },
-  dataValidade: {
-    requiredForProvisorio: 'A data de validade é obrigatória para registros com tipo de CRM PROVISÓRIO',
-    notAllowedForType: (tipoCrm: string) => `A data de validade não deve ser preenchida para o tipo de CRM ${tipoCrm}`,
-    mustBeAfterRegistro: 'A data de validade deve ser posterior à data de registro',
   },
 } as const
 

@@ -1,11 +1,10 @@
-import { ISupervisorDoctor } from '@repositories/supervisor-doctor-respository'
+import { ISupervisorDoctor } from '@core/contracts/repositories/supervisor-doctor-respository'
 import { IUserHTTP, UserPresenter } from '../users/user-presenter'
 
 interface ISupervisorDoctorHTTP {
   publicId: string
   crm: string
   crmUf: string
-  tipoCrm: string
   status: string
   dataRegistro: Date | null
   dataValidade: Date | null
@@ -42,7 +41,6 @@ export class SupervisorDoctorPresenter {
 
       crm: input.crm,
       crmUf: input.crmUf,
-      tipoCrm: input.tipoCrm,
       status: input.status,
       dataRegistro: input.dataRegistro,
       dataValidade: input.dataValidade,

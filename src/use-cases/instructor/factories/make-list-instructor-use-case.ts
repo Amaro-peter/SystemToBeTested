@@ -1,7 +1,7 @@
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { PrismaErrorMapper } from '@lib/prisma/utils/prisma-error-mapper'
 import { PrismaInstructorRepository } from '@repositories/prisma/prisma-instructor-repository'
-import { instructorErrorMapping } from '@use-cases/errors/health-professional/health-professional-error-mapper'
+import { instructorErrorMapping } from '@use-cases/errors/instructor/instructor-error-mapper'
 import { ListInstructorUseCase } from '../list-instructor-use-case'
 
 export function makeListInstructorUseCase() {

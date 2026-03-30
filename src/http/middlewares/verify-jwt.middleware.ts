@@ -1,5 +1,5 @@
-import { messages } from '@constants/messages'
 import type { FastifyReply, FastifyRequest } from 'fastify'
+import { messages } from '@core/constants/messages'
 
 export async function verifyJwt(request: FastifyRequest, reply: FastifyReply) {
   try {

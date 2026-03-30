@@ -1,5 +1,5 @@
-import { Result } from '@core/logic/result'
-import { IInstructor, InstructorRepository } from '@repositories/instructor-repository.interface'
+import { IInstructor, InstructorRepository } from '@core/contracts/repositories/instructor-repository.interface'
+import { Result } from '@core/shared/result'
 
 interface ListInstructorUseCaseRequest {
   page: number

@@ -31,3 +31,7 @@ export const SearchUsersMessages = {
     min: 'Page size must be at least 1.',
   },
 } as const
+
+export const UpdateUserSchemaMessages = {
+  noOp: 'Informe ao menos um campo para atualizar.',
+} as const

@@ -1,7 +1,7 @@
-import { ok, err, Result } from '@core/logic/result'
 import { User, UserRole } from '@prisma/client'
-import { UserRepository } from '@repositories/users-repository'
-import { IProfileStrategyFactory } from '@tps/use-case/user-profiles/factories/profile-strategy-factory'
+import { UserRepository } from '@core/contracts/repositories/users-repository'
+import { IProfileStrategyFactory } from '@core/contracts/use-case/user-profiles/factories/profile-strategy-factory.interface'
+import { ok, err, Result } from '@core/shared/result'
 import { UserAlreadyDeactivatedError } from '@use-cases/errors/users/user-already-deactivated-error'
 import { UserNotFoundError } from '@use-cases/errors/users/user-not-found-error'
 
@@ -39,7 +39,7 @@ export class DeleteUserUseCase {
     // 2. Desativa Perfil Específico (Factory -> Strategy)
     const strategyResult = this.profileFactory.createStrategy(role)
 
-    if (!strategyResult.success) {
+    if (strategyResult.success === false) {
       return err(strategyResult.error)
     }
 
@@ -47,7 +47,7 @@ export class DeleteUserUseCase {
 
     const profileResult = await deleteStrategy.execute(user)
 
-    if (!profileResult.success) {
+    if (profileResult.success === false) {
       return err(profileResult.error)
     }
 
@@ -56,7 +56,7 @@ export class DeleteUserUseCase {
     // 3. Desativa Usuário Base
     const deactivatedUserResult = await this.usersRepository.deactivateUser(user.id)
 
-    if (!deactivatedUserResult.success) {
+    if (deactivatedUserResult.success === false) {
       return err(deactivatedUserResult.error)
     }
 

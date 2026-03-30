@@ -1,12 +1,12 @@
-import { ok, err, Result } from '@core/logic/result'
 import { User } from '@prisma/client'
 import {
   ISupervisorDoctor,
   SupervisorDoctorPayload,
   SupervisorDoctorRepository,
-} from '@repositories/supervisor-doctor-respository'
-import { IProfileStrategy } from '@tps/use-case/user-profiles/strategies/profile-strategy.interface'
-import { IValidator } from '@tps/validation/validator.interface'
+} from '@core/contracts/repositories/supervisor-doctor-respository'
+import { IProfileStrategy } from '@core/contracts/use-case/user-profiles/strategies/profile-strategy.interface'
+import { IValidator } from '@core/contracts/validation/validator.interface'
+import { ok, err, Result } from '@core/shared/result'
 
 type SupervisorDoctorStrategyResponse = {
   supervisorDoctor: ISupervisorDoctor

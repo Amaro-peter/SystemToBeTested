@@ -1,8 +1,8 @@
 import { randomBytes } from 'crypto'
-import { emailSchema } from '@http/schemas/utils/email'
 import { User } from '@prisma/client'
-import { UserRepository } from '@repositories/users-repository'
+import { UserRepository } from '@core/contracts/repositories/users-repository'
 import { UserNotFoundForPasswordResetError } from '@use-cases/errors/users/user-not-found-for-password-reset-error'
+import { emailSchema } from 'schemas/utils/email'
 
 interface ForgotPasswordUseCaseRequest {
   login: string

@@ -1,9 +1,9 @@
-import { HttpErrorMapper } from '@http/errors/http-error-mapper'
+import { FastifyReply, FastifyRequest } from 'fastify'
 import { InstructorPresenter } from '@http/presenters/instructor/instructor-presenter'
-import { searchInstructorSchema } from '@http/schemas/instructor/search-instructor-schema'
 import { logger } from '@lib/logger'
 import { makeSearchInstructorUseCase } from '@use-cases/instructor/factories/make-search-instructor-use-case'
-import { FastifyReply, FastifyRequest } from 'fastify'
+import { HttpErrorMapper } from 'errors/http/http-error.mapper'
+import { searchInstructorSchema } from 'schemas/http/instructor/search-instructor-schema'
 
 export async function searchInstructorController(request: FastifyRequest, reply: FastifyReply) {
   const { name, registration, speciality, page, pageSize } = searchInstructorSchema.parse(request.body)
