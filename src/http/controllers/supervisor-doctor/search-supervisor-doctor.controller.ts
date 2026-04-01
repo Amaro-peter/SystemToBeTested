@@ -5,12 +5,12 @@ import { HttpErrorMapper } from 'errors/http/http-error.mapper'
 import { searchSupervisorDoctorByNameSchema } from 'schemas/http/supervisor-doctor/search-supervisor-doctor-schema'
 
 export async function searchSupervisorDoctorController(request: FastifyRequest, reply: FastifyReply) {
-  const { page, pageSize, name, crm, crmUf, status } = searchSupervisorDoctorByNameSchema.parse(request.body)
+  const { page, pageSize, name, isActive, crm, crmUf, status } = searchSupervisorDoctorByNameSchema.parse(request.body)
 
   const searchSupervisorDoctorUseCase = makeSearchSupervisorDoctorUseCase()
 
   const result = await searchSupervisorDoctorUseCase.execute({
-    filters: { name, crm, crmUf, status },
+    filters: { name, isActive, crm, crmUf, status },
     page,
     pageSize,
   })

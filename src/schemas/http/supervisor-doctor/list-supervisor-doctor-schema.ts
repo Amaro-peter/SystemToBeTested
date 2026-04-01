@@ -10,7 +10,8 @@ export const listSupervisorDoctorSchema = z.object({
   pageSize: z.coerce
     .number({ message: ListSupervisorDoctorMessages.pageSize.invalid })
     .int({ message: ListSupervisorDoctorMessages.pageSize.invalid })
-    .positive({ message: ListSupervisorDoctorMessages.pageSize.min }),
+    .positive({ message: ListSupervisorDoctorMessages.pageSize.min })
+    .default(10),
 })
 
 export type ListSupervisorDoctorSchemaType = z.infer<typeof listSupervisorDoctorSchema>

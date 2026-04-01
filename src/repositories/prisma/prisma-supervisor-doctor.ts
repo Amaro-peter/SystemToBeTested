@@ -113,6 +113,12 @@ export class PrismaSupervisorDoctorRepository implements SupervisorDoctorReposit
         }
       }
 
+      if (filters.isActive) {
+        where.user = {
+          isActive: filters.isActive,
+        }
+      }
+
       if (filters.crm) {
         where.crm = {
           contains: filters.crm,

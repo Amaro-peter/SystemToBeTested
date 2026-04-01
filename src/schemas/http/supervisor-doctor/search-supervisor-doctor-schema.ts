@@ -10,6 +10,11 @@ export const searchSupervisorDoctorByNameSchema = z.object({
       message: SearchSupervisorDoctorMessages.name.invalid,
     })
     .optional(),
+  isActive: z
+    .boolean({
+      message: SearchSupervisorDoctorMessages.isActive.invalid,
+    })
+    .optional(),
   crm: crmSchema.optional(),
   status: statusCrmSchema.optional(),
   crmUf: crmUfSchema.optional(),
@@ -23,7 +28,8 @@ export const searchSupervisorDoctorByNameSchema = z.object({
     .number({
       message: SearchSupervisorDoctorMessages.pageSize.invalid,
     })
-    .min(1, SearchSupervisorDoctorMessages.pageSize.min),
+    .min(1, SearchSupervisorDoctorMessages.pageSize.min)
+    .default(10),
 })
 
 export type SearchSupervisorDoctorByNameSchema = z.infer<typeof searchSupervisorDoctorByNameSchema>

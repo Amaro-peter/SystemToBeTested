@@ -10,7 +10,8 @@ export const listInstructorSchema = z.object({
   pageSize: z.coerce
     .number({ message: ListInstructorMessages.pageSize.invalid })
     .int({ message: ListInstructorMessages.pageSize.invalid })
-    .positive({ message: ListInstructorMessages.pageSize.min }),
+    .positive({ message: ListInstructorMessages.pageSize.min })
+    .default(10),
 })
 
 export type ListInstructorSchemaType = z.infer<typeof listInstructorSchema>

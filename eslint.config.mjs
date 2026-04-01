@@ -4,6 +4,7 @@ import eslintPluginImport from 'eslint-plugin-import'
 import eslintPluginPrettier from 'eslint-plugin-prettier'
 import unicorn from 'eslint-plugin-unicorn'
 import globals from 'globals'
+// eslint-disable-next-line import/no-unresolved
 import tseslint from 'typescript-eslint'
 
 export default [
@@ -38,7 +39,12 @@ export default [
     },
     rules: {
       semi: ['error', 'never'],
-      'prettier/prettier': 'error',
+      'prettier/prettier': [
+        'error',
+        {
+          endOfLine: 'auto',
+        },
+      ],
       'no-console': 'error',
       '@typescript-eslint/no-extraneous-class': 'off',
       'unicorn/filename-case': [

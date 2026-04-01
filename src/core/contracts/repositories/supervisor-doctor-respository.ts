@@ -32,6 +32,7 @@ export type SupervisorDoctorPayload = {
 
 export interface ISearchSupervisorDoctorFilters {
   name?: string
+  isActive?: boolean
   crm?: string
   crmUf?: UF
   status?: DoctorStatus

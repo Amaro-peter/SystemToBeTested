@@ -32,7 +32,8 @@ export const searchUsersSchema = z.object({
     .number({
       message: SearchUsersMessages.pageSize.invalid,
     })
-    .min(1, SearchUsersMessages.pageSize.min),
+    .min(1, SearchUsersMessages.pageSize.min)
+    .default(10),
 })
 
 export type SearchUsersSchema = z.infer<typeof searchUsersSchema>

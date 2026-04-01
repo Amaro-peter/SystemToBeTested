@@ -36,7 +36,8 @@ export const searchInstructorSchema = z.object({
     .positive({
       message: SearchInstructorMessages.pageSize.min,
     })
-    .min(1, SearchInstructorMessages.pageSize.min),
+    .min(1, SearchInstructorMessages.pageSize.min)
+    .default(10),
 })
 
 export type SearchInstructorSchema = z.infer<typeof searchInstructorSchema>

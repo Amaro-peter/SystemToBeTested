@@ -23,6 +23,9 @@ export const SearchSupervisorDoctorMessages = {
   name: {
     invalid: 'O nome deve ser um texto válido',
   },
+  isActive: {
+    invalid: 'O isActive deve ser um valor booleano válido',
+  },
   page: {
     min: 'A página deve ser no mínimo 1',
     invalid: 'A página deve ser um número válido',

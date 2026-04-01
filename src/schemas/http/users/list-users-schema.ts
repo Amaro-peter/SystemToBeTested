@@ -10,7 +10,8 @@ export const listUsersSchema = z.object({
   pageSize: z.coerce
     .number({ message: ListUserSchemaMessages.pageSize.invalid })
     .int({ message: ListUserSchemaMessages.pageSize.invalid })
-    .positive({ message: ListUserSchemaMessages.pageSize.min }),
+    .positive({ message: ListUserSchemaMessages.pageSize.min })
+    .default(10),
 })
 
 export type ListUsersSchemaType = z.infer<typeof listUsersSchema>
