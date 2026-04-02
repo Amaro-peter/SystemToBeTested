@@ -1,5 +1,5 @@
 import { User } from '@prisma/client'
-import { ISearchUserFilters, UserRepository } from '@core/contracts/repositories/users-repository'
+import { ISearchUserFilters, UserRepository } from '@core/contracts/repositories/users-repository.interface'
 import { Result } from '@core/shared/result'
 
 interface ISearchUsersUseCaseRequest {

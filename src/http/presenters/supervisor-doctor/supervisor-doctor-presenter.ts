@@ -1,4 +1,4 @@
-import { ISupervisorDoctor } from '@core/contracts/repositories/supervisor-doctor-respository'
+import { ISupervisorDoctor } from '@core/contracts/repositories/supervisor-doctor-respository.interface'
 import { IUserHTTP, UserPresenter } from '../users/user-presenter'
 
 interface ISupervisorDoctorHTTP {

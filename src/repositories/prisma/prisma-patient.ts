@@ -1,5 +1,5 @@
 import { Patient } from '@prisma/client'
-import { CreatePatientPayload, PatientRepository } from '@core/contracts/repositories/patient-repository'
+import { CreatePatientPayload, PatientRepository } from '@core/contracts/repositories/patient-repository.interface'
 import { ok, err, Result } from '@core/shared/result'
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { PrismaErrorMapper } from '@lib/prisma/utils/prisma-error-mapper'

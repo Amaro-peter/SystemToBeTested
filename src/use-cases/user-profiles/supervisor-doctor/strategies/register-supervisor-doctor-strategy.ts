@@ -3,7 +3,7 @@ import {
   ISupervisorDoctor,
   SupervisorDoctorPayload,
   SupervisorDoctorRepository,
-} from '@core/contracts/repositories/supervisor-doctor-respository'
+} from '@core/contracts/repositories/supervisor-doctor-respository.interface'
 import { IUserProfileStrategy } from '@core/contracts/use-case/user-profiles/strategies/user-profile-strategy.interface'
 import { IValidator } from '@core/contracts/validation/validator.interface'
 import { ok, err, Result } from '@core/shared/result'

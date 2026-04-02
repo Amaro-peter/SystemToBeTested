@@ -1,5 +1,5 @@
 import { User, UserRole } from '@prisma/client'
-import { UserRepository } from '@core/contracts/repositories/users-repository'
+import { UserRepository } from '@core/contracts/repositories/users-repository.interface'
 import { IUserProfileStrategyFactory } from '@core/contracts/use-case/user-profiles/factories/user-profile-strategy-factory.interface'
 import { ok, err, Result } from '@core/shared/result'
 import { UserAlreadyDeactivatedError } from '@use-cases/errors/users/user-already-deactivated-error'

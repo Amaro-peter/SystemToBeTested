@@ -4,7 +4,7 @@ import {
   ISupervisorDoctor,
   SupervisorDoctorPayload,
   SupervisorDoctorRepository,
-} from '@core/contracts/repositories/supervisor-doctor-respository'
+} from '@core/contracts/repositories/supervisor-doctor-respository.interface'
 import { ok, err, Result } from '@core/shared/result'
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { PrismaErrorMapper } from '@lib/prisma/utils/prisma-error-mapper'

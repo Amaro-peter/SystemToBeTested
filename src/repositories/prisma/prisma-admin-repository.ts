@@ -1,5 +1,5 @@
 import { Admin } from '@prisma/client'
-import { AdminRepository, CreateAdminPayload } from '@core/contracts/repositories/admin-repository'
+import { AdminRepository, CreateAdminPayload } from '@core/contracts/repositories/admin-repository.interface'
 import { ok, err, Result } from '@core/shared/result'
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { PrismaErrorMapper } from '@lib/prisma/utils/prisma-error-mapper'

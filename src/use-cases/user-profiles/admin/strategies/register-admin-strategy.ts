@@ -1,5 +1,5 @@
 import { Admin, User } from '@prisma/client'
-import { CreateAdminPayload } from '@core/contracts/repositories/admin-repository'
+import { CreateAdminPayload } from '@core/contracts/repositories/admin-repository.interface'
 import { IUserProfileStrategy } from '@core/contracts/use-case/user-profiles/strategies/user-profile-strategy.interface'
 import { IValidator } from '@core/contracts/validation/validator.interface'
 import { err, ok, Result } from '@core/shared/result'

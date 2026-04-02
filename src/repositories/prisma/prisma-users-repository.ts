@@ -1,5 +1,5 @@
 import { Prisma, User } from '@prisma/client'
-import { ISearchUserFilters, UserRepository } from '@core/contracts/repositories/users-repository'
+import { ISearchUserFilters, UserRepository } from '@core/contracts/repositories/users-repository.interface'
 import { ok, err, Result } from '@core/shared/result'
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { PrismaErrorMapper } from '@lib/prisma/utils/prisma-error-mapper'

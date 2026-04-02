@@ -1,6 +1,6 @@
 import { User } from '@prisma/client'
 import { hash } from 'bcryptjs'
-import type { UserRepository } from '@core/contracts/repositories/users-repository'
+import type { UserRepository } from '@core/contracts/repositories/users-repository.interface'
 import { env } from '@env/index'
 import { InvalidTokenError } from '@use-cases/errors/invalid-token-error'
 

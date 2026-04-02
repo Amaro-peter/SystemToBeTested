@@ -1,5 +1,5 @@
 import { Patient, User } from '@prisma/client'
-import { CreatePatientPayload, PatientRepository } from '@core/contracts/repositories/patient-repository'
+import { CreatePatientPayload, PatientRepository } from '@core/contracts/repositories/patient-repository.interface'
 import { IUserProfileStrategy } from '@core/contracts/use-case/user-profiles/strategies/user-profile-strategy.interface'
 import { IValidator } from '@core/contracts/validation/validator.interface'
 import { err, ok, Result } from '@core/shared/result'

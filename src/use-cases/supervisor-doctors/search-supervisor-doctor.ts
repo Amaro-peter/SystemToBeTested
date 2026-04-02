@@ -2,7 +2,7 @@ import {
   ISearchSupervisorDoctorFilters,
   ISupervisorDoctor,
   SupervisorDoctorRepository,
-} from '@core/contracts/repositories/supervisor-doctor-respository'
+} from '@core/contracts/repositories/supervisor-doctor-respository.interface'
 import { Result } from '@core/shared/result'
 
 interface ISearchSupervisorDoctorUseCaseRequest {
