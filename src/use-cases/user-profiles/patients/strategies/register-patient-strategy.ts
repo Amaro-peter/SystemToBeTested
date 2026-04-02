@@ -1,6 +1,6 @@
 import { Patient, User } from '@prisma/client'
 import { CreatePatientPayload, PatientRepository } from '@core/contracts/repositories/patient-repository'
-import { IProfileStrategy } from '@core/contracts/use-case/user-profiles/strategies/profile-strategy.interface'
+import { IUserProfileStrategy } from '@core/contracts/use-case/user-profiles/strategies/user-profile-strategy.interface'
 import { IValidator } from '@core/contracts/validation/validator.interface'
 import { err, ok, Result } from '@core/shared/result'
 
@@ -8,7 +8,7 @@ type PatientStrategyResponse = {
   patient: Patient
 }
 
-export class RegisterPatientStrategy implements IProfileStrategy<PatientStrategyResponse> {
+export class RegisterPatientStrategy implements IUserProfileStrategy<PatientStrategyResponse> {
   constructor(
     private patientRepository: PatientRepository,
     private validator: IValidator<CreatePatientPayload>,

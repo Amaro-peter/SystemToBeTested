@@ -4,7 +4,7 @@ import {
   InstructorPayload,
   InstructorRepository,
 } from '@core/contracts/repositories/instructor-repository.interface'
-import { IProfileStrategy } from '@core/contracts/use-case/user-profiles/strategies/profile-strategy.interface'
+import { IUserProfileStrategy } from '@core/contracts/use-case/user-profiles/strategies/user-profile-strategy.interface'
 import { IValidator } from '@core/contracts/validation/validator.interface'
 import { err, ok, Result } from '@core/shared/result'
 
@@ -12,7 +12,7 @@ type InstructorStrategyResponse = {
   instructor: IInstructor
 }
 
-export class RegisterInstructorStrategy implements IProfileStrategy<InstructorStrategyResponse> {
+export class RegisterInstructorStrategy implements IUserProfileStrategy<InstructorStrategyResponse> {
   constructor(
     private instructorRepository: InstructorRepository,
     private validator: IValidator<InstructorPayload>,

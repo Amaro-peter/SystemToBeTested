@@ -1,7 +1,7 @@
 import { User, UserRole } from '@prisma/client'
 import { hash } from 'bcryptjs'
 import { UserRepository } from '@core/contracts/repositories/users-repository'
-import { IProfileStrategyFactory } from '@core/contracts/use-case/user-profiles/factories/profile-strategy-factory.interface'
+import { IUserProfileStrategyFactory } from '@core/contracts/use-case/user-profiles/factories/user-profile-strategy-factory.interface'
 import { err, ok, Result } from '@core/shared/result'
 import { env } from '@env/index'
 import { UserAlreadyExistsError } from '@use-cases/errors/users/user-already-exists-error'
@@ -28,7 +28,7 @@ type RegisterUserUseCaseResponse = Result<
 export class RegisterUserUseCase {
   constructor(
     private usersRepository: UserRepository,
-    private profileFactory: IProfileStrategyFactory,
+    private profileFactory: IUserProfileStrategyFactory,
   ) {}
 
   async execute({

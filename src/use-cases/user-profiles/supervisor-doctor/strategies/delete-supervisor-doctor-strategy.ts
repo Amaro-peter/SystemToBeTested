@@ -3,14 +3,14 @@ import {
   ISupervisorDoctor,
   SupervisorDoctorRepository,
 } from '@core/contracts/repositories/supervisor-doctor-respository'
-import { IProfileStrategy } from '@core/contracts/use-case/user-profiles/strategies/profile-strategy.interface'
+import { IUserProfileStrategy } from '@core/contracts/use-case/user-profiles/strategies/user-profile-strategy.interface'
 import { ok, err, Result } from '@core/shared/result'
 
 type DeleteSupervisorDoctorStrategyResponse = {
   supervisorDoctor: ISupervisorDoctor
 }
 
-export class DeleteSupervisorDoctorStrategy implements IProfileStrategy<DeleteSupervisorDoctorStrategyResponse> {
+export class DeleteSupervisorDoctorStrategy implements IUserProfileStrategy<DeleteSupervisorDoctorStrategyResponse> {
   constructor(private supervisorDoctorRepository: SupervisorDoctorRepository) {}
 
   async execute(user: User): Promise<Result<DeleteSupervisorDoctorStrategyResponse, Error>> {

@@ -4,7 +4,7 @@ import {
   SupervisorDoctorPayload,
   SupervisorDoctorRepository,
 } from '@core/contracts/repositories/supervisor-doctor-respository'
-import { IProfileStrategy } from '@core/contracts/use-case/user-profiles/strategies/profile-strategy.interface'
+import { IUserProfileStrategy } from '@core/contracts/use-case/user-profiles/strategies/user-profile-strategy.interface'
 import { IValidator } from '@core/contracts/validation/validator.interface'
 import { filterUndefinedValues } from '@core/shared/filter-undefined-values'
 import { ok, err, Result } from '@core/shared/result'
@@ -13,7 +13,7 @@ type SupervisorDoctorStrategyResponse = {
   supervisorDoctor: ISupervisorDoctor
 }
 
-export class UpdateSupervisorDoctorStrategy implements IProfileStrategy<SupervisorDoctorStrategyResponse> {
+export class UpdateSupervisorDoctorStrategy implements IUserProfileStrategy<SupervisorDoctorStrategyResponse> {
   constructor(
     private supervisorDoctorRepository: SupervisorDoctorRepository,
     private validator: IValidator<Partial<SupervisorDoctorPayload>>,
