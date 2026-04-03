@@ -20,5 +20,5 @@ export async function listSupervisorDoctorController(request: FastifyRequest, re
 
   const response = SupervisorDoctorPresenter.toHTTP(result.value)
 
-  reply.status(200).send(response)
+  reply.status(200).send({ data: response })
 }

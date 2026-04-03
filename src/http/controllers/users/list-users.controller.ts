@@ -20,7 +20,7 @@ export async function listUsers(request: FastifyRequest, reply: FastifyReply) {
 
   const users = result.value
 
-  const sanitizedUsers = UserPresenter.toHTTP(users)
+  const response = UserPresenter.toHTTP(users)
 
-  return reply.status(200).send({ users: sanitizedUsers })
+  return reply.status(200).send({ data: response })
 }

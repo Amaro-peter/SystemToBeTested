@@ -20,5 +20,5 @@ export async function listInstructorController(request: FastifyRequest, reply: F
 
   const response = InstructorPresenter.toHTTP(result.value)
 
-  reply.status(200).send(response)
+  reply.status(200).send({ data: response })
 }
