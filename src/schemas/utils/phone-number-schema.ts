@@ -3,8 +3,6 @@ import { z } from 'zod'
 import { messages } from '@core/constants/messages'
 import { STRICT_BR_PHONE_REGEX } from '@core/constants/regex-constants'
 
-// specified phone format +55 61 98765-4321 or +55 11 8765-4321
-
 export const phoneNumberSchema = z
   .string()
   .min(1, { message: messages.validation.invalidPhoneNumber })
@@ -24,4 +22,9 @@ export const phoneNumberSchema = z
         message: messages.validation.invalidPhoneNumber,
       })
     }
+  })
+  .transform((val) => {
+    const phone = parsePhoneNumberFromString(val, 'BR')
+    // Returns E.164 formatted string (e.g., +5511987654321)
+    return phone?.number ?? val
   })

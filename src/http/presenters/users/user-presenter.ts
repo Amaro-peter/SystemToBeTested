@@ -146,17 +146,22 @@ export class UserPresenter {
             status: supervisorData.status,
             dataRegistro: supervisorData.dataRegistro,
             dataValidade: supervisorData.dataValidade,
-            patientCount: supervisorData.patientCount ?? 0,
 
-            // We safely map over the Prisma patients and convert them to PatientHTTP shapes
-            patients: supervisorData.patients?.map((patient) => ({
-              publicId: patient.publicId,
-              birthDate: patient.birthDate,
-              gender: patient.gender,
-              riskLevel: patient.riskLevel,
-              assistantDoctorName: patient.assistantDoctorName,
-              healthInsuranceName: patient.healthInsuranceName,
-            })),
+            ...(supervisorData.patientCount && supervisorData.patientCount > 0
+              ? { patientCount: supervisorData.patientCount }
+              : {}),
+            ...(supervisorData.patients && supervisorData.patients.length > 0
+              ? {
+                  patients: supervisorData.patients.map((patient) => ({
+                    publicId: patient.publicId,
+                    birthDate: patient.birthDate,
+                    gender: patient.gender,
+                    riskLevel: patient.riskLevel,
+                    assistantDoctorName: patient.assistantDoctorName,
+                    healthInsuranceName: patient.healthInsuranceName,
+                  })),
+                }
+              : {}),
           }
         }
         break
