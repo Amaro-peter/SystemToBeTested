@@ -1,6 +1,6 @@
 import { EnumProfessionalCategory, IInstructor } from '@core/contracts/repositories/instructor-repository.interface'
 import { ISupervisorDoctor } from '@core/contracts/repositories/supervisor-doctor-respository.interface'
-import { Admin, DoctorStatus, Gender, Patient, RiskLevel, UF, User, UserRole } from '@prisma/client'
+import { Admin, DoctorStatus, Patient, UF, User, UserRole } from '@prisma/client'
 
 export type UserWithRelations = User & {
   admin?: Admin | null
@@ -60,13 +60,21 @@ type AdminHTTP = {
   publicId: string
 }
 
-type PatientHTTP = {
+export type PatientHTTP = {
   publicId: string
-  birthDate: Date
-  gender: Gender
-  riskLevel: RiskLevel
-  assistantDoctorName: string | null
-  healthInsuranceName: string | null
+  birthDate: Date | null
+  gender: string
+  riskLevel: string
+  medicationsInUse?: string | null
+  assistantDoctorName?: string | null
+  assistantDoctorPhone?: string | null
+  healthInsuranceNumber?: string | null
+  referenceHospital?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  healthInsuranceName?: string | null
+  createdAt?: Date | null
+  updatedAt?: Date | null
 }
 
 // Update the output to strictly enforce an array of PatientHTTP
@@ -102,6 +110,23 @@ export type IUserHTTP = {
   instructor?: InstructorHTTP
   patient?: PatientHTTP
 }
+
+const mapPatientToHTTP = (patient: Partial<Patient>): PatientHTTP => ({
+  publicId: patient.publicId!,
+  birthDate: patient.birthDate ?? null,
+  gender: patient.gender!,
+  riskLevel: patient.riskLevel!,
+  medicationsInUse: patient.medicationsInUse,
+  assistantDoctorName: patient.assistantDoctorName,
+  assistantDoctorPhone: patient.assistantDoctorPhone,
+  healthInsuranceNumber: patient.healthInsuranceNumber,
+  referenceHospital: patient.referenceHospital,
+  emergencyContactName: patient.emergencyContactName,
+  emergencyContactPhone: patient.emergencyContactPhone,
+  healthInsuranceName: patient.healthInsuranceName,
+  createdAt: patient.createdAt,
+  updatedAt: patient.updatedAt,
+})
 
 export class UserPresenter {
   static toHTTP(user: UserWithRelations, userProfile?: unknown): IUserHTTP
@@ -150,16 +175,10 @@ export class UserPresenter {
             ...(supervisorData.patientCount && supervisorData.patientCount > 0
               ? { patientCount: supervisorData.patientCount }
               : {}),
+
             ...(supervisorData.patients && supervisorData.patients.length > 0
               ? {
-                  patients: supervisorData.patients.map((patient) => ({
-                    publicId: patient.publicId,
-                    birthDate: patient.birthDate,
-                    gender: patient.gender,
-                    riskLevel: patient.riskLevel,
-                    assistantDoctorName: patient.assistantDoctorName,
-                    healthInsuranceName: patient.healthInsuranceName,
-                  })),
+                  patients: supervisorData.patients.map(mapPatientToHTTP),
                 }
               : {}),
           }
@@ -184,14 +203,7 @@ export class UserPresenter {
         const patientProfile = getProfileField(userProfile, 'patient') ?? userProfile
         const patientData = isPatientProfile(patientProfile) ? patientProfile : input.patient
         if (patientData) {
-          base.patient = {
-            publicId: patientData.publicId,
-            birthDate: patientData.birthDate,
-            gender: patientData.gender,
-            riskLevel: patientData.riskLevel,
-            assistantDoctorName: patientData.assistantDoctorName,
-            healthInsuranceName: patientData.healthInsuranceName,
-          }
+          base.patient = mapPatientToHTTP(patientData)
         }
         break
       }

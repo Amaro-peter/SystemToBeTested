@@ -1,6 +1,5 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
 import { UserPresenter } from '@http/presenters/users/user-presenter'
-import { UserProfilePresenter } from '@http/presenters/users/user-profile-presenter'
 import { logger } from '@lib/logger'
 import { makeUpdateUserUseCase } from '@use-cases/users/factories/make-update-user-use-case'
 import { HttpErrorMapper } from 'errors/http/http-error.mapper'
@@ -29,14 +28,7 @@ export async function updateUser(request: FastifyRequest, reply: FastifyReply) {
 
   logger.info('Usuário atualizado com sucesso!')
 
-  const response = {
-    user: UserPresenter.toHTTP(updatedUser),
-    userProfile: undefined as unknown,
-  }
-
-  if (updatedUserProfile) {
-    response.userProfile = UserProfilePresenter.toHTTP(updatedUserProfile)
-  }
+  let response = UserPresenter.toHTTP(updatedUser, updatedUserProfile)
 
   return reply.status(200).send(response)
 }

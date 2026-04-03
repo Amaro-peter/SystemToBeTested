@@ -23,5 +23,5 @@ export async function searchSupervisorDoctorController(request: FastifyRequest, 
 
   const response = SupervisorDoctorPresenter.toHTTP(supervisorDoctors)
 
-  return reply.status(200).send(response)
+  return reply.status(200).send({ data: response })
 }
