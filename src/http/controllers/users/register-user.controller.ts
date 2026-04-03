@@ -29,14 +29,7 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
 
   logger.info({ userId: user.publicId, role: user.role }, `User with role ${user.role} registered successfully!`)
 
-  const response = {
-    user: UserPresenter.toHTTP(user),
-    userProfile: undefined as unknown,
-  }
-
-  if (userProfile) {
-    response.userProfile = UserProfilePresenter.toHTTP(userProfile)
-  }
+  const response = UserPresenter.toHTTP(user, userProfile)
 
   return reply.status(201).send(response)
 }
