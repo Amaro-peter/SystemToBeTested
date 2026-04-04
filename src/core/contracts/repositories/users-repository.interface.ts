@@ -42,6 +42,7 @@ export interface ISearchUserFilters {
   email?: string
   cpf?: string
   isActive?: boolean
+  role?: IUserRole
 }
 
 export interface UserRepository {
@@ -49,8 +50,8 @@ export interface UserRepository {
   findBy(where: Prisma.UserWhereUniqueInput): Promise<User | null>
   findByEmailOrCpf(email: string, cpf: string): Promise<User | null>
   findByEmailWithProfile(email: string): Promise<Result<IUser, Error>>
-  list(page: number, pageSize: number): Promise<Result<User[], Error>>
+  list(page: number, pageSize: number): Promise<Result<IUser[], Error>>
   update(publicId: string, data: Prisma.UserUpdateInput): Promise<Result<User, Error>>
   deactivateUser(id: number): Promise<Result<User, Error>>
-  search(filters: ISearchUserFilters, page: number, pageSize: number): Promise<Result<User[], Error>>
+  search(filters: ISearchUserFilters, page: number, pageSize: number): Promise<Result<IUser[], Error>>
 }

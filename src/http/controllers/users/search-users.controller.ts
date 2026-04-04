@@ -5,7 +5,7 @@ import { HttpErrorMapper } from 'errors/http/http-error.mapper'
 import { searchUsersSchema } from 'schemas/http/users/search-users-schema'
 
 export async function searchUsersController(request: FastifyRequest, reply: FastifyReply) {
-  const { page, pageSize, name, email, cpf, isActive } = searchUsersSchema.parse(request.body)
+  const { page, pageSize, name, email, cpf, isActive, role } = searchUsersSchema.parse(request.body)
 
   const searchUsersUseCase = makeSearchUsersUseCase()
 
@@ -15,6 +15,7 @@ export async function searchUsersController(request: FastifyRequest, reply: Fast
       email,
       cpf,
       isActive,
+      role,
     },
     page,
     pageSize,

@@ -1,5 +1,4 @@
-import { User } from '@prisma/client'
-import { UserRepository } from '@core/contracts/repositories/users-repository.interface'
+import { IUser, UserRepository } from '@core/contracts/repositories/users-repository.interface'
 import { Result } from '@core/shared/result'
 
 interface ListUsersUseCaseRequest {
@@ -7,7 +6,7 @@ interface ListUsersUseCaseRequest {
   pageSize: number
 }
 
-type ListUsersUseCaseResponse = Result<User[], Error>
+type ListUsersUseCaseResponse = Result<IUser[], Error>
 
 export class ListUsersUseCase {
   constructor(private usersRepository: UserRepository) {}

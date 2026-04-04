@@ -8,7 +8,6 @@ import { INSTRUCTOR_UNSUPPORTED_SPECIALITY_ERROR } from 'messages/error/instruct
 import { USER_UNSUPPORTED_ROLE_ERROR } from 'messages/error/user/user-error-messages'
 
 type UserProfileRelations = Pick<IUser, 'admin' | 'patient' | 'supervisorDoctor' | 'instructor'>
-type UserProfileResolver = (userId: number) => Promise<UserProfileRelations>
 
 class UnsupportedInstructorSpecialityError extends DomainError {
   constructor() {
@@ -53,68 +52,109 @@ const mapUserRole = (role: PrismaUserRole): IUserRole => {
 export class PrismaUserProfileLoader {
   constructor(private readonly dbContext: DatabaseContext) {}
 
-  private readonly resolvers: Record<IUserRole, UserProfileResolver> = {
-    ADMIN: async (userId: number) => {
-      const admin = await this.dbContext.client.admin.findUnique({
-        where: { userId },
-        select: {
-          id: true,
-          publicId: true,
-          userId: true,
-        },
-      })
-      return { admin }
-    },
-    INSTRUCTOR: async (userId: number) => {
-      const instructor = await this.dbContext.client.instructor.findUnique({
-        where: { userId },
-        select: {
-          id: true,
-          publicId: true,
-          userId: true,
-          registration: true,
-          speciality: true,
-        },
-      })
-
-      if (!instructor) {
-        return {}
-      }
-
-      const instructorProfile: IInstructor = {
-        ...instructor,
-        speciality: mapInstructorSpeciality(instructor.speciality),
-      }
-
-      return { instructor: instructorProfile }
-    },
-    SUPERVISOR_DOCTOR: async (userId: number) => {
-      const supervisorDoctor = await this.dbContext.client.supervisorDoctor.findUnique({ where: { userId } })
-      return { supervisorDoctor }
-    },
-    PATIENT: async (userId: number) => {
-      const patient = await this.dbContext.client.patient.findUnique({ where: { userId } })
-      return { patient }
-    },
-  }
-
-  async load(user: User): Promise<IUser> {
-    const baseUser: IUser = {
+  private toBaseUser(user: User): IUser {
+    return {
       ...user,
       role: mapUserRole(user.role),
     }
+  }
 
-    const resolveProfile = this.resolvers[baseUser.role]
+  async load(user: User): Promise<IUser> {
+    const [profiledUser] = await this.loadMany([user])
 
-    if (!resolveProfile) {
-      return baseUser
+    return profiledUser
+  }
+
+  async loadMany(users: User[]): Promise<IUser[]> {
+    if (users.length === 0) {
+      return []
     }
 
-    const profile = await resolveProfile(user.id)
+    const baseUsers = users.map((user) => this.toBaseUser(user))
 
-    return {
-      ...baseUser,
-      ...profile,
+    const userIdsByRole: Record<IUserRole, number[]> = {
+      ADMIN: [],
+      INSTRUCTOR: [],
+      SUPERVISOR_DOCTOR: [],
+      PATIENT: [],
     }
+
+    for (const user of baseUsers) {
+      userIdsByRole[user.role].push(user.id)
+    }
+
+    const findManyIfAny = async <T>(ids: number[], query: (ids: number[]) => Promise<T[]>): Promise<T[]> => {
+      if (ids.length === 0) {
+        return []
+      }
+
+      return query(ids)
+    }
+
+    const [admins, instructors, supervisorDoctors, patients] = await Promise.all([
+      findManyIfAny(userIdsByRole.ADMIN, (ids) =>
+        this.dbContext.client.admin.findMany({
+          where: { userId: { in: ids } },
+          select: {
+            id: true,
+            publicId: true,
+            userId: true,
+          },
+        }),
+      ),
+      findManyIfAny(userIdsByRole.INSTRUCTOR, (ids) =>
+        this.dbContext.client.instructor.findMany({
+          where: { userId: { in: ids } },
+          select: {
+            id: true,
+            publicId: true,
+            userId: true,
+            registration: true,
+            speciality: true,
+          },
+        }),
+      ),
+      findManyIfAny(userIdsByRole.SUPERVISOR_DOCTOR, (ids) =>
+        this.dbContext.client.supervisorDoctor.findMany({
+          where: { userId: { in: ids } },
+        }),
+      ),
+      findManyIfAny(userIdsByRole.PATIENT, (ids) =>
+        this.dbContext.client.patient.findMany({
+          where: { userId: { in: ids } },
+        }),
+      ),
+    ])
+
+    const adminByUserId = new Map(admins.map((admin) => [admin.userId, admin]))
+    const instructorByUserId = new Map<number, IInstructor>(
+      instructors.map((instructor): [number, IInstructor] => [
+        instructor.userId,
+        {
+          ...instructor,
+          speciality: mapInstructorSpeciality(instructor.speciality),
+        },
+      ]),
+    )
+    const supervisorDoctorByUserId = new Map(
+      supervisorDoctors.map((supervisorDoctor) => [supervisorDoctor.userId, supervisorDoctor]),
+    )
+    const patientByUserId = new Map(patients.map((patient) => [patient.userId, patient]))
+
+    return baseUsers.map((user) => {
+      const relationByRole: UserProfileRelations =
+        user.role === 'ADMIN'
+          ? { admin: adminByUserId.get(user.id) ?? null }
+          : user.role === 'INSTRUCTOR'
+            ? { instructor: instructorByUserId.get(user.id) ?? null }
+            : user.role === 'SUPERVISOR_DOCTOR'
+              ? { supervisorDoctor: supervisorDoctorByUserId.get(user.id) ?? null }
+              : { patient: patientByUserId.get(user.id) ?? null }
+
+      return {
+        ...user,
+        ...relationByRole,
+      }
+    })
   }
 }

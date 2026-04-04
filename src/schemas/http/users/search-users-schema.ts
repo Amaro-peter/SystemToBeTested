@@ -1,5 +1,6 @@
 import z from 'zod'
 import { SearchUsersMessages } from 'messages/schemas/users/user-schema-messages'
+import { userRoleSchema } from 'schemas/utils/role-schema'
 
 export const searchUsersSchema = z.object({
   name: z
@@ -22,6 +23,7 @@ export const searchUsersSchema = z.object({
       message: SearchUsersMessages.isActive.invalid,
     })
     .optional(),
+  role: userRoleSchema.optional(),
   page: z
     .number({
       message: SearchUsersMessages.page.invalid,

@@ -60,19 +60,16 @@ export class PrismaUsersRepository implements UserRepository {
     }
   }
 
-  async list(page: number, pageSize: number): Promise<Result<User[], Error>> {
+  async list(page: number, pageSize: number): Promise<Result<IUser[], Error>> {
     try {
       const users = await this.dbContext.client.user.findMany({
         skip: (page - 1) * pageSize,
         take: pageSize,
-        include: {
-          admin: true,
-          patient: true,
-          supervisorDoctor: true,
-          instructor: true,
-        },
       })
-      return ok(users)
+
+      const usersWithProfiles = await this.profileLoader.loadMany(users)
+
+      return ok(usersWithProfiles)
     } catch (error) {
       const domainError = this.errorMapper.mapToKnownError(error)
       return err(domainError)
@@ -110,9 +107,9 @@ export class PrismaUsersRepository implements UserRepository {
     }
   }
 
-  async search(filters: ISearchUserFilters, page: number, pageSize: number): Promise<Result<User[], Error>> {
+  async search(filters: ISearchUserFilters, page: number, pageSize: number): Promise<Result<IUser[], Error>> {
     try {
-      const { name, email, cpf, isActive } = filters ?? {}
+      const { name, email, cpf, isActive, role } = filters ?? {}
 
       const where: Prisma.UserWhereInput = {}
 
@@ -138,6 +135,10 @@ export class PrismaUsersRepository implements UserRepository {
         where.isActive = isActive
       }
 
+      if (role) {
+        where.role = role
+      }
+
       const users = await this.dbContext.client.user.findMany({
         where,
         take: pageSize,
@@ -145,15 +146,11 @@ export class PrismaUsersRepository implements UserRepository {
         orderBy: {
           name: 'asc',
         },
-        include: {
-          admin: true,
-          patient: true,
-          supervisorDoctor: true,
-          instructor: true,
-        },
       })
 
-      return ok(users)
+      const usersWithProfiles = await this.profileLoader.loadMany(users)
+
+      return ok(usersWithProfiles)
     } catch (error) {
       const domainError = this.errorMapper.mapToKnownError(error)
       return err(domainError)

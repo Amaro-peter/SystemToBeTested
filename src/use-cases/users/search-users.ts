@@ -1,5 +1,4 @@
-import { User } from '@prisma/client'
-import { ISearchUserFilters, UserRepository } from '@core/contracts/repositories/users-repository.interface'
+import { ISearchUserFilters, IUser, UserRepository } from '@core/contracts/repositories/users-repository.interface'
 import { Result } from '@core/shared/result'
 
 interface ISearchUsersUseCaseRequest {
@@ -8,7 +7,7 @@ interface ISearchUsersUseCaseRequest {
   pageSize: number
 }
 
-type SearchUsersResponse = Result<User[], Error>
+type SearchUsersResponse = Result<IUser[], Error>
 
 export class SearchUsersUseCase {
   constructor(private usersRepository: UserRepository) {}
