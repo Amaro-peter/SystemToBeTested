@@ -39,3 +39,8 @@ export const USER_WRONG_EMAIL_ERROR: IErrorDetail = {
   code: 'USER_WRONG_EMAIL',
   message: 'O e-mail está incorreto',
 }
+
+export const USER_UNSUPPORTED_ROLE_ERROR: IErrorDetail = {
+  code: 'USER_UNSUPPORTED_ROLE',
+  message: 'Função do usuário não é suportada.',
+}

@@ -1,68 +1,10 @@
 import { Prisma, User } from '@prisma/client'
-import { IInstructor } from '@core/contracts/repositories/instructor-repository.interface'
-import {
-  ISearchUserFilters,
-  IUser,
-  IUserRole,
-  UserRepository,
-} from '@core/contracts/repositories/users-repository.interface'
+import { ISearchUserFilters, IUser, UserRepository } from '@core/contracts/repositories/users-repository.interface'
 import { ok, err, Result } from '@core/shared/result'
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { PrismaErrorMapper } from '@lib/prisma/utils/prisma-error-mapper'
 import { UserNotFoundError } from '@use-cases/errors/users/user-not-found-error'
-
-type UserProfileRelations = Pick<IUser, 'admin' | 'patient' | 'supervisorDoctor' | 'instructor'>
-type UserProfileResolver = (userId: number) => Promise<UserProfileRelations>
-
-class PrismaUserProfileLoader {
-  constructor(private readonly dbContext: DatabaseContext) {}
-
-  private readonly resolvers: Record<IUserRole, UserProfileResolver> = {
-    ADMIN: async (userId: number) => {
-      const admin = await this.dbContext.client.admin.findUnique({
-        where: { userId },
-        select: {
-          id: true,
-          publicId: true,
-          userId: true,
-        },
-      })
-      return { admin }
-    },
-    INSTRUCTOR: async (userId: number) => {
-      const instructor = await this.dbContext.client.instructor.findUnique({ where: { userId } })
-      return { instructor: instructor as IInstructor | null }
-    },
-    SUPERVISOR_DOCTOR: async (userId: number) => {
-      const supervisorDoctor = await this.dbContext.client.supervisorDoctor.findUnique({ where: { userId } })
-      return { supervisorDoctor }
-    },
-    PATIENT: async (userId: number) => {
-      const patient = await this.dbContext.client.patient.findUnique({ where: { userId } })
-      return { patient }
-    },
-  }
-
-  async load(user: User): Promise<IUser> {
-    const baseUser: IUser = {
-      ...user,
-      role: user.role as IUserRole,
-    }
-
-    const resolveProfile = this.resolvers[baseUser.role]
-
-    if (!resolveProfile) {
-      return baseUser
-    }
-
-    const profile = await resolveProfile(user.id)
-
-    return {
-      ...baseUser,
-      ...profile,
-    }
-  }
-}
+import { PrismaUserProfileLoader } from './prisma-profile-loader-strategy'
 
 export class PrismaUsersRepository implements UserRepository {
   private readonly profileLoader: PrismaUserProfileLoader
@@ -124,13 +66,7 @@ export class PrismaUsersRepository implements UserRepository {
         skip: (page - 1) * pageSize,
         take: pageSize,
         include: {
-          admin: {
-            select: {
-              id: true,
-              publicId: true,
-              userId: true,
-            },
-          },
+          admin: true,
           patient: true,
           supervisorDoctor: true,
           instructor: true,
@@ -210,13 +146,7 @@ export class PrismaUsersRepository implements UserRepository {
           name: 'asc',
         },
         include: {
-          admin: {
-            select: {
-              id: true,
-              publicId: true,
-              userId: true,
-            },
-          },
+          admin: true,
           patient: true,
           supervisorDoctor: true,
           instructor: true,

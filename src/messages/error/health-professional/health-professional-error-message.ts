@@ -20,3 +20,8 @@ export const INSTRUCTOR_OPERATION_FAILED_ERROR: IErrorDetail = {
   message:
     'Não foi possível concluir a operação. Verifique se todos os dados relacionados estão corretos e tente novamente.',
 }
+
+export const INSTRUCTOR_UNSUPPORTED_SPECIALITY_ERROR: IErrorDetail = {
+  code: 'INSTRUCTOR_UNSUPPORTED_SPECIALITY',
+  message: 'Especialidade do instrutor não é suportada.',
+}
