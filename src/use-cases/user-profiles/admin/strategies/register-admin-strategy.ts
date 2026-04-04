@@ -1,34 +1,20 @@
-import { Admin, User } from '@prisma/client'
-import { CreateAdminPayload } from '@core/contracts/repositories/admin-repository.interface'
+import { IAdmin } from '@core/contracts/repositories/admin-repository.interface'
+import { IUser } from '@core/contracts/repositories/users-repository.interface'
 import { IUserProfileStrategy } from '@core/contracts/use-case/user-profiles/strategies/user-profile-strategy.interface'
-import { IValidator } from '@core/contracts/validation/validator.interface'
 import { err, ok, Result } from '@core/shared/result'
 import { PrismaAdminRepository } from '@repositories/prisma/prisma-admin-repository'
 
 type AdminStrategyResponse = {
-  admin: Admin
+  admin: IAdmin
 }
 
 export class RegisterAdminStrategy implements IUserProfileStrategy<AdminStrategyResponse> {
-  constructor(
-    private adminRepository: PrismaAdminRepository,
-    private validator: IValidator<CreateAdminPayload>,
-  ) {}
+  constructor(private adminRepository: PrismaAdminRepository) {}
 
-  async execute(user: User, payload?: unknown): Promise<Result<AdminStrategyResponse, Error>> {
-    const validationResult = this.validator.validate(payload)
+  async execute(user: IUser): Promise<Result<AdminStrategyResponse, Error>> {
+    const adminResult = await this.adminRepository.create(user.id, {})
 
-    if (!validationResult.success) {
-      return err(validationResult.error)
-    }
-
-    const specificData = validationResult.value
-
-    const adminResult = await this.adminRepository.create(user.id, {
-      ...specificData,
-    })
-
-    if (!adminResult.success) {
+    if (adminResult.success === false) {
       return err(adminResult.error)
     }
 

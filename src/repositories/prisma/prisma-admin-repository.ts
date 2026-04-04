@@ -1,5 +1,4 @@
-import { Admin } from '@prisma/client'
-import { AdminRepository, CreateAdminPayload } from '@core/contracts/repositories/admin-repository.interface'
+import { AdminRepository, CreateAdminPayload, IAdmin } from '@core/contracts/repositories/admin-repository.interface'
 import { ok, err, Result } from '@core/shared/result'
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { PrismaErrorMapper } from '@lib/prisma/utils/prisma-error-mapper'
@@ -10,7 +9,7 @@ export class PrismaAdminRepository implements AdminRepository {
     private readonly errorMapper: PrismaErrorMapper,
   ) {}
 
-  async create(userId: number, data: CreateAdminPayload): Promise<Result<Admin, Error>> {
+  async create(userId: number, data: CreateAdminPayload): Promise<Result<IAdmin, Error>> {
     try {
       const admin = await this.dbContext.client.admin.create({
         data: {

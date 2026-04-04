@@ -5,7 +5,12 @@ import { Result } from '@core/shared/result'
 import { IAdmin } from './admin-repository.interface'
 import { IPatient } from './patient-repository.interface'
 
-export type IUserRole = 'ADMIN' | 'SUPERVISOR_DOCTOR' | 'INSTRUCTOR' | 'PATIENT'
+export enum EnumUserRole {
+  ADMIN = 'ADMIN',
+  PATIENT = 'PATIENT',
+  SUPERVISOR_DOCTOR = 'SUPERVISOR_DOCTOR',
+  INSTRUCTOR = 'INSTRUCTOR',
+}
 
 export interface IUser {
   id: number
@@ -15,7 +20,7 @@ export interface IUser {
   cpf: string
   phoneNumber: string
   passwordHash: string
-  role: IUserRole
+  role: EnumUserRole
   token: string | null
   tokenExpiresAt: Date | null
   passwordChangedAt: Date | null
@@ -42,7 +47,7 @@ export interface ISearchUserFilters {
   email?: string
   cpf?: string
   isActive?: boolean
-  role?: IUserRole
+  role?: EnumUserRole
 }
 
 export interface UserRepository {

@@ -1,6 +1,6 @@
 import { ProfessionalCategory, User, UserRole as PrismaUserRole } from '@prisma/client'
 import { EnumProfessionalCategory, IInstructor } from '@core/contracts/repositories/instructor-repository.interface'
-import { IUser, IUserRole } from '@core/contracts/repositories/users-repository.interface'
+import { IUser, EnumUserRole } from '@core/contracts/repositories/users-repository.interface'
 import { ErrorType } from '@core/types/error-type'
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { DomainError } from 'errors/domain-error'
@@ -33,16 +33,16 @@ const mapInstructorSpeciality = (speciality: ProfessionalCategory): EnumProfessi
   }
 }
 
-const mapUserRole = (role: PrismaUserRole): IUserRole => {
+const mapUserRole = (role: PrismaUserRole): EnumUserRole => {
   switch (role) {
     case PrismaUserRole.ADMIN:
-      return 'ADMIN'
+      return EnumUserRole.ADMIN
     case PrismaUserRole.SUPERVISOR_DOCTOR:
-      return 'SUPERVISOR_DOCTOR'
+      return EnumUserRole.SUPERVISOR_DOCTOR
     case PrismaUserRole.INSTRUCTOR:
-      return 'INSTRUCTOR'
+      return EnumUserRole.INSTRUCTOR
     case PrismaUserRole.PATIENT:
-      return 'PATIENT'
+      return EnumUserRole.PATIENT
     default: {
       throw new UnsupportedUserRoleError()
     }
@@ -72,11 +72,11 @@ export class PrismaUserProfileLoader {
 
     const baseUsers = users.map((user) => this.toBaseUser(user))
 
-    const userIdsByRole: Record<IUserRole, number[]> = {
-      ADMIN: [],
-      INSTRUCTOR: [],
-      SUPERVISOR_DOCTOR: [],
-      PATIENT: [],
+    const userIdsByRole: Record<EnumUserRole, number[]> = {
+      [EnumUserRole.ADMIN]: [],
+      [EnumUserRole.INSTRUCTOR]: [],
+      [EnumUserRole.SUPERVISOR_DOCTOR]: [],
+      [EnumUserRole.PATIENT]: [],
     }
 
     for (const user of baseUsers) {
@@ -143,11 +143,11 @@ export class PrismaUserProfileLoader {
 
     return baseUsers.map((user) => {
       const relationByRole: UserProfileRelations =
-        user.role === 'ADMIN'
+        user.role === EnumUserRole.ADMIN
           ? { admin: adminByUserId.get(user.id) ?? null }
-          : user.role === 'INSTRUCTOR'
+          : user.role === EnumUserRole.INSTRUCTOR
             ? { instructor: instructorByUserId.get(user.id) ?? null }
-            : user.role === 'SUPERVISOR_DOCTOR'
+            : user.role === EnumUserRole.SUPERVISOR_DOCTOR
               ? { supervisorDoctor: supervisorDoctorByUserId.get(user.id) ?? null }
               : { patient: patientByUserId.get(user.id) ?? null }
 
