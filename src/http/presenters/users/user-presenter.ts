@@ -1,10 +1,13 @@
-import { EnumProfessionalCategory, IInstructor } from '@core/contracts/repositories/instructor-repository.interface'
-import { ISupervisorDoctor } from '@core/contracts/repositories/supervisor-doctor-respository.interface'
 import { Admin, DoctorStatus, Patient, UF, User, UserRole } from '@prisma/client'
+import { IAdmin } from '@core/contracts/repositories/admin-repository.interface'
+import { EnumProfessionalCategory, IInstructor } from '@core/contracts/repositories/instructor-repository.interface'
+import { IPatient } from '@core/contracts/repositories/patient-repository.interface'
+import { ISupervisorDoctor } from '@core/contracts/repositories/supervisor-doctor-respository.interface'
+import { IUser } from '@core/contracts/repositories/users-repository.interface'
 
-export type UserWithRelations = User & {
-  admin?: Admin | null
-  patient?: Patient | null
+export type UserWithRelations = (User | IUser) & {
+  admin?: Admin | IAdmin | null
+  patient?: Patient | IPatient | null
   supervisorDoctor?: ISupervisorDoctor | null
   instructor?: IInstructor | null
 }
@@ -44,7 +47,7 @@ const isInstructorProfile = (value: unknown): value is IInstructor => {
   )
 }
 
-const isPatientProfile = (value: unknown): value is Patient => {
+const isPatientProfile = (value: unknown): value is Patient | IPatient => {
   return (
     isObject(value) &&
     typeof value.publicId === 'string' &&
@@ -111,11 +114,11 @@ export type IUserHTTP = {
   patient?: PatientHTTP
 }
 
-const mapPatientToHTTP = (patient: Partial<Patient>): PatientHTTP => ({
-  publicId: patient.publicId!,
+const mapPatientToHTTP = (patient: Partial<Patient | IPatient>): PatientHTTP => ({
+  publicId: patient.publicId ?? '',
   birthDate: patient.birthDate ?? null,
-  gender: patient.gender!,
-  riskLevel: patient.riskLevel!,
+  gender: patient.gender ?? '',
+  riskLevel: patient.riskLevel ?? '',
   medicationsInUse: patient.medicationsInUse,
   assistantDoctorName: patient.assistantDoctorName,
   assistantDoctorPhone: patient.assistantDoctorPhone,

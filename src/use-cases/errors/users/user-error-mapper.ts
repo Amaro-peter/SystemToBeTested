@@ -6,5 +6,11 @@ import { UserOperationFailedError } from './user-operation-failed-error'
 export const userErrorMapping: PrismaErrorMapping = {
   P2002: () => new UserAlreadyExistsError(),
   P2025: () => new UserNotFoundError(),
-  P2003: () => new UserOperationFailedError(),
+  P2003: (error) =>
+    new UserOperationFailedError({
+      prisma: {
+        code: error.code,
+        meta: error.meta,
+      },
+    }),
 }

@@ -7,7 +7,7 @@ export const USER_ALREADY_EXISTS_ERROR: IErrorDetail = {
 
 export const USER_NOT_FOUND_ERROR: IErrorDetail = {
   code: 'USER_NOT_FOUND',
-  message: 'Usuário não encontrado!',
+  message: 'Usuário não encontrado! Verifique o e-mail ou CPF e tente novamente.',
 }
 
 export const USER_COULD_NOT_BE_CREATED_ERROR: IErrorDetail = {
@@ -28,4 +28,14 @@ export const USER_IS_DEACTIVATED: IErrorDetail = {
 export const USER_WITH_NO_ROLE_ERROR: IErrorDetail = {
   code: 'USER_WITH_NO_ROLE',
   message: 'Usuário não possui uma função atribuída',
+}
+
+export const USER_WRONG_PASSWORD_ERROR: IErrorDetail = {
+  code: 'USER_WRONG_PASSWORD',
+  message: 'A senha está incorreta',
+}
+
+export const USER_WRONG_EMAIL_ERROR: IErrorDetail = {
+  code: 'USER_WRONG_EMAIL',
+  message: 'O e-mail está incorreto',
 }

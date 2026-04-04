@@ -1,14 +1,71 @@
 import { Prisma, User } from '@prisma/client'
-import { ISearchUserFilters, UserRepository } from '@core/contracts/repositories/users-repository.interface'
+import { IInstructor } from '@core/contracts/repositories/instructor-repository.interface'
+import {
+  ISearchUserFilters,
+  IUser,
+  IUserRole,
+  UserRepository,
+} from '@core/contracts/repositories/users-repository.interface'
 import { ok, err, Result } from '@core/shared/result'
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { PrismaErrorMapper } from '@lib/prisma/utils/prisma-error-mapper'
+import { UserNotFoundError } from '@use-cases/errors/users/user-not-found-error'
+
+type UserProfileRelations = Pick<IUser, 'admin' | 'patient' | 'supervisorDoctor' | 'instructor'>
+type UserProfileResolver = (userId: number) => Promise<UserProfileRelations>
+
+class PrismaUserProfileLoader {
+  constructor(private readonly dbContext: DatabaseContext) {}
+
+  private readonly resolvers: Record<IUserRole, UserProfileResolver> = {
+    ADMIN: async (userId: number) => {
+      const admin = await this.dbContext.client.admin.findUnique({ where: { userId } })
+      return { admin }
+    },
+    INSTRUCTOR: async (userId: number) => {
+      const instructor = await this.dbContext.client.instructor.findUnique({ where: { userId } })
+      return { instructor: instructor as IInstructor | null }
+    },
+    SUPERVISOR_DOCTOR: async (userId: number) => {
+      const supervisorDoctor = await this.dbContext.client.supervisorDoctor.findUnique({ where: { userId } })
+      return { supervisorDoctor }
+    },
+    PATIENT: async (userId: number) => {
+      const patient = await this.dbContext.client.patient.findUnique({ where: { userId } })
+      return { patient }
+    },
+  }
+
+  async load(user: User): Promise<IUser> {
+    const baseUser: IUser = {
+      ...user,
+      role: user.role as IUserRole,
+    }
+
+    const resolveProfile = this.resolvers[baseUser.role]
+
+    if (!resolveProfile) {
+      return baseUser
+    }
+
+    const profile = await resolveProfile(user.id)
+
+    return {
+      ...baseUser,
+      ...profile,
+    }
+  }
+}
 
 export class PrismaUsersRepository implements UserRepository {
+  private readonly profileLoader: PrismaUserProfileLoader
+
   constructor(
     private readonly dbContext: DatabaseContext,
     private readonly errorMapper: PrismaErrorMapper,
-  ) {}
+  ) {
+    this.profileLoader = new PrismaUserProfileLoader(this.dbContext)
+  }
 
   async create(data: Prisma.UserCreateInput): Promise<Result<User, Error>> {
     try {
@@ -35,6 +92,23 @@ export class PrismaUsersRepository implements UserRepository {
         OR: [{ email }, { cpf }],
       },
     })
+  }
+
+  async findByEmailWithProfile(email: string): Promise<Result<IUser, Error>> {
+    try {
+      const user = await this.dbContext.client.user.findUnique({
+        where: { email },
+      })
+
+      if (!user) return err(new UserNotFoundError())
+
+      const userWithProfile = await this.profileLoader.load(user)
+
+      return ok(userWithProfile)
+    } catch (error) {
+      const domainError = this.errorMapper.mapToKnownError(error)
+      return err(domainError)
+    }
   }
 
   async list(page: number, pageSize: number): Promise<Result<User[], Error>> {
@@ -120,7 +194,7 @@ export class PrismaUsersRepository implements UserRepository {
           admin: true,
           patient: true,
           supervisorDoctor: true,
-          Instructor: true,
+          instructor: true,
         },
       })
 

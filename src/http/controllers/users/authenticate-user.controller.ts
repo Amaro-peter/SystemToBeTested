@@ -1,28 +1,45 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
 import { UserPresenter } from '@http/presenters/users/user-presenter'
 import { logger } from '@lib/logger'
-import { InvalidCredentialsError } from '@use-cases/errors/invalid-credentials-error'
 import { makeAuthenticateUserUseCase } from '@use-cases/users/factories/make-authenticate-user-use-case'
+import { HttpErrorMapper } from 'errors/http/http-error.mapper'
 import { authenticateSchema } from 'schemas/http/users/authenticate-schema'
 
 export async function authenticateUser(request: FastifyRequest, reply: FastifyReply) {
-  try {
-    const { login, password } = authenticateSchema.parse(request.body)
+  const { login, password } = authenticateSchema.parse(request.body)
 
-    const authenticateUserUseCase = makeAuthenticateUserUseCase()
+  const ipAddress = request.ip || 'UNKNOWN'
+  const userAgent = request.headers['user-agent'] || 'UNKNOWN'
 
-    const { user } = await authenticateUserUseCase.execute({ login, password })
+  const authenticateUserUseCase = makeAuthenticateUserUseCase()
 
-    logger.info('User authenticated successfully!')
+  const result = await authenticateUserUseCase.execute({
+    login,
+    password,
+    ipAddress,
+    userAgent,
+  })
 
-    const token = await reply.jwtSign({ sub: user.publicId, role: user.role }, { expiresIn: '1d' })
-
-    return reply.status(200).send({ token, user: UserPresenter.toHTTP(user) })
-  } catch (error) {
-    if (error instanceof InvalidCredentialsError) {
-      return reply.status(400).send({ message: error.message })
-    }
-
-    throw error
+  if (result.success === false) {
+    return HttpErrorMapper.map(result.error, reply)
   }
+
+  const { user } = result.value
+
+  const token = await reply.jwtSign(
+    { role: user.role },
+    {
+      sign: {
+        sub: user.publicId,
+        expiresIn: '1d',
+      },
+    },
+  )
+
+  logger.info({ userId: user.publicId, role: user.role }, 'User authenticated successfully!')
+
+  return reply.status(200).send({
+    token,
+    user: UserPresenter.toHTTP(user),
+  })
 }

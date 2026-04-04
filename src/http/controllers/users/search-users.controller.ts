@@ -26,5 +26,5 @@ export async function searchUsersController(request: FastifyRequest, reply: Fast
 
   const response = UserPresenter.toHTTP(result.value)
 
-  return reply.status(200).send(response)
+  return reply.status(200).send({ data: response })
 }

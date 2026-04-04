@@ -15,6 +15,28 @@ export type CreatePatientPayload = {
   riskLevel: RiskLevel
 }
 
+export interface IPatient {
+  id: number
+  publicId: string
+  birthDate: Date
+  medicationsInUse: string | null
+  assistantDoctorName: string | null
+  assistantDoctorPhone: string | null
+  healthInsuranceNumber: string | null
+  referenceHospital: string | null
+  emergencyContactName: string | null
+  emergencyContactPhone: string | null
+  healthInsuranceName: string | null
+  gender: string
+  riskLevel: string
+  createdAt: Date
+  updatedAt: Date
+  deletedAt: Date | null
+  userId: number
+  supervisorDoctorId: number | null
+  classId: number | null
+}
+
 export interface PatientRepository {
   create(publicId: string, data: CreatePatientPayload): Promise<Result<Patient, Error>>
   update(userId: number, data: Partial<CreatePatientPayload>): Promise<Result<Patient, Error>>
