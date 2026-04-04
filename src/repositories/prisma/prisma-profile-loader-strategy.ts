@@ -4,7 +4,7 @@ import { IUser, IUserRole } from '@core/contracts/repositories/users-repository.
 import { ErrorType } from '@core/types/error-type'
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { DomainError } from 'errors/domain-error'
-import { INSTRUCTOR_UNSUPPORTED_SPECIALITY_ERROR } from 'messages/error/health-professional/health-professional-error-message'
+import { INSTRUCTOR_UNSUPPORTED_SPECIALITY_ERROR } from 'messages/error/instructor/instructor-error-message'
 import { USER_UNSUPPORTED_ROLE_ERROR } from 'messages/error/user/user-error-messages'
 
 type UserProfileRelations = Pick<IUser, 'admin' | 'patient' | 'supervisorDoctor' | 'instructor'>
