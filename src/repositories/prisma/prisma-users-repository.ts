@@ -19,7 +19,14 @@ class PrismaUserProfileLoader {
 
   private readonly resolvers: Record<IUserRole, UserProfileResolver> = {
     ADMIN: async (userId: number) => {
-      const admin = await this.dbContext.client.admin.findUnique({ where: { userId } })
+      const admin = await this.dbContext.client.admin.findUnique({
+        where: { userId },
+        select: {
+          id: true,
+          publicId: true,
+          userId: true,
+        },
+      })
       return { admin }
     },
     INSTRUCTOR: async (userId: number) => {
@@ -116,6 +123,18 @@ export class PrismaUsersRepository implements UserRepository {
       const users = await this.dbContext.client.user.findMany({
         skip: (page - 1) * pageSize,
         take: pageSize,
+        include: {
+          admin: {
+            select: {
+              id: true,
+              publicId: true,
+              userId: true,
+            },
+          },
+          patient: true,
+          supervisorDoctor: true,
+          instructor: true,
+        },
       })
       return ok(users)
     } catch (error) {
@@ -191,7 +210,13 @@ export class PrismaUsersRepository implements UserRepository {
           name: 'asc',
         },
         include: {
-          admin: true,
+          admin: {
+            select: {
+              id: true,
+              publicId: true,
+              userId: true,
+            },
+          },
           patient: true,
           supervisorDoctor: true,
           instructor: true,

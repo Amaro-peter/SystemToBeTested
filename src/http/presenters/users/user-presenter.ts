@@ -28,6 +28,16 @@ const isAdminProfile = (value: unknown): value is Admin => {
   return isObject(value) && typeof value.publicId === 'string'
 }
 
+const getPublicId = (value: unknown): string | undefined => {
+  if (!isObject(value)) {
+    return undefined
+  }
+
+  const { publicId } = value
+
+  return typeof publicId === 'string' && publicId.length > 0 ? publicId : undefined
+}
+
 const isSupervisorDoctorProfile = (value: unknown): value is ISupervisorDoctor => {
   return (
     isObject(value) &&
@@ -155,9 +165,11 @@ export class UserPresenter {
       case UserRole.ADMIN: {
         const adminProfile = getProfileField(userProfile, 'admin') ?? userProfile
         const adminData = isAdminProfile(adminProfile) ? adminProfile : input.admin
-        if (adminData) {
+        const adminPublicId = getPublicId(adminData) ?? getPublicId(input.admin)
+
+        if (adminPublicId) {
           base.admin = {
-            publicId: adminData.publicId,
+            publicId: adminPublicId,
           }
         }
         break
