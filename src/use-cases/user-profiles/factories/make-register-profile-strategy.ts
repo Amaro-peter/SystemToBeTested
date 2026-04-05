@@ -7,7 +7,7 @@ import { IUserProfileStrategy } from '@core/contracts/use-case/user-profiles/str
 import { err, ok, Result } from '@core/shared/result'
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { UserWithNoRoleError } from '@use-cases/errors/users/user-with-no-role-error'
-import { MakeAdminRegisterStrategy } from '../admin/factories/make-register-admin'
+import { makeAdminRegisterStrategy } from '../admin/factories/make-register-admin'
 import { makeRegisterInstructorStrategy } from '../instructor/factories/make-register-instructor-strategy'
 import { makeRegisterPatientStrategy } from '../patients/factories/make-register-patient'
 import { makeRegisterSupervisorDoctorStrategy } from '../supervisor-doctor/factories/make-register-supervisor-doctor-strategy'
@@ -26,7 +26,7 @@ const strategies: Record<UserRole, UserProfileStrategyCreatorType> = {
   },
 
   [UserRole.ADMIN]: (dbContext) => {
-    return MakeAdminRegisterStrategy(dbContext)
+    return makeAdminRegisterStrategy(dbContext)
   },
 }
 
