@@ -1,14 +1,11 @@
 -- CreateEnum
-CREATE TYPE "AuthenticationStatus" AS ENUM ('SUCCESS', 'USER_NOT_EXISTS', 'INCORRECT_PASSWORD', 'RECOVER_PASSWORD', 'INVALID_TOKEN', 'BLOCKED');
+CREATE TYPE "AuthenticationStatus" AS ENUM ('SUCCESS', 'USER_NOT_EXISTS', 'INTERNAL_SERVER_ERROR', 'INCORRECT_PASSWORD', 'RECOVER_PASSWORD', 'INVALID_TOKEN', 'BLOCKED');
 
 -- CreateEnum
 CREATE TYPE "UserRole" AS ENUM ('ADMIN', 'SUPERVISOR_DOCTOR', 'INSTRUCTOR', 'PATIENT');
 
 -- CreateEnum
 CREATE TYPE "UF" AS ENUM ('AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO');
-
--- CreateEnum
-CREATE TYPE "TipoCRM" AS ENUM ('DEFINITIVO', 'PROVISORIO', 'ESTRANGEIRO');
 
 -- CreateEnum
 CREATE TYPE "DoctorStatus" AS ENUM ('ATIVO', 'SUSPENSO', 'CASSADO', 'INATIVO');
@@ -86,7 +83,6 @@ CREATE TABLE "supervisor_doctors" (
     "publicId" TEXT NOT NULL,
     "crm" VARCHAR(20) NOT NULL,
     "crm_uf" "UF" NOT NULL,
-    "tipo_crm" "TipoCRM" NOT NULL DEFAULT 'DEFINITIVO',
     "status" "DoctorStatus" NOT NULL DEFAULT 'ATIVO',
     "data_registro" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "data_validade" TIMESTAMP(3),

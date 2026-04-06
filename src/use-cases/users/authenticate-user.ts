@@ -68,6 +68,30 @@ export class AuthenticateUserUseCase {
 
           return err(new UserOperationFailedError())
         }
+      } else {
+        const authenticationAuditResult = await this.authenticationAuditsRepository.create({
+          ipAddress,
+          remotePort,
+          userAgent,
+          origin,
+          status: EnumAuthenticationStatus.INTERNAL_SERVER_ERROR,
+        })
+
+        if (authenticationAuditResult.success === false) {
+          logger.error(
+            {
+              authenticationAuditError: authenticationAuditResult.error,
+              authenticationAuditStatus: EnumAuthenticationStatus.INTERNAL_SERVER_ERROR,
+              ipAddress,
+              origin,
+              remotePort,
+              userAgent,
+            },
+            'Failed to create authentication audit for internal server error',
+          )
+
+          return err(new UserOperationFailedError())
+        }
       }
 
       return err(userResult.error)

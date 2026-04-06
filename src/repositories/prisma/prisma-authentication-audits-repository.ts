@@ -12,6 +12,7 @@ import { PrismaErrorMapper } from '@lib/prisma/utils/prisma-error-mapper'
 const toPrismaAuthenticationStatus: Record<DomainAuthenticationStatus, PrismaAuthenticationStatus> = {
   [DomainAuthenticationStatus.SUCCESS]: PrismaAuthenticationStatus.SUCCESS,
   [DomainAuthenticationStatus.USER_NOT_EXISTS]: PrismaAuthenticationStatus.USER_NOT_EXISTS,
+  [DomainAuthenticationStatus.INTERNAL_SERVER_ERROR]: PrismaAuthenticationStatus.INTERNAL_SERVER_ERROR,
   [DomainAuthenticationStatus.INCORRECT_PASSWORD]: PrismaAuthenticationStatus.INCORRECT_PASSWORD,
   [DomainAuthenticationStatus.RECOVER_PASSWORD]: PrismaAuthenticationStatus.RECOVER_PASSWORD,
   [DomainAuthenticationStatus.INVALID_TOKEN]: PrismaAuthenticationStatus.INVALID_TOKEN,
@@ -21,6 +22,7 @@ const toPrismaAuthenticationStatus: Record<DomainAuthenticationStatus, PrismaAut
 const toDomainAuthenticationStatus: Record<PrismaAuthenticationStatus, DomainAuthenticationStatus> = {
   [PrismaAuthenticationStatus.SUCCESS]: DomainAuthenticationStatus.SUCCESS,
   [PrismaAuthenticationStatus.USER_NOT_EXISTS]: DomainAuthenticationStatus.USER_NOT_EXISTS,
+  [PrismaAuthenticationStatus.INTERNAL_SERVER_ERROR]: DomainAuthenticationStatus.INTERNAL_SERVER_ERROR,
   [PrismaAuthenticationStatus.INCORRECT_PASSWORD]: DomainAuthenticationStatus.INCORRECT_PASSWORD,
   [PrismaAuthenticationStatus.RECOVER_PASSWORD]: DomainAuthenticationStatus.RECOVER_PASSWORD,
   [PrismaAuthenticationStatus.INVALID_TOKEN]: DomainAuthenticationStatus.INVALID_TOKEN,
