@@ -1,5 +1,18 @@
-import { Gender, Patient, RiskLevel } from '@prisma/client'
+import { Patient } from '@prisma/client'
 import { Result } from '@core/shared/result'
+
+export enum EnumGender {
+  FEMININO = 'FEMININO',
+  MASCULINO = 'MASCULINO',
+  INTERSEXO = 'INTERSEXO',
+  PREFIRO_NAO_RESPONDER = 'PREFIRO_NAO_RESPONDER',
+}
+
+export enum EnumRiskLevel {
+  ALTO = 'ALTO',
+  MODERADO = 'MODERADO',
+  BAIXO = 'BAIXO',
+}
 
 export type CreatePatientPayload = {
   birthDate: Date
@@ -11,8 +24,8 @@ export type CreatePatientPayload = {
   emergencyContactName?: string
   emergencyContactPhone?: string
   healthInsuranceName?: string
-  gender: Gender
-  riskLevel: RiskLevel
+  gender: EnumGender
+  riskLevel: EnumRiskLevel
 }
 
 export interface IPatient {
@@ -27,8 +40,8 @@ export interface IPatient {
   emergencyContactName: string | null
   emergencyContactPhone: string | null
   healthInsuranceName: string | null
-  gender: string
-  riskLevel: string
+  gender: EnumGender
+  riskLevel: EnumRiskLevel
   createdAt: Date
   updatedAt: Date
   deletedAt: Date | null
@@ -38,7 +51,7 @@ export interface IPatient {
 }
 
 export interface PatientRepository {
-  create(publicId: string, data: CreatePatientPayload): Promise<Result<Patient, Error>>
+  create(userId: number, data: CreatePatientPayload): Promise<Result<IPatient, Error>>
   update(userId: number, data: Partial<CreatePatientPayload>): Promise<Result<Patient, Error>>
   deactivatePatient(userId: number): Promise<Result<Patient, Error>>
   findByUserId(userId: number): Promise<Patient | null>

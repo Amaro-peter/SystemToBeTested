@@ -1,6 +1,12 @@
 import { Patient } from '@prisma/client'
-import { CreatePatientPayload, PatientRepository } from '@core/contracts/repositories/patient-repository.interface'
-import { ok, err, Result } from '@core/shared/result'
+import {
+  CreatePatientPayload,
+  EnumGender,
+  EnumRiskLevel,
+  IPatient,
+  PatientRepository,
+} from '@core/contracts/repositories/patient-repository.interface'
+import { err, ok, Result } from '@core/shared/result'
 import { DatabaseContext } from '@lib/prisma/helpers/database-context'
 import { PrismaErrorMapper } from '@lib/prisma/utils/prisma-error-mapper'
 
@@ -10,20 +16,20 @@ export class PrismaPatientRepository implements PatientRepository {
     private readonly errorMapper: PrismaErrorMapper,
   ) {}
 
-  async create(publicId: string, data: CreatePatientPayload): Promise<Result<Patient, Error>> {
+  async create(userId: number, data: CreatePatientPayload): Promise<Result<IPatient, Error>> {
     try {
       const patient = await this.dbContext.client.patient.create({
         data: {
           ...data,
           user: {
             connect: {
-              publicId,
+              id: userId,
             },
           },
         },
       })
 
-      return ok(patient)
+      return ok(this.mapToIPatient(patient))
     } catch (error) {
       const domainError = this.errorMapper.mapToKnownError(error)
       return err(domainError)
@@ -70,5 +76,29 @@ export class PrismaPatientRepository implements PatientRepository {
       },
     })
     return patient
+  }
+
+  private mapToIPatient(patient: Patient): IPatient {
+    return {
+      id: patient.id,
+      publicId: patient.publicId,
+      birthDate: patient.birthDate,
+      medicationsInUse: patient.medicationsInUse,
+      assistantDoctorName: patient.assistantDoctorName,
+      assistantDoctorPhone: patient.assistantDoctorPhone,
+      healthInsuranceNumber: patient.healthInsuranceNumber,
+      referenceHospital: patient.referenceHospital,
+      emergencyContactName: patient.emergencyContactName,
+      emergencyContactPhone: patient.emergencyContactPhone,
+      healthInsuranceName: patient.healthInsuranceName,
+      gender: patient.gender as EnumGender,
+      riskLevel: patient.riskLevel as EnumRiskLevel,
+      createdAt: patient.createdAt,
+      updatedAt: patient.updatedAt,
+      deletedAt: patient.deletedAt,
+      userId: patient.userId,
+      supervisorDoctorId: patient.supervisorDoctorId,
+      classId: patient.classId,
+    }
   }
 }
